@@ -1,0 +1,58 @@
+name: Publicar no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Verificar scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Checar sintaxe do JavaScript
+        run: |
+          for f in $(find jogo/js -name '*.js'); do
+            node --check "$f" || exit 1
+          done
+          echo "Todos os scripts estão válidos."
+      - name: Checar arquivos essenciais
+        run: |
+          test -f jogo/index.html
+          test -f jogo/lib/phaser.min.js
+          test -f jogo/css/style.css
+
+  publicar:
+    name: Publicar
+    needs: verificar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aplicar versão (evita cache antigo no navegador)
+        run: |
+          VERSAO="$(date -u +%Y%m%d)-${GITHUB_SHA::7}"
+          find jogo -type f \( -name '*.html' -o -name '*.js' \) -not -path 'jogo/lib/*' \
+            -exec sed -i "s/__VERSION__/${VERSAO}/g" {} +
+          echo "Versão publicada: ${VERSAO}"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: jogo
+      - id: deployment
+        uses: actions/deploy-pages@v4

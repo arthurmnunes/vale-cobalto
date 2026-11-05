@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#14213d">
+  <meta name="description" content="Vale Cobalto: um RPG de Química para o Ensino Médio. Reabra o Laboratório Aurora e aprenda Química jogando.">
+  <title>Vale Cobalto: O Laboratório Aurora</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="assets/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="css/style.css?v=__VERSION__">
+</head>
+<body>
+  <div id="game" aria-label="Mundo do jogo"></div>
+
+  <div id="hud" hidden>
+    <div class="panel objective" aria-live="polite">
+      <span class="chapter-label">Capítulo 1: Fundamentos</span>
+      <p id="objectiveText"></p>
+    </div>
+    <div class="hud-right">
+      <div class="panel coins" aria-label="Moedas"><img id="coinIcon" class="pixel" alt=""><span id="coinCount">0</span></div>
+      <button class="hud-btn" id="btnBag" aria-label="Mochila (tecla I)" title="Mochila (I)">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 2h6v2h2v10H3V4h2zM6 3v1h4V3zM5 7h6v2H5z"/></svg>
+      </button>
+      <button class="hud-btn" id="btnBook" aria-label="Caderno do Laboratório (tecla C)" title="Caderno (C)">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h9l1 1v11H4l-1-1zM5 4v8h6V4zM6 5h4v1H6zm0 2h4v1H6z"/></svg>
+      </button>
+      <button class="hud-btn" id="btnMenu" aria-label="Menu (tecla Esc)" title="Menu (Esc)">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h12v2H2zm0 4h12v2H2zm0 4h12v2H2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="touch" hidden>
+    <div id="stick" aria-hidden="true"><div id="knob"></div></div>
+    <button id="btnA" aria-label="Interagir">A</button>
+  </div>
+
+  <div id="title" hidden>
+    <div class="title-inner">
+      <h1><span class="t-vale">Vale</span><span class="t-cobalto">Cobalto</span></h1>
+      <p class="subtitle">O Laboratório Aurora</p>
+      <div class="title-actions">
+        <button id="btnContinue" class="btn primary" hidden>Continuar</button>
+        <button id="btnNew" class="btn">Novo jogo</button>
+      </div>
+      <p class="title-foot">Um RPG de Química para o Ensino Médio. <span id="version"></span></p>
+    </div>
+  </div>
+
+  <div id="loading">Preparando o laboratório…</div>
+  <div id="layer"></div>
+  <div id="toasts" aria-live="polite"></div>
+
+  <noscript>Este jogo precisa de JavaScript ativado no navegador.</noscript>
+
+  <script src="lib/phaser.min.js"></script>
+  <script src="js/art.js?v=__VERSION__"></script>
+  <script src="js/data/dados.js?v=__VERSION__"></script>
+  <script src="js/data/desafios.js?v=__VERSION__"></script>
+  <script src="js/state.js?v=__VERSION__"></script>
+  <script src="js/ui.js?v=__VERSION__"></script>
+  <script src="js/maps.js?v=__VERSION__"></script>
+  <script src="js/story.js?v=__VERSION__"></script>
+  <script src="js/scenes/boot.js?v=__VERSION__"></script>
+  <script src="js/scenes/world.js?v=__VERSION__"></script>
+  <script src="js/main.js?v=__VERSION__"></script>
+</body>
+</html>
