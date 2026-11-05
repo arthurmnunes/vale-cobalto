@@ -9,7 +9,9 @@ VC.ITEMS = {
   balanca: { name: 'Balança de laboratório', icon: 'balanca', desc: 'Mede a massa das substâncias. Vai ser essencial na estequiometria.' },
   relatorio: { name: 'Relatório de ocorrências', icon: 'relatorio', desc: 'Lista de acontecimentos que assustaram a cidade. Precisa de análise na bancada.' },
   laudo: { name: 'Laudo técnico', icon: 'laudo', desc: 'Sua análise dos fenômenos da cidade. Entregue à Prefeita Célia.' },
-  licenca: { name: 'Licença provisória', icon: 'licenca', desc: 'Autoriza o funcionamento do Laboratório Aurora. Pendurada na parede do laboratório.' }
+  licenca: { name: 'Licença provisória', icon: 'licenca', desc: 'Autoriza o funcionamento do Laboratório Aurora. Pendurada na parede do laboratório.' },
+  bunsen: { name: 'Bico de Bunsen', icon: 'bunsen', desc: 'Queimador a gás com chama forte e regulável. Presente do Seu Bento para o festival.' },
+  receita: { name: 'Receita dos fogos', icon: 'receita', desc: 'Que sal produz cada cor: sódio, cobre, estrôncio e potássio. Entregue à Prefeita Célia.' }
 };
 
 // Loja do Seu Bento
@@ -17,8 +19,8 @@ VC.SHOP = [
   { id: 'planta', name: 'Samambaia em vaso', price: 30, desc: 'Deixa o laboratório mais vivo.', decor: true },
   { id: 'poltrona', name: 'Poltrona de leitura', price: 45, desc: 'Para estudar com conforto.', decor: true },
   { id: 'lousa', name: 'Lousa branca', price: 60, desc: 'Para rabiscar fórmulas na parede.', decor: true },
-  { id: 'bunsen', name: 'Bico de Bunsen', price: 80, desc: 'Chama para o teste de chama.', lockedText: 'Disponível no Capítulo 2' },
-  { id: 'tubos', name: 'Tubos de ensaio', price: 40, desc: 'Para reações em pequena escala.', lockedText: 'Disponível no Capítulo 2' }
+  { id: 'modelo', name: 'Modelo atômico', price: 50, desc: 'Um átomo de Bohr com órbitas de arame.', decor: true, needs: 'cap1' },
+  { id: 'tubos', name: 'Tubos de ensaio', price: 40, desc: 'Para reações em pequena escala.', lockedText: 'Disponível no Capítulo 3' }
 ];
 
 // Caderno do Laboratório (conceitos aprendidos)
@@ -32,7 +34,16 @@ VC.NOTEBOOK = {
   alotropia: { title: 'Alotropia', text: 'Um mesmo elemento pode formar substâncias simples diferentes. O oxigênio forma O_2 (gás oxigênio) e O_3 (ozônio).' },
   fenomeno_fisico: { title: 'Fenômeno físico', text: 'Muda a forma, o tamanho ou o estado físico, mas a substância continua a mesma. Exemplos: derreter gelo, quebrar vidro, dissolver açúcar.' },
   fenomeno_quimico: { title: 'Fenômeno químico', text: 'Formam-se substâncias novas (reação química). Sinais comuns: mudança de cor, liberação de gás, luz ou calor, formação de sólido.' },
-  mudancas_estado: { title: 'Mudanças de estado', text: 'Fusão (sólido → líquido), solidificação (líquido → sólido), vaporização (líquido → gás), condensação (gás → líquido) e sublimação (sólido ↔ gás). Em substância pura, a temperatura fica constante durante a mudança.' }
+  mudancas_estado: { title: 'Mudanças de estado', text: 'Fusão (sólido → líquido), solidificação (líquido → sólido), vaporização (líquido → gás), condensação (gás → líquido) e sublimação (sólido ↔ gás). Em substância pura, a temperatura fica constante durante a mudança.' },
+  particulas: { title: 'Partículas do átomo', text: 'Próton: carga +1, fica no núcleo. Nêutron: sem carga, fica no núcleo. Elétron: carga −1, fica na eletrosfera e tem massa quase nula.' },
+  numero_atomico: { title: 'Número atômico (Z)', text: 'Z é o número de prótons e define o elemento. Todo átomo com 6 prótons é carbono. No átomo neutro, elétrons = prótons.' },
+  numero_massa: { title: 'Número de massa (A)', text: 'A = prótons + nêutrons. Para achar os nêutrons: n = A − Z. Sódio-23: 23 − 11 = 12 nêutrons.' },
+  ions_isotopos: { title: 'Íons e isótopos', text: 'Íon: átomo que perdeu elétrons (cátion, carga +, como Na^+) ou ganhou elétrons (ânion, carga −, como Cl^−). Isótopos: mesmo Z e A diferente, como carbono-12 e carbono-14.' },
+  camadas: { title: 'Camadas eletrônicas', text: 'No modelo de Bohr, os elétrons ocupam camadas: K, L, M... Nos 20 primeiros elementos, K recebe até 2, L até 8 e M até 8. Sódio: 2-8-1. Cloro: 2-8-7.' },
+  tabela: { title: 'Tabela periódica', text: 'Período (linha) = número de camadas. Família ou grupo (coluna) = mesmo número de elétrons na camada de valência, por isso propriedades parecidas.' },
+  familias: { title: 'Famílias', text: 'Grupo 1: metais alcalinos (Li, Na, K). Grupo 2: alcalino-terrosos (Mg, Ca). Grupo 17: halogênios (F, Cl, Br). Grupo 18: gases nobres (He, Ne, Ar), com a camada de valência completa.' },
+  teste_chama: { title: 'Teste de chama', text: 'Na chama, os elétrons absorvem energia e saltam para camadas mais externas. Ao voltar, emitem luz de cor característica: sódio amarelo, potássio lilás, cobre verde-azulado, estrôncio vermelho.' },
+  bohr: { title: 'Modelo de Bohr', text: 'Os elétrons giram em camadas com energia definida. Só mudam de camada absorvendo ou emitindo uma quantidade exata de energia, o que explica as cores do teste de chama.' }
 };
 
 // Missões: texto do objetivo e alvo do marcador "!"
@@ -47,13 +58,23 @@ VC.QUESTS = {
   q_entrega: { text: 'Entregue o laudo à Prefeita Célia.', target: { map: 'praca', id: 'prefeita' } },
   q_fim1: { text: 'Capítulo 1 concluído. Use sua verba na barraca do Seu Bento.', target: { map: 'praca', id: 'bento' } },
   q_ver_lab: { text: 'Veja as melhorias no laboratório.', target: { map: 'lab' } },
-  q_fim_demo: { text: 'Fim do conteúdo disponível. O Capítulo 2 chega na próxima atualização.', target: null }
+  q_fim_demo: { text: 'Fim do conteúdo disponível. O Capítulo 2 chega na próxima atualização.', target: null },
+  q2_lia: { ch: 2, text: 'A Lia tem novidades. Procure por ela na praça.', target: { map: 'praca', id: 'lia' } },
+  q2_mural: { ch: 2, text: 'Restaure o mural do átomo no laboratório.', target: { map: 'lab', id: 'mural' } },
+  q2_familias: { ch: 2, text: 'Termine o mural: as famílias da tabela periódica.', target: { map: 'lab', id: 'mural' } },
+  q2_bento: { ch: 2, text: 'Fale com o Seu Bento sobre os fogos do festival.', target: { map: 'praca', id: 'bento' } },
+  q2_chama: { ch: 2, text: 'Faça o teste de chama na bancada.', target: { map: 'lab', id: 'bancada' } },
+  q2_entrega: { ch: 2, text: 'Leve a receita dos fogos à Prefeita Célia.', target: { map: 'praca', id: 'prefeita' } },
+  q2_fim: { ch: 2, text: 'Fim do conteúdo disponível. O Capítulo 3 chega na próxima atualização.', target: null }
 };
+
+// Capítulos já implementados
+VC.IMPLEMENTED = 2;
 
 // Roteiro de capítulos (quadro de pedidos)
 VC.CHAPTERS = [
-  { n: 1, title: 'Fundamentos da Química', topic: 'Segurança, substâncias, misturas e fenômenos', reward: 'Licença provisória e balança' },
-  { n: 2, title: 'O átomo e a tabela periódica', topic: 'Partículas, distribuição eletrônica, famílias', reward: 'Bico de Bunsen e mural restaurado' },
+  { n: 1, short: 'Fundamentos', title: 'Fundamentos da Química', topic: 'Segurança, substâncias, misturas e fenômenos', reward: 'Licença provisória e balança' },
+  { n: 2, short: 'O átomo', title: 'O átomo e a tabela periódica', topic: 'Partículas, distribuição eletrônica, famílias', reward: 'Bico de Bunsen e mural restaurado' },
   { n: 3, title: 'Ligações e interações', topic: 'Iônica, covalente, metálica e polaridade', reward: 'Bancada de síntese' },
   { n: 4, title: 'Compostos e reações inorgânicas', topic: 'Ácidos, bases, sais, óxidos e balanceamento', reward: 'Medidor de pH e capela' },
   { n: 5, title: 'Grandezas e estequiometria', topic: 'Mol, massa molar e proporções', reward: 'Balança analítica' },

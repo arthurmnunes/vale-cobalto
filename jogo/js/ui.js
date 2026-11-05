@@ -17,11 +17,11 @@ window.VC = window.VC || {};
   /* ---------- Texto com subscrito: H_2O -> H<sub>2</sub>O ---------- */
   function segments(text) {
     const out = [];
-    const re = /_(\d+)/g;
+    const re = /_(\d+)|\^([+\-−\d]+)/g;
     let last = 0, m;
     while ((m = re.exec(text))) {
       for (const ch of text.slice(last, m.index)) out.push({ t: ch });
-      out.push({ sub: m[1] });
+      out.push(m[1] ? { sub: m[1] } : { sup: m[2] });
       last = re.lastIndex;
     }
     for (const ch of text.slice(last)) out.push({ t: ch });
@@ -30,7 +30,10 @@ window.VC = window.VC || {};
   function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function segHtml(segs, n) {
     let h = '';
-    for (let i = 0; i < Math.min(n, segs.length); i++) h += segs[i].sub ? '<sub>' + esc(segs[i].sub) + '</sub>' : esc(segs[i].t);
+    for (let i = 0; i < Math.min(n, segs.length); i++) {
+      const g = segs[i];
+      h += g.sub ? '<sub>' + esc(g.sub) + '</sub>' : g.sup ? '<sup>' + esc(g.sup) + '</sup>' : esc(g.t);
+    }
     return h;
   }
   ui.rich = function (node, text) {
@@ -50,12 +53,13 @@ window.VC = window.VC || {};
       const notes = {
         blip: [[660, 0.03]], ok: [[523, 0.08], [784, 0.12]], err: [[220, 0.12], [180, 0.14]],
         coin: [[988, 0.06], [1319, 0.1]], door: [[330, 0.06], [262, 0.08]], open: [[440, 0.05], [554, 0.06]],
-        win: [[523, 0.1], [659, 0.1], [784, 0.1], [1047, 0.2]]
+        win: [[523, 0.1], [659, 0.1], [784, 0.1], [1047, 0.2]],
+        boom: [[110, 0.05], [70, 0.18]]
       }[kind] || [[440, 0.05]];
       let t = actx.currentTime;
       notes.forEach(([f, d]) => {
         const o = actx.createOscillator(), g = actx.createGain();
-        o.type = kind === 'err' ? 'sawtooth' : 'square';
+        o.type = kind === 'err' || kind === 'boom' ? 'sawtooth' : 'square';
         o.frequency.value = f;
         g.gain.setValueAtTime(0.045, t);
         g.gain.exponentialRampToValueAtTime(0.0001, t + d);
@@ -82,6 +86,8 @@ window.VC = window.VC || {};
   ui.refreshHud = function () {
     const q = VC.QUESTS[VC.state.quest];
     $('objectiveText').textContent = q ? q.text : '';
+    const ch = VC.CHAPTERS.find((c) => c.n === ((q && q.ch) || 1));
+    $('chapterLabel').textContent = 'Capítulo ' + ch.n + ': ' + ch.short;
     $('coinCount').textContent = VC.state.coins;
   };
 
@@ -331,7 +337,7 @@ window.VC = window.VC || {};
       list.appendChild(item);
     });
     m.content.appendChild(list);
-    m.content.appendChild(el('p', 'muted small', ids.length + ' de ' + Object.keys(VC.NOTEBOOK).length + ' conceitos do Capítulo 1 registrados.'));
+    m.content.appendChild(el('p', 'muted small', ids.length + (ids.length === 1 ? ' conceito registrado.' : ' conceitos registrados.')));
   };
 
   /* ---------- Menu ---------- */
@@ -388,15 +394,16 @@ window.VC = window.VC || {};
         list.innerHTML = '';
         VC.SHOP.forEach((it) => {
           const row = el('div', 'shop-item');
-          const img = el('img', 'pixel'); img.alt = ''; img.src = VC.art.objectIcon(it.id === 'bunsen' || it.id === 'tubos' ? 'bancada' : it.id);
+          const locked = it.lockedText || (it.needs && !VC.flag(it.needs) ? 'Disponível após o Capítulo 1' : '');
+          const img = el('img', 'pixel'); img.alt = ''; img.src = VC.art.objectIcon(it.decor ? it.id : 'bancada');
           row.appendChild(img);
           const info = el('div', 'shop-info');
           info.appendChild(el('h3', '', it.name));
-          info.appendChild(el('p', '', it.lockedText || it.desc));
+          info.appendChild(el('p', '', locked || it.desc));
           row.appendChild(info);
           const owned = VC.state.decor.includes(it.id);
-          const b = el('button', 'btn small', owned ? 'Comprado' : it.lockedText ? 'Bloqueado' : it.price + ' moedas');
-          b.disabled = owned || !!it.lockedText;
+          const b = el('button', 'btn small', owned ? 'Comprado' : locked ? 'Bloqueado' : it.price + ' moedas');
+          b.disabled = owned || !!locked;
           if (!b.disabled && VC.state.coins < it.price) b.classList.add('poor');
           b.addEventListener('click', () => {
             if (VC.state.coins < it.price) { ui.sfx('err'); ui.toast('Faltam ' + (it.price - VC.state.coins) + ' moedas.'); return; }
@@ -421,11 +428,11 @@ window.VC = window.VC || {};
     return new Promise((resolve) => {
       const m = ui.modal({ title: 'Quadro de pedidos da cidade', wide: true });
       m.onClose = resolve;
-      const done1 = VC.flag('cap1');
       const list = el('ol', 'roadmap');
       VC.CHAPTERS.forEach((c) => {
         const li = el('li', 'chapter');
-        const status = c.n === 1 ? (done1 ? 'Concluído' : 'Em andamento') : (c.n === 2 && done1 ? 'Em breve' : 'Bloqueado');
+        const open = c.n === 1 || VC.flag('cap' + (c.n - 1));
+        const status = VC.flag('cap' + c.n) ? 'Concluído' : !open ? 'Bloqueado' : c.n <= VC.IMPLEMENTED ? 'Em andamento' : 'Em breve';
         li.classList.add(status === 'Concluído' ? 'is-done' : status === 'Em andamento' ? 'is-now' : 'is-locked');
         li.appendChild(el('h3', '', 'Capítulo ' + c.n + ': ' + c.title));
         li.appendChild(el('p', '', c.topic));
@@ -518,6 +525,7 @@ window.VC = window.VC || {};
         if (i >= cfg.questions.length) { resolve({ errors }); return; }
         const item = cfg.questions[i];
         ui.rich(q, item.q);
+        if (item.flame) q.prepend(flameEl(item.flame));
         opts.innerHTML = '';
         item.options.forEach((o, k) => {
           const b = richEl('button', 'btn option', o);
@@ -576,6 +584,132 @@ window.VC = window.VC || {};
     });
   }
 
+  // Chama colorida do teste de chama
+  function flameEl(color) {
+    const w = el('div', 'flame-wrap');
+    w.setAttribute('aria-hidden', 'true');
+    const f = el('div', 'flame');
+    f.style.setProperty('--flame', color);
+    w.appendChild(f);
+    w.appendChild(el('div', 'burner'));
+    return w;
+  }
+
+  // Desenho simples do átomo (modelo de Bohr)
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  function svgEl(tag, attrs) {
+    const e = document.createElementNS(SVGNS, tag);
+    Object.keys(attrs).forEach((k) => e.setAttribute(k, attrs[k]));
+    return e;
+  }
+  function drawAtom(svg, v, shellsMode) {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const cx = 90, cy = 90, radii = [36, 56, 76];
+    let shells;
+    if (shellsMode) shells = [v.K || 0, v.L || 0, v.M || 0];
+    else {
+      const e = v.e || 0;
+      shells = [Math.min(e, 2), Math.min(Math.max(e - 2, 0), 8), Math.max(e - 10, 0)];
+    }
+    radii.forEach((r, i) => {
+      svg.appendChild(svgEl('circle', { cx, cy, r, fill: 'none', stroke: 'rgba(143,179,240,0.55)', 'stroke-width': 1.5, 'stroke-dasharray': '3 3' }));
+      const n = shells[i];
+      for (let k = 0; k < n; k++) {
+        const a = (k / n) * Math.PI * 2 - Math.PI / 2 + i * 0.4;
+        svg.appendChild(svgEl('circle', { cx: cx + Math.cos(a) * r, cy: cy + Math.sin(a) * r, r: 4, fill: '#f2b84b', stroke: '#1b1f2e', 'stroke-width': 1 }));
+      }
+      const t = svgEl('text', { x: cx + r + 2, y: cy + 3, fill: '#a9b9cc', 'font-size': 9, 'font-family': 'Pixelify Sans, sans-serif' });
+      t.textContent = ['K', 'L', 'M'][i];
+      svg.appendChild(t);
+    });
+    if (shellsMode) {
+      svg.appendChild(svgEl('circle', { cx, cy, r: 11, fill: '#e0675a', stroke: '#1b1f2e', 'stroke-width': 1 }));
+      return;
+    }
+    // núcleo: prótons (vermelho) e nêutrons (cinza) intercalados
+    const p = v.p || 0, n = v.n || 0, total = p + n;
+    let pi = 0, ni = 0;
+    for (let k = 0; k < total; k++) {
+      const takeP = (pi < p) && (ni >= n || pi <= ni);
+      if (takeP) pi++; else ni++;
+      const a = k * 2.399963, rr = 2.7 * Math.sqrt(k + 0.5);
+      svg.appendChild(svgEl('circle', { cx: cx + Math.cos(a) * rr, cy: cy + Math.sin(a) * rr, r: 3.2, fill: takeP ? '#e0675a' : '#c9d3d8', stroke: '#1b1f2e', 'stroke-width': 0.7 }));
+    }
+  }
+
+  // Desafio com contadores (prótons, nêutrons, elétrons ou camadas)
+  function numbersGame(cfg, m) {
+    return new Promise((resolve) => {
+      let i = 0, errors = 0;
+      const prog = el('div', 'progress'); const bar = el('div', 'bar'); prog.appendChild(bar);
+      m.content.appendChild(prog);
+      const prompt = el('p', 'card question');
+      m.content.appendChild(prompt);
+      const row = el('div', 'atom-row');
+      const svg = svgEl('svg', { viewBox: '0 0 180 180', class: 'atom', role: 'img', 'aria-label': 'Desenho do átomo' });
+      row.appendChild(svg);
+      const fields = el('div', 'steppers');
+      row.appendChild(fields);
+      m.content.appendChild(row);
+      const check = el('button', 'btn primary', 'Conferir');
+      m.content.appendChild(check);
+      const fb = el('div', 'feedback'); fb.hidden = true;
+      m.content.appendChild(fb);
+      let task, vals, boxes;
+      function show() {
+        fb.hidden = true; check.hidden = false;
+        bar.style.width = (i / cfg.tasks.length * 100) + '%';
+        if (i >= cfg.tasks.length) { resolve({ errors }); return; }
+        task = cfg.tasks[i];
+        ui.rich(prompt, task.prompt);
+        vals = {}; boxes = {};
+        fields.innerHTML = '';
+        task.fields.forEach(([key, label]) => {
+          vals[key] = 0;
+          const f = el('div', 'stepper');
+          f.appendChild(el('span', 'stepper-label', label));
+          const minus = el('button', 'btn step', '−'); minus.setAttribute('aria-label', 'Diminuir ' + label);
+          const out = el('output', 'step-val', '0');
+          const plus = el('button', 'btn step', '+'); plus.setAttribute('aria-label', 'Aumentar ' + label);
+          const set = (d) => {
+            vals[key] = Math.max(0, Math.min(30, vals[key] + d));
+            out.textContent = vals[key];
+            f.classList.remove('bad', 'good');
+            drawAtom(svg, vals, task.shells);
+          };
+          minus.addEventListener('click', () => set(-1));
+          plus.addEventListener('click', () => set(1));
+          f.appendChild(minus); f.appendChild(out); f.appendChild(plus);
+          fields.appendChild(f);
+          boxes[key] = f;
+        });
+        drawAtom(svg, vals, task.shells);
+        const first = fields.querySelector('.step');
+        if (first) first.focus();
+      }
+      check.addEventListener('click', () => {
+        let wrong = 0;
+        task.fields.forEach(([k]) => {
+          const ok = vals[k] === task.answer[k];
+          if (!ok) wrong++;
+          boxes[k].classList.toggle('bad', !ok);
+          boxes[k].classList.toggle('good', ok);
+        });
+        if (!wrong) {
+          ui.sfx('ok'); check.hidden = true; i++;
+          feedback(fb, true, 'Átomo correto!', task.why, show);
+        } else {
+          errors++; ui.sfx('err');
+          const hint = task.shells
+            ? 'Lembre: K recebe até 2 elétrons, L até 8, e o que sobrar vai para a M. A soma precisa dar o total de elétrons.'
+            : 'Lembre: prótons = Z; nêutrons = A − Z; no átomo neutro, elétrons = prótons. Íon positivo perdeu elétrons.';
+          feedback(fb, false, 'Ainda não. Confira os campos marcados em vermelho.', hint, () => { fb.hidden = true; check.focus(); }, 'Tentar de novo');
+        }
+      });
+      show();
+    });
+  }
+
   // Executa uma sequência de desafios e devolve estrelas e erros
   ui.challenge = async function (ids, title) {
     ui.lock();
@@ -584,7 +718,7 @@ window.VC = window.VC || {};
       const cfg = VC.CHALLENGES[id];
       const m = ui.modal({ title: cfg.title, wide: true, closable: false });
       m.el.classList.add('challenge');
-      const res = await (cfg.type === 'sort' ? sortGame(cfg, m) : cfg.type === 'quiz' ? quizGame(cfg, m) : pickGame(cfg, m));
+      const res = await (cfg.type === 'sort' ? sortGame(cfg, m) : cfg.type === 'quiz' ? quizGame(cfg, m) : cfg.type === 'numbers' ? numbersGame(cfg, m) : pickGame(cfg, m));
       errors += res.errors;
       m.close();
     }

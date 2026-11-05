@@ -354,6 +354,13 @@ window.VC = window.VC || {};
     flask(ctx, 4, 0, '#4fb3a0'); flask(ctx, 10, 1, '#f2b84b');
     return c;
   };
+  O.bancada_bunsen = () => {
+    const [c, ctx] = canvas(32, 16);
+    benchBase(ctx);
+    R(ctx, '#1b1f2e', 4, 0, 4, 6); R(ctx, '#8fa3a8', 5, 1, 2, 5); R(ctx, '#2fd3b0', 5, 0, 2, 1); R(ctx, '#1b1f2e', 3, 5, 6, 1);
+    R(ctx, '#1b1f2e', 17, 1, 12, 5); R(ctx, '#d6dde0', 18, 2, 10, 3); R(ctx, '#7bc67e', 19, 3, 4, 1); R(ctx, '#aab4b8', 20, 0, 6, 1);
+    return c;
+  };
   O.bancada_balanca = () => {
     const [c, ctx] = canvas(32, 16);
     benchBase(ctx);
@@ -382,17 +389,29 @@ window.VC = window.VC || {};
   O.estante = () => { const [c, ctx] = canvas(32, 24); shelf(ctx, false); return c; };
   O.estante_ok = () => { const [c, ctx] = canvas(32, 24); shelf(ctx, true); return c; };
 
-  O.mural = () => {
+  // Mural da tabela periódica: 0 apagado, 1 metade (átomo), 2 restaurado
+  function mural(stage) {
     const [c, ctx] = canvas(64, 16);
-    R(ctx, '#1b1f2e', 0, 1, 64, 13); R(ctx, '#cfc8b4', 1, 2, 62, 11);
+    R(ctx, '#1b1f2e', 0, 1, 64, 13); R(ctx, stage === 2 ? '#f0ead8' : '#cfc8b4', 1, 2, 62, 11);
     const r = rng(5);
+    const famColor = (x) => (x === 0 ? '#e0675a' : x === 1 ? '#f2b84b' : x === 13 ? '#4fb3a0' : x === 14 ? '#9b7bd0' : '#6fa8dc');
     for (let y = 0; y < 3; y++) for (let x = 0; x < 15; x++) {
       if (y === 0 && x > 0 && x < 14) continue;
       const faded = r() < 0.7;
-      R(ctx, faded ? '#bdb6a2' : '#6fa8dc', 3 + x * 4, 3 + y * 3, 3, 2);
+      let col = faded ? '#bdb6a2' : '#6fa8dc';
+      if (stage === 2) col = famColor(x);
+      R(ctx, col, 3 + x * 4, 3 + y * 3, 3, 2);
+    }
+    if (stage >= 1) {
+      // átomo desenhado no centro do mural
+      R(ctx, '#2a4c8f', 26, 3, 12, 1); R(ctx, '#2a4c8f', 26, 7, 12, 1); R(ctx, '#2a4c8f', 25, 4, 1, 3); R(ctx, '#2a4c8f', 38, 4, 1, 3);
+      R(ctx, '#e0675a', 31, 4, 2, 2); R(ctx, '#f2b84b', 27, 3); R(ctx, '#f2b84b', 37, 7); R(ctx, '#f2b84b', 34, 3);
     }
     return c;
-  };
+  }
+  O.mural = () => mural(0);
+  O.mural_meio = () => mural(1);
+  O.mural_ok = () => mural(2);
 
   O.lavaolhos = () => {
     const [c, ctx] = canvas(16, 24);
@@ -466,6 +485,21 @@ window.VC = window.VC || {};
     return c;
   };
 
+  O.modelo = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#3d2716', 7, 11, 2, 3); R(ctx, '#1b1f2e', 4, 14, 8, 2); R(ctx, '#6b4a2a', 5, 14, 6, 1);
+    R(ctx, '#8fb3f0', 2, 5, 12, 1); R(ctx, '#8fb3f0', 2, 9, 12, 1); R(ctx, '#8fb3f0', 1, 6, 1, 3); R(ctx, '#8fb3f0', 14, 6, 1, 3);
+    R(ctx, '#8fb3f0', 6, 1, 4, 1); R(ctx, '#8fb3f0', 6, 13, 4, 0); R(ctx, '#8fb3f0', 5, 2, 1, 8); R(ctx, '#8fb3f0', 10, 2, 1, 8);
+    R(ctx, '#e0675a', 7, 6, 2, 2); R(ctx, '#f2b84b', 2, 5, 1, 1); R(ctx, '#f2b84b', 10, 3, 1, 1); R(ctx, '#f2b84b', 13, 9, 1, 1);
+    return c;
+  };
+
+  O.spark = () => {
+    const [c, ctx] = canvas(3, 3);
+    R(ctx, '#ffffff', 1, 0, 1, 3); R(ctx, '#ffffff', 0, 1, 3, 1);
+    return c;
+  };
+
   O.licenca = () => {
     const [c, ctx] = canvas(16, 16);
     R(ctx, '#3d2716', 2, 2, 12, 11); R(ctx, '#f2b84b', 3, 3, 10, 9); R(ctx, '#f0ead8', 4, 4, 8, 7);
@@ -510,6 +544,8 @@ window.VC = window.VC || {};
     relatorio: ['................', '...kkkkkkkkk....', '...kwwwwwwwkk...', '...kwbbbbwwwk...', '...kwwwwwwwwk...', '...kwbbbbbbwk...', '...kwwwwwwwwk...', '...kwbbbbbwwk...', '...kwwwwwwwwk...', '...kwbbbwwwwk...', '...kkkkkkkkkk...'],
     laudo: ['................', '...kkkkkkkkk....', '...kwwwwwwwkk...', '...kwbbbbwwwk...', '...kwwwwwwwwk...', '...kwbbbbbbwk...', '...kwwwwwwwwk...', '...kwbbwwwggk...', '...kwwwwwgggk...', '...kwbbbwwggk...', '...kkkkkkkkkk...'],
     licenca: ['................', '..kkkkkkkkkkkk..', '..kaaaaaaaaaak..', '..kawwwwwwwwak..', '..kawbbbbbbwak..', '..kawwwwwwwwak..', '..kawbbbwrrwak..', '..kawwwwwrrwak..', '..kaaaaaaaaaak..', '..kkkkkkkkkkkk..'],
+    bunsen: ['................', '.......aa.......', '......agga......', '......agga......', '.......kk.......', '.......ks.......', '.......ks.......', '.......ks.......', '......kssk......', '....kkkkkkkk....', '....ksssssssk...', '....kkkkkkkk....'],
+    receita: ['................', '...kkkkkkkkk....', '...kwwwwwwwkk...', '...kwbbbbwwwk...', '...kwwwwwwwwk...', '...kwrwbbbbwk...', '...kwwwwwwwwk...', '...kwgwbbbbwk...', '...kwwwwwwwwk...', '...kwawbbbwwk...', '...kkkkkkkkkk...'],
     moeda: ['................', '................', '.....kkkkkk.....', '....kaaaaaak....', '...kaallaaaak...', '...kaalaakaak...', '...kaaaakaaak...', '...kaaakaaaak...', '...kaaaaaaaak...', '....kaaaaaak....', '.....kkkkkk.....']
   };
   const ICON_PAL = { k: '#1b1f2e', a: '#f2b84b', w: '#f4f7f8', r: '#e0675a', b: '#2a4c8f', l: '#c8e3ec', g: '#4fb3a0', s: '#c9d3d8' };

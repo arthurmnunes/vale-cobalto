@@ -23,7 +23,7 @@ Você herda o Laboratório Aurora da Profa. Ítala Ferraz, sua antiga orientador
 | Capítulo | Tema | Situação |
 |---|---|---|
 | 1 | Fundamentos da Química: segurança, substâncias, misturas, fenômenos e mudanças de estado | Pronto |
-| 2 | O átomo e a tabela periódica | Planejado |
+| 2 | O átomo e a tabela periódica: partículas, íons, isótopos, camadas, famílias e teste de chama | Pronto |
 | 3 | Ligações e interações químicas | Planejado |
 | 4 | Compostos e reações inorgânicas | Planejado |
 | 5 | Grandezas químicas e estequiometria | Planejado |

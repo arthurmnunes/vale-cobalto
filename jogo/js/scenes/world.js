@@ -242,6 +242,50 @@ window.VC = window.VC || {};
       if (tile.idx === VC.art.T.WATER && this.def.waterText) await VC.story.narrate(this.def.waterText);
     }
 
+    // Espetáculo de fogos do Festival das Luzes (cores do teste de chama)
+    festival(duration) {
+      return new Promise((resolve) => {
+        const cam = this.cameras.main;
+        const v = cam.worldView;
+        const night = this.add.rectangle(v.x - 50, v.y - 50, v.width + 100, v.height + 100, 0x0a1030, 0).setOrigin(0).setDepth(99990);
+        this.tweens.add({ targets: night, fillAlpha: 0.6, duration: 700 });
+        if (this.marker) this.marker.setVisible(false);
+        // uma textura por cor (funciona também sem WebGL, onde não há tingimento)
+        const colors = ['#ffb020', '#2fd3b0', '#e8323c', '#b48ce8'];
+        const keys = colors.map((c) => {
+          const k = 'spark' + c;
+          if (!this.textures.exists(k)) {
+            const cv = document.createElement('canvas'); cv.width = 3; cv.height = 3;
+            const x = cv.getContext('2d'); x.fillStyle = c; x.fillRect(1, 0, 1, 3); x.fillRect(0, 1, 3, 1);
+            this.textures.addCanvas(k, cv);
+          }
+          return k;
+        });
+        const emitters = keys.map((key) => this.add.particles(0, 0, key, {
+          speed: { min: 18, max: 62 }, lifespan: 1500, gravityY: 22,
+          scale: { start: 1.3, end: 0.2 }, alpha: { start: 1, end: 0 },
+          emitting: false, blendMode: 'ADD'
+        }).setDepth(99995));
+        let k = 0;
+        this.time.addEvent({
+          delay: 420, repeat: Math.floor((duration || 6500) / 420) - 1,
+          callback: () => {
+            const x = v.x + Phaser.Math.Between(24, Math.max(25, v.width - 24));
+            const y = v.y + Phaser.Math.Between(18, Math.max(19, v.height * 0.45));
+            emitters[k % 4].explode(46, x, y);
+            k++;
+            VC.ui.sfx('boom');
+          }
+        });
+        this.time.delayedCall((duration || 6500) + 900, () => {
+          this.tweens.add({
+            targets: night, fillAlpha: 0, duration: 700,
+            onComplete: () => { night.destroy(); emitters.forEach((e) => e.destroy()); this.updateMarker(); resolve(); }
+          });
+        });
+      });
+    }
+
     goTo(map, spawn, face) {
       if (this.transitioning) return;
       this.transitioning = true;

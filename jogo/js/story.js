@@ -30,6 +30,17 @@ window.VC = window.VC || {};
     await wait(320);
     if (scene !== VC.world || !scene.ready) return;
 
+    if (VC.flag('cap2Aviso')) {
+      VC.flag('cap2Aviso', false);
+      ui().lock();
+      try {
+        await ui().chapterCard('Capítulo 2: O átomo e a tabela periódica', [
+          'Novo capítulo liberado! Vale Cobalto se prepara para o Festival das Luzes.',
+          'A Lia tem novidades. Procure por ela na praça.'
+        ]);
+      } finally { ui().unlock(); }
+    }
+
     if (scene.mapKey === 'praca' && !VC.flag('controlsHint')) {
       VC.flag('controlsHint', true);
       ui().toast(ui().isTouch ? 'Use o joystick para andar e o botão A para conversar.' : 'WASD ou setas para andar, E para conversar. Menu no Esc.');
@@ -53,8 +64,7 @@ window.VC = window.VC || {};
           ['narrador', 'O Aurora está ganhando vida. As melhorias já estão no lugar.'],
           ['narrador', '{cat} inspeciona cada novidade e parece aprovar.']
         ]);
-        VC.setQuest('q_fim_demo');
-        await S.endOfDemo();
+        await S.startChapter2();
       } finally { ui().unlock(); }
     }
 
@@ -63,19 +73,33 @@ window.VC = window.VC || {};
     }
   };
 
+  const starsOf = (keys) => keys.reduce((a, k) => a + (VC.state.stars[k] || 0), 0);
+
   S.endOfDemo = function () {
-    const stars = Object.values(VC.state.stars).reduce((a, b) => a + b, 0);
+    const next = VC.CHAPTERS.find((c) => c.n === VC.IMPLEMENTED + 1);
     return ui().chapterCard('Fim da versão atual', [
       'Você concluiu todo o conteúdo disponível de Vale Cobalto.',
-      'Estrelas: ' + stars + ' de 9. Conceitos no Caderno: ' + VC.state.notebook.length + ' de ' + Object.keys(VC.NOTEBOOK).length + '.',
-      'O Capítulo 2, O átomo e a tabela periódica, chega na próxima atualização. Seu progresso fica salvo.',
+      'Conceitos no Caderno: ' + VC.state.notebook.length + '.',
+      'O Capítulo ' + next.n + ', ' + next.title + ', chega na próxima atualização. Seu progresso fica salvo.',
       'Até lá, explore a cidade e continue equipando o laboratório na barraca do Seu Bento.'
     ]);
   };
 
-  // Corrige jogos salvos parados no fim do Capítulo 1
+  S.startChapter2 = async function () {
+    VC.setQuest('q2_lia');
+    await ui().chapterCard('Capítulo 2: O átomo e a tabela periódica', [
+      'Vale Cobalto se prepara para o Festival das Luzes.',
+      'A Lia tem novidades. Procure por ela na praça.'
+    ]);
+  };
+
+  // Corrige jogos salvos de versões anteriores
   S.migrate = function () {
     if (VC.state.quest === 'q_fim1' && VC.state.decor.length > 0) VC.state.quest = 'q_ver_lab';
+    if (VC.state.quest === 'q_fim_demo') {
+      VC.state.quest = 'q2_lia';
+      VC.state.flags.cap2Aviso = true;
+    }
   };
 
   /* ---------- Cena do rival ---------- */
@@ -103,6 +127,49 @@ window.VC = window.VC || {};
       scene.scripted = false;
       ui().unlock();
     }
+  }
+
+  /* ---------- Festival das Luzes (fim do Capítulo 2) ---------- */
+  async function festivalScene(scene) {
+    await talk([
+      ['prefeita', 'A receita dos fogos! Sódio, cobre, estrôncio e potássio... e tudo explicado.'],
+      ['prefeita', 'Bem a tempo. Olhe quem está chegando.']
+    ]);
+    scene.scripted = true;
+    try {
+      scene.addNpc({ id: 'rival', sprite: 'rival', pos: () => [28, 8], face: 'left', solid: false });
+      await scene.walkNpc('rival', [24, 7], 60);
+      await talk([
+        ['rival', 'Prefeita, o Grupo Vex traz um show de fogos importado. Só cinquenta mil moedas.'],
+        ['prefeita', 'Obrigada, {rival}, mas o Aurora já resolveu. E custou bem menos.'],
+        ['rival', 'Fogos caseiros? Isso é coisa de amador.']
+      ]);
+      const c = await ui().choose('player', 'Responder:', ['Não é mágica nem sorte: é o modelo de Bohr.', 'Apareça no festival, {rival}. Vai gostar.']);
+      await say('rival', c === 0 ? 'Hum. Pelo menos você estudou.' : 'Talvez eu apareça. Só para ver vocês errarem.');
+      await scene.walkNpc('rival', [28, 8], 70);
+      scene.removeNpc('rival');
+    } finally { scene.scripted = false; }
+
+    VC.removeItem('receita');
+    VC.addCoins(120);
+    await say('narrador', 'Naquela noite, toda Vale Cobalto se reúne na praça.');
+    scene.scripted = true;
+    const show = scene.festival(7000);
+    await talk([
+      ['narrador', 'Amarelo do sódio, verde-azulado do cobre, vermelho do estrôncio, lilás do potássio.'],
+      ['narrador', 'Cada cor é a luz que os elétrons emitem ao voltar para suas camadas.'],
+      ['lia', 'Que lindo! E eu entendi tudo! Amanhã eu gabarito a prova do átomo.']
+    ]);
+    await show;
+    scene.scripted = false;
+    VC.flag('cap2', true);
+    VC.setQuest('q2_fim');
+    await ui().chapterCard('Capítulo 2 concluído', [
+      'O Festival das Luzes foi um sucesso, e o mural da Profa. Ítala voltou a brilhar.',
+      'Estrelas: ' + starsOf(['mural1', 'mural2', 'chama']) + ' de 9. A prefeitura pagou 120 moedas pelos fogos.',
+      'O Grupo Vex saiu da praça sem contrato.'
+    ]);
+    await S.endOfDemo();
   }
 
   /* ---------- Interações ---------- */
@@ -146,21 +213,35 @@ window.VC = window.VC || {};
       VC.addCoins(100);
       VC.flag('cap1', true);
       VC.setQuest('q_fim1');
-      const stars = Object.values(VC.state.stars).reduce((a, b) => a + b, 0);
+      const stars = starsOf(['epi', 'estante', 'laudo']);
       await ui().chapterCard('Capítulo 1 concluído', [
         'Você reabriu o Laboratório Aurora e conquistou a licença provisória.',
         'Estrelas: ' + stars + ' de 9. Conceitos no Caderno: ' + VC.state.notebook.length + '.',
-        'Próximo: Capítulo 2, O átomo e a tabela periódica (em breve).',
+        'Próximo: Capítulo 2, O átomo e a tabela periódica.',
         'Enquanto isso, use sua verba na barraca do Seu Bento para equipar o laboratório.'
       ]);
       return;
     }
     if (q() === 'q_bancada') { await say('prefeita', 'O relatório está com você. Analise tudo na bancada do laboratório!'); return; }
+    if (q() === 'q2_entrega') { await festivalScene(scene); return; }
+    if (q() === 'q2_fim') { await say('prefeita', 'Até hoje a cidade fala dos fogos do festival, {player}. Que espetáculo!'); return; }
+    if (q().indexOf('q2_') === 0) { await say('prefeita', 'O Festival das Luzes está chegando! A Lia me contou que você está ajudando.'); return; }
     if (['q_fim1', 'q_ver_lab', 'q_fim_demo'].includes(q())) { await say('prefeita', 'Vale Cobalto agradece, {player}. Logo teremos novos desafios para o Aurora.'); return; }
     await say('prefeita', 'O laboratório é todo seu. Mostre do que ele é capaz!');
   };
 
   H.bento = async function () {
+    if (q() === 'q2_bento') {
+      await talk([
+        ['bento', 'Fogos para o festival? Então você vai precisar de uma chama forte e limpa.'],
+        ['bento', 'Tome, um bico de Bunsen novinho. Por conta da casa: é pela cidade!'],
+        ['bento', 'Leve uns sais também: sódio, cobre, estrôncio e potássio. Faça o teste de chama na bancada.']
+      ]);
+      VC.flag('bentoMet', true);
+      VC.addItem('bunsen');
+      VC.setQuest('q2_chama');
+      return;
+    }
     if (!VC.flag('bentoMet')) {
       await talk([
         ['bento', 'Bom dia! Sou o Bento. Vendo de tudo um pouco: vidrarias, reagentes e uns mimos para laboratório.'],
@@ -187,10 +268,26 @@ window.VC = window.VC || {};
     q_entrega: 'Corre, leva o laudo para a prefeita!',
     q_fim1: 'O Seu Bento tem umas coisas ótimas para o laboratório. Dá uma olhada na barraca!',
     q_ver_lab: 'Já foi ver como o laboratório ficou? Quero visitar depois!',
-    q_fim_demo: 'Quando você for estudar átomos, me chama? Quero ser cientista também!'
+    q_fim_demo: 'Quando você for estudar átomos, me chama? Quero ser cientista também!',
+    q2_mural: 'O mural fica no laboratório, na parede do fundo. Começa pelo átomo: prótons, nêutrons e elétrons!',
+    q2_familias: 'Já estou estudando pelo átomo do mural! Agora faltam as famílias da tabela.',
+    q2_bento: 'Para fazer fogos, precisa de chama forte. O Seu Bento deve ter alguma coisa.',
+    q2_chama: 'Teste de chama! Cada metal deixa a chama de uma cor. Quero ver!',
+    q2_entrega: 'Corre, leva a receita dos fogos para a prefeita!',
+    q2_fim: 'Tirei 10 na prova do átomo! Obrigada, {player}. Quando tiver ligações químicas, me chama!'
   };
 
   H.lia = async function () {
+    if (q() === 'q2_lia') {
+      await talk([
+        ['lia', '{player}! Você soube? Sábado tem o Festival das Luzes de Vale Cobalto!'],
+        ['lia', 'A prefeita quer fogos coloridos, mas o Grupo Vex está cobrando uma fortuna.'],
+        ['lia', 'E eu tenho prova sobre o átomo na segunda... Aquele mural apagado no Aurora era da Profa. Ítala, né?'],
+        ['lia', 'Se você restaurar o mural, eu estudo por ele! Dizem até que a cor dos fogos tem a ver com os elétrons.']
+      ]);
+      VC.setQuest('q2_mural');
+      return;
+    }
     if (!VC.flag('liaMet')) {
       await say('lia', 'Oi! Sou a Lia, estudo no colégio daqui. Química é a minha matéria favorita.');
       VC.flag('liaMet', true);
@@ -203,7 +300,11 @@ window.VC = window.VC || {};
     q_estante: '{cat} encara a estante bagunçada e espirra com a poeira.',
     q_volta_prefeita: '{cat} olha para a porta. Hora de voltar à praça.',
     q_bancada: '{cat} sobe na bancada e derruba um papel. Era só um guardanapo.',
-    q_entrega: '{cat} boceja. Entregue logo esse laudo.'
+    q_entrega: '{cat} boceja. Entregue logo esse laudo.',
+    q2_mural: '{cat} encara o mural apagado, com as orelhas em pé.',
+    q2_familias: '{cat} dá uma patada no canto do mural onde ficam os gases nobres.',
+    q2_chama: '{cat} se afasta da bancada. Gatos e chamas não combinam.',
+    q2_fim: '{cat} ainda está assustado com os fogos de ontem.'
   };
 
   H.cat = async function () {
@@ -267,7 +368,19 @@ window.VC = window.VC || {};
     VC.setQuest('q_volta_prefeita');
   };
 
-  H.bancada = async function () {
+  H.bancada = async function (scene) {
+    if (q() === 'q2_chama') {
+      await say('narrador', 'Bico de Bunsen aceso, chama azul e limpa. Um sal de cada vez na alça de platina.');
+      const r = await ui().challenge('chama', 'Teste de chama concluído');
+      VC.state.stars.chama = r.stars;
+      VC.learn(['teste_chama', 'bohr']);
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'Você anota a receita: cada sal, sua cor. Os fogos do festival estão garantidos.');
+      VC.addItem('receita');
+      VC.setQuest('q2_entrega');
+      return;
+    }
+    if (VC.hasItem('bunsen') && q() !== 'q_bancada') { await say('narrador', 'Bancada equipada: balança calibrada e bico de Bunsen pronto para uso.'); return; }
     if (!VC.flag('epi')) { await say('narrador', 'Sem EPI, nada de bancada! O armário de segurança fica no canto.'); return; }
     if (q() !== 'q_bancada') {
       await say('narrador', after('q_bancada') ? 'A bancada está limpa e a balança, calibrada.' : 'A bancada está pronta, mas ainda não há nada para analisar.');
@@ -283,8 +396,34 @@ window.VC = window.VC || {};
     VC.setQuest('q_entrega');
   };
 
-  H.mural = async function () {
-    await say('narrador', 'Um mural da tabela periódica, quase todo apagado. Restaurá-lo será o desafio do Capítulo 2.');
+  H.mural = async function (scene) {
+    if (q() === 'q2_mural') {
+      await say('narrador', 'No centro do mural, um átomo desenhado à mão pela professora, quase apagado. Hora de refazer.');
+      const r = await ui().challenge(['particulas', 'atomos'], 'Átomo restaurado');
+      VC.state.stars.mural1 = r.stars;
+      VC.flag('muralMeio', true);
+      scene.refreshObject('mural');
+      VC.learn(['particulas', 'numero_atomico', 'numero_massa', 'ions_isotopos', 'camadas']);
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'O átomo voltou a aparecer no mural. Em volta dele, a tabela ainda está apagada.');
+      VC.setQuest('q2_familias');
+      return;
+    }
+    if (q() === 'q2_familias') {
+      await say('narrador', 'Agora as colunas da tabela: cada família tem sua cor no mural.');
+      const r = await ui().challenge(['familias', 'tabela'], 'Mural restaurado');
+      VC.state.stars.mural2 = r.stars;
+      VC.flag('muralOk', true);
+      scene.refreshObject('mural');
+      VC.learn(['tabela', 'familias']);
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'O mural da Profa. Ítala está completo de novo, com cores vivas em cada família.');
+      ui().toast('Missão concluída: O mural apagado');
+      VC.setQuest('q2_bento');
+      return;
+    }
+    if (VC.flag('muralOk')) { await say('narrador', 'O mural restaurado: alcalinos, alcalino-terrosos, halogênios e gases nobres, cada um com sua cor.'); return; }
+    await say('narrador', 'Um mural da tabela periódica, quase todo apagado. A Profa. Ítala desenhou cada quadrinho à mão.');
   };
 
   H.lavaolhos = async function () {
@@ -295,6 +434,7 @@ window.VC = window.VC || {};
   H.lousa = async function () { await say('narrador', 'Você rabisca na lousa: H_2O, CO_2, NaCl, O_3. Ficou bonito.'); };
   H.licenca = async function () { await say('narrador', 'Licença provisória de funcionamento. O Aurora está oficialmente de volta!'); };
   H.planta = async function () { await say('narrador', 'A samambaia gosta da luz do laboratório. Plantas fazem fotossíntese: um fenômeno químico!'); };
+  H.modelo = async function () { await say('narrador', 'Um modelo atômico de Bohr: núcleo no centro e elétrons girando em camadas.'); };
   H.poltrona = async function () { await say('narrador', 'Uma poltrona confortável. {cat} já decidiu que ela é dele.'); };
   H.fonte = async function () { await say('narrador', 'A água da fonte vem do rio. Está turva e tem um leve cheiro de ovo podre.'); };
   H.placa_lab = async function () { await say('narrador', 'Laboratório Aurora. Fundado pela Profa. Ítala Ferraz.'); };

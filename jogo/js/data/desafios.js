@@ -108,4 +108,161 @@ VC.CHALLENGES = {
       }
     ]
   }
+,
+
+  /* ================= Capítulo 2 ================= */
+
+  particulas: {
+    type: 'quiz',
+    title: 'Mural do átomo',
+    questions: [
+      {
+        q: 'Qual partícula tem carga positiva e fica no núcleo?',
+        options: ['Elétron', 'Próton', 'Nêutron'],
+        answer: 1,
+        why: 'O próton tem carga +1 e fica no núcleo, junto com os nêutrons, que não têm carga.'
+      },
+      {
+        q: 'O que define qual elemento químico um átomo é?',
+        options: ['O número de nêutrons', 'O número de elétrons', 'O número de prótons (Z)'],
+        answer: 2,
+        why: 'O número atômico Z é o número de prótons. Todo átomo com 6 prótons é carbono, não importa quantos nêutrons ou elétrons tenha.'
+      },
+      {
+        q: 'Carbono-12 e carbono-14 têm 6 prótons cada, mas massas diferentes. Eles são:',
+        options: ['Isótopos', 'Íons', 'Elementos diferentes'],
+        answer: 0,
+        why: 'Isótopos têm o mesmo número de prótons e números de nêutrons diferentes: 6 no C-12 e 8 no C-14.'
+      }
+    ]
+  },
+
+  atomos: {
+    type: 'numbers',
+    title: 'Monte os átomos',
+    tasks: [
+      {
+        prompt: 'Monte um átomo neutro de carbono-12. Dados: Z = 6 e A = 12.',
+        fields: [['p', 'Prótons'], ['n', 'Nêutrons'], ['e', 'Elétrons']],
+        answer: { p: 6, n: 6, e: 6 },
+        why: 'Z = 6, então 6 prótons. Neutro: 6 elétrons. Nêutrons = A − Z = 12 − 6 = 6.'
+      },
+      {
+        prompt: 'Monte um átomo neutro de sódio-23. Dados: Z = 11 e A = 23.',
+        fields: [['p', 'Prótons'], ['n', 'Nêutrons'], ['e', 'Elétrons']],
+        answer: { p: 11, n: 12, e: 11 },
+        why: '11 prótons, 11 elétrons (neutro) e 23 − 11 = 12 nêutrons.'
+      },
+      {
+        prompt: 'Agora o íon Na^+: o sódio perdeu 1 elétron.',
+        fields: [['p', 'Prótons'], ['n', 'Nêutrons'], ['e', 'Elétrons']],
+        answer: { p: 11, n: 12, e: 10 },
+        why: 'Perder elétron não muda o núcleo: continuam 11 prótons e 12 nêutrons. Ficam 10 elétrons, e a carga passa a ser +1.'
+      },
+      {
+        prompt: 'Distribua os 11 elétrons do sódio nas camadas.',
+        fields: [['K', 'Camada K'], ['L', 'Camada L'], ['M', 'Camada M']],
+        answer: { K: 2, L: 8, M: 1 },
+        shells: true,
+        why: 'K recebe até 2 e L até 8. Sobra 1 elétron para a M: 2-8-1. Esse único elétron externo é fácil de perder, por isso o sódio forma Na^+.'
+      },
+      {
+        prompt: 'Distribua os 17 elétrons do cloro nas camadas.',
+        fields: [['K', 'Camada K'], ['L', 'Camada L'], ['M', 'Camada M']],
+        answer: { K: 2, L: 8, M: 7 },
+        shells: true,
+        why: '2-8-7: são 7 elétrons na última camada, falta 1 para completar 8. Por isso o cloro tende a ganhar 1 elétron e formar Cl^−.'
+      }
+    ]
+  },
+
+  familias: {
+    type: 'sort',
+    title: 'Mural das famílias',
+    prompt: 'Coloque cada elemento na sua família da tabela periódica.',
+    bins: ['Metais alcalinos', 'Alcalino-terrosos', 'Halogênios', 'Gases nobres'],
+    items: [
+      { label: 'Lítio (Li)', bin: 0, why: 'Grupo 1: 1 elétron na camada de valência.' },
+      { label: 'Sódio (Na)', bin: 0, why: 'Grupo 1. Muito reativo: reage até com a água.' },
+      { label: 'Potássio (K)', bin: 0, why: 'Grupo 1, como o lítio e o sódio.' },
+      { label: 'Magnésio (Mg)', bin: 1, why: 'Grupo 2: 2 elétrons na camada de valência.' },
+      { label: 'Cálcio (Ca)', bin: 1, why: 'Grupo 2. Está nos ossos, no calcário e na casca de ovo.' },
+      { label: 'Flúor (F)', bin: 2, why: 'Grupo 17: 7 elétrons na valência. É o mais reativo dos halogênios.' },
+      { label: 'Cloro (Cl)', bin: 2, why: 'Grupo 17. Usado no tratamento de água.' },
+      { label: 'Bromo (Br)', bin: 2, why: 'Grupo 17. Um dos poucos elementos líquidos à temperatura ambiente.' },
+      { label: 'Hélio (He)', bin: 3, why: 'Grupo 18: camada completa, quase não reage. Enche balões.' },
+      { label: 'Neônio (Ne)', bin: 3, why: 'Grupo 18. Brilha em letreiros luminosos.' },
+      { label: 'Argônio (Ar)', bin: 3, why: 'Grupo 18. Usado dentro de lâmpadas porque não reage com o filamento.' }
+    ]
+  },
+
+  tabela: {
+    type: 'quiz',
+    title: 'Lendo a tabela periódica',
+    questions: [
+      {
+        q: 'O que os elementos de uma mesma família (coluna) têm em comum?',
+        options: ['A mesma massa', 'O mesmo número de elétrons na camada de valência', 'O mesmo número de prótons'],
+        answer: 1,
+        why: 'O mesmo número de elétrons na última camada dá propriedades químicas parecidas a toda a família.'
+      },
+      {
+        q: 'O sódio tem distribuição 2-8-1. Em que período ele está?',
+        options: ['1º período', '8º período', '3º período'],
+        answer: 2,
+        why: 'Período = número de camadas. São 3 camadas (K, L, M), então 3º período.'
+      },
+      {
+        q: 'Por que os gases nobres quase não reagem?',
+        options: ['Têm a camada de valência completa', 'São leves demais', 'Não têm elétrons'],
+        answer: 0,
+        why: 'Com a última camada completa, eles já são estáveis e não precisam ganhar, perder ou compartilhar elétrons.'
+      }
+    ]
+  },
+
+  chama: {
+    type: 'quiz',
+    title: 'Teste de chama',
+    questions: [
+      {
+        flame: '#ffb020',
+        q: 'Você leva um sal à chama do bico de Bunsen e ela fica assim. Qual é o sal?',
+        options: ['Cloreto de cobre (CuCl_2)', 'Cloreto de sódio (NaCl)', 'Cloreto de potássio (KCl)'],
+        answer: 1,
+        why: 'O sódio produz um amarelo-alaranjado intenso. É a mesma cor das lâmpadas de vapor de sódio nas ruas.'
+      },
+      {
+        flame: '#2fd3b0',
+        q: 'E esta chama verde-azulada?',
+        options: ['Cloreto de cobre (CuCl_2)', 'Cloreto de estrôncio (SrCl_2)', 'Cloreto de sódio (NaCl)'],
+        answer: 0,
+        why: 'O cobre dá a chama verde-azulada. Nos fogos de artifício, sais de cobre fazem o verde e o azul.'
+      },
+      {
+        flame: '#e8323c',
+        q: 'A prefeita quer fogos vermelhos. Qual sal produziu esta chama?',
+        options: ['Cloreto de potássio (KCl)', 'Cloreto de cobre (CuCl_2)', 'Cloreto de estrôncio (SrCl_2)'],
+        answer: 2,
+        why: 'O estrôncio dá o vermelho vivo, o mais usado em fogos de artifício e sinalizadores.'
+      },
+      {
+        flame: '#b48ce8',
+        q: 'E esta chama lilás, bem suave?',
+        options: ['Cloreto de potássio (KCl)', 'Cloreto de sódio (NaCl)', 'Cloreto de estrôncio (SrCl_2)'],
+        answer: 0,
+        why: 'O potássio produz um lilás fraco, que o amarelo do sódio costuma esconder quando os dois estão juntos.'
+      },
+      {
+        q: 'Por que cada metal produz uma cor diferente?',
+        options: [
+          'A chama queima o metal e muda a cor dele',
+          'Os elétrons absorvem energia, saltam de camada e, ao voltar, emitem luz com energia própria de cada elemento',
+          'O gás do bico de Bunsen muda de cor sozinho'
+        ],
+        answer: 1,
+        why: 'É o modelo de Bohr: cada elemento tem camadas com energias próprias, então a luz emitida tem uma cor característica.'
+      }
+    ]
+  }
 };

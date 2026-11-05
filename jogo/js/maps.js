@@ -100,15 +100,16 @@ window.VC = window.VC || {};
       bg: '#0f1626',
       objects: [
         { id: 'armario', tex: 'armario', x: 1, y: 2, w: 1, solidH: 10 },
-        { id: 'bancada', tex: () => (VC.hasItem('balanca') ? 'bancada_balanca' : 'bancada'), x: 3, y: 2, w: 2, solidH: 12 },
-        { id: 'mural', tex: 'mural', x: 6, y: 1, w: 4, solid: false, depth: 1 },
+        { id: 'bancada', tex: () => (VC.hasItem('bunsen') ? 'bancada_bunsen' : VC.hasItem('balanca') ? 'bancada_balanca' : 'bancada'), x: 3, y: 2, w: 2, solidH: 12 },
+        { id: 'mural', tex: () => (VC.flag('muralOk') ? 'mural_ok' : VC.flag('muralMeio') ? 'mural_meio' : 'mural'), x: 6, y: 1, w: 4, solid: false, depth: 1 },
         { id: 'estante', tex: () => (VC.flag('estanteOk') ? 'estante_ok' : 'estante'), x: 11, y: 2, w: 2, solidH: 12 },
         { id: 'lavaolhos', tex: 'lavaolhos', x: 14, y: 2, w: 1, solidH: 10 },
         { id: 'mesa', tex: () => (VC.hasItem('carta') ? 'mesa_vazia' : 'mesa'), x: 7, y: 5, w: 2, solidH: 10 },
         { id: 'lousa', tex: 'lousa', x: 3, y: 1, w: 2, solid: false, depth: 1, cond: () => VC.state.decor.includes('lousa') },
         { id: 'licenca', tex: 'licenca', x: 13, y: 1, w: 1, solid: false, depth: 1, cond: () => VC.hasItem('licenca') },
         { id: 'planta', tex: 'planta', x: 1, y: 9, w: 1, solidH: 6, cond: () => VC.state.decor.includes('planta') },
-        { id: 'poltrona', tex: 'poltrona', x: 13, y: 8, w: 1, solidH: 8, cond: () => VC.state.decor.includes('poltrona') }
+        { id: 'poltrona', tex: 'poltrona', x: 13, y: 8, w: 1, solidH: 8, cond: () => VC.state.decor.includes('poltrona') },
+        { id: 'modelo', tex: 'modelo', x: 12, y: 5, w: 1, solidH: 6, cond: () => VC.state.decor.includes('modelo') }
       ],
       npcs: [
         { id: 'cat', sprite: 'cat', pos: () => [10, 7], face: 'down', cond: () => VC.hasItem('carta'), solid: false }

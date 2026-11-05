@@ -1,7 +1,8 @@
 /* Vale Cobalto - interface (mobile-first) */
-@font-face { font-family: 'Pixelify Sans'; src: url('../assets/fonts/pixelify-sans-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'Pixelify Sans'; src: url('../assets/fonts/pixelify-sans-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-display: swap; }
-@font-face { font-family: 'Pixelify Sans'; src: url('../assets/fonts/pixelify-sans-latin-700-normal.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+/* A letra Z fica fora da fonte em pixel: nela, Z e 2 são quase iguais (Z = número atômico). */
+@font-face { font-family: 'Pixelify Sans'; src: url('../assets/fonts/pixelify-sans-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; unicode-range: U+0000-0059, U+005B-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Pixelify Sans'; src: url('../assets/fonts/pixelify-sans-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-display: swap; unicode-range: U+0000-0059, U+005B-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Pixelify Sans'; src: url('../assets/fonts/pixelify-sans-latin-700-normal.woff2') format('woff2'); font-weight: 700; font-display: swap; unicode-range: U+0000-0059, U+005B-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 
 :root {
   --noite: #0f1626;
@@ -296,3 +297,28 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--ambar); out
   .objective { top: calc(60px + var(--safe-t)); max-width: calc(100% - 16px); }
   #toasts { top: calc(124px + var(--safe-t)); }
 }
+
+/* Capítulo 2: montar átomos */
+.atom-row { display: grid; grid-template-columns: minmax(130px, 180px) 1fr; gap: 12px; align-items: center; }
+.atom { width: 100%; height: auto; background: radial-gradient(circle, #1d2c50 0%, var(--cobalto-900) 70%); border: 3px solid var(--tinta); }
+.steppers { display: grid; gap: 8px; }
+.stepper { display: grid; grid-template-columns: 1fr 46px 3ch 46px; align-items: center; gap: 6px; padding: 4px 6px; border-left: 5px solid transparent; }
+.stepper.bad { border-left-color: var(--erro); background: rgba(224, 103, 90, 0.13); }
+.stepper.good { border-left-color: var(--ok); }
+.stepper-label { font-size: 0.95rem; }
+.btn.step { min-height: 44px; padding: 0; text-align: center; font-size: 1.3rem; }
+.step-val { text-align: center; font-size: 1.3rem; font-weight: 700; color: var(--ambar); }
+@media (max-width: 420px) { .atom-row { grid-template-columns: 1fr; } .atom { max-width: 170px; justify-self: center; } }
+
+/* Capítulo 2: teste de chama */
+.flame-wrap { position: relative; width: 96px; height: 104px; margin: 0 auto 10px; background: var(--cobalto-900); border: 3px solid var(--tinta); }
+.flame {
+  position: absolute; left: 50%; bottom: 22px; width: 40px; height: 62px; margin-left: -20px;
+  border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%;
+  background: radial-gradient(ellipse at 50% 78%, #ffffff 0%, var(--flame) 38%, transparent 72%);
+  filter: drop-shadow(0 0 10px var(--flame));
+  animation: flicker 0.35s ease-in-out infinite alternate;
+}
+.burner { position: absolute; left: 50%; bottom: 0; width: 18px; height: 24px; margin-left: -9px; background: #6b7f8a; border: 3px solid var(--tinta); }
+@keyframes flicker { from { transform: scaleY(1) translateY(0); } to { transform: scaleY(1.08) translateY(-2px) skewX(2deg); } }
+sup { font-size: 0.72em; line-height: 0; }
