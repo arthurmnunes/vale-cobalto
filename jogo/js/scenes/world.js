@@ -27,7 +27,7 @@ window.VC = window.VC || {};
       this.cameras.main.setBackgroundColor(def.bg);
 
       const map = this.make.tilemap({ data: def.grid, tileWidth: 16, tileHeight: 16 });
-      const ts = map.addTilesetImage('tiles', 'tiles', 16, 16, 0, 0);
+      const ts = map.addTilesetImage('tiles', 'tiles', 16, 16, 1, 2);
       this.layer = map.createLayer(0, ts, 0, 0);
       this.layer.setCollision(VC.art.SOLID);
       this.tilemap = map;
@@ -62,8 +62,8 @@ window.VC = window.VC || {};
         this.shadow = this.add.image(0, 0, 'sombra').setOrigin(0.5, 0.5);
         this.physics.add.collider(this.player, this.layer);
         this.physics.add.collider(this.player, this.solids);
-        cam.startFollow(this.player, true, 0.2, 0.2);
         this.applyZoom();
+        this.snapCamera(true);
         this.keys = this.input.keyboard.addKeys('W,A,S,D,UP,DOWN,LEFT,RIGHT', false);
         VC.state.map = this.mapKey;
         VC.state.pos = this.spawn;
@@ -82,11 +82,26 @@ window.VC = window.VC || {};
       const cam = this.cameras.main;
       const w = this.scale.width, h = this.scale.height;
       cam.setSize(w, h);
+      // Zoom inteiro em pixels físicos: cada pixel do jogo ocupa sempre o mesmo número de pixels da tela
       const z = Math.max(2, Math.floor(Math.min(h, w * 0.75) / 165));
       cam.setZoom(z);
+      this.zoom = z;
       const vw = w / z, vh = h / z;
       const bw = Math.max(this.mapW, vw), bh = Math.max(this.mapH, vh);
-      cam.setBounds((this.mapW - bw) / 2, (this.mapH - bh) / 2, bw, bh);
+      const q = (v) => Math.floor(v * z) / z;
+      cam.setBounds(q((this.mapW - bw) / 2), q((this.mapH - bh) / 2), bw, bh);
+      if (this.player) this.snapCamera(true);
+    }
+
+    // Câmera segue o personagem e para sempre em pixel físico inteiro
+    snapCamera(instant) {
+      const cam = this.cameras.main;
+      const z = this.zoom || cam.zoom;
+      const tx = this.player.x - cam.width / 2;
+      const ty = this.player.y - 8 - cam.height / 2;
+      this.camX = instant || this.camX === undefined ? tx : this.camX + (tx - this.camX) * 0.2;
+      this.camY = instant || this.camY === undefined ? ty : this.camY + (ty - this.camY) * 0.2;
+      cam.setScroll(Math.round(this.camX * z) / z, Math.round(this.camY * z) / z);
     }
 
     texOf(o) { return typeof o.tex === 'function' ? o.tex() : o.tex; }
@@ -292,6 +307,7 @@ window.VC = window.VC || {};
         this.player.setFrame(FRAME[this.facing]);
       }
       this.player.setDepth(this.player.y);
+      this.snapCamera(false);
       this.shadow.setPosition(this.player.x, this.player.y - 1).setDepth(this.player.y - 1);
 
       // Portas

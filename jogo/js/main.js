@@ -40,6 +40,8 @@ window.VC = window.VC || {};
     goFullscreenOnMobile();
     VC.ui.sfx('ok');
     if (!VC.load()) { newGame(); return; }
+    VC.story.migrate();
+    VC.save();
     startWorld(VC.state.map || 'praca', VC.state.pos || [5, 9], 'down');
   }
 
@@ -49,6 +51,23 @@ window.VC = window.VC || {};
     const cont = $('btnContinue');
     if (VC.hasSave()) { cont.hidden = false; cont.focus(); } else $('btnNew').focus();
   };
+
+  // Tamanho do canvas em pixels físicos da tela (evita colunas desiguais com escala 125%, 150%...)
+  function devSize() {
+    const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), 3);
+    return { dpr, w: 2 * Math.round(window.innerWidth * dpr / 2), h: 2 * Math.round(window.innerHeight * dpr / 2) };
+  }
+  function fitGame() {
+    if (!VC.game) return;
+    const s = devSize();
+    VC.dpr = s.dpr;
+    VC.game.scale.setZoom(1 / s.dpr);
+    VC.game.scale.resize(s.w, s.h);
+  }
+  VC.dpr = devSize().dpr;
+  window.addEventListener('resize', fitGame);
+  window.addEventListener('orientationchange', () => setTimeout(fitGame, 200));
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', fitGame);
 
   window.addEventListener('DOMContentLoaded', () => {
     VC.ui.init();
@@ -62,7 +81,7 @@ window.VC = window.VC || {};
       backgroundColor: '#0f1626',
       pixelArt: true,
       roundPixels: true,
-      scale: { mode: Phaser.Scale.RESIZE, width: '100%', height: '100%' },
+      scale: { mode: Phaser.Scale.NONE, width: devSize().w, height: devSize().h, zoom: 1 / devSize().dpr },
       physics: { default: 'arcade', arcade: { debug: false } },
       input: { keyboard: { capture: [] } },
       scene: [VC.BootScene, VC.WorldScene]

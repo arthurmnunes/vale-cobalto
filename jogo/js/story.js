@@ -46,9 +46,36 @@ window.VC = window.VC || {};
       } finally { ui().unlock(); }
     }
 
+    if (scene.mapKey === 'lab' && q() === 'q_ver_lab') {
+      ui().lock();
+      try {
+        await talk([
+          ['narrador', 'O Aurora está ganhando vida. As melhorias já estão no lugar.'],
+          ['narrador', '{cat} inspeciona cada novidade e parece aprovar.']
+        ]);
+        VC.setQuest('q_fim_demo');
+        await S.endOfDemo();
+      } finally { ui().unlock(); }
+    }
+
     if (scene.mapKey === 'praca' && q() === 'q_volta_prefeita' && !VC.flag('rivalMet')) {
       await rivalScene(scene);
     }
+  };
+
+  S.endOfDemo = function () {
+    const stars = Object.values(VC.state.stars).reduce((a, b) => a + b, 0);
+    return ui().chapterCard('Fim da versão atual', [
+      'Você concluiu todo o conteúdo disponível de Vale Cobalto.',
+      'Estrelas: ' + stars + ' de 9. Conceitos no Caderno: ' + VC.state.notebook.length + ' de ' + Object.keys(VC.NOTEBOOK).length + '.',
+      'O Capítulo 2, O átomo e a tabela periódica, chega na próxima atualização. Seu progresso fica salvo.',
+      'Até lá, explore a cidade e continue equipando o laboratório na barraca do Seu Bento.'
+    ]);
+  };
+
+  // Corrige jogos salvos parados no fim do Capítulo 1
+  S.migrate = function () {
+    if (VC.state.quest === 'q_fim1' && VC.state.decor.length > 0) VC.state.quest = 'q_ver_lab';
   };
 
   /* ---------- Cena do rival ---------- */
@@ -129,7 +156,7 @@ window.VC = window.VC || {};
       return;
     }
     if (q() === 'q_bancada') { await say('prefeita', 'O relatório está com você. Analise tudo na bancada do laboratório!'); return; }
-    if (q() === 'q_fim1') { await say('prefeita', 'Vale Cobalto agradece, {player}. Logo teremos novos desafios para o Aurora.'); return; }
+    if (['q_fim1', 'q_ver_lab', 'q_fim_demo'].includes(q())) { await say('prefeita', 'Vale Cobalto agradece, {player}. Logo teremos novos desafios para o Aurora.'); return; }
     await say('prefeita', 'O laboratório é todo seu. Mostre do que ele é capaz!');
   };
 
@@ -143,6 +170,10 @@ window.VC = window.VC || {};
     }
     const c = await ui().choose('bento', 'Vai levar alguma coisa?', ['Ver a barraca', 'Só passando']);
     if (c === 0) await ui().shop();
+    if (q() === 'q_fim1' && VC.state.decor.length > 0) {
+      await say('bento', 'Já mandei entregar tudo no laboratório. Passe lá para ver como ficou!');
+      VC.setQuest('q_ver_lab');
+    }
   };
 
   const LIA_HINTS = {
@@ -154,7 +185,9 @@ window.VC = window.VC || {};
     q_volta_prefeita: 'A prefeita está na frente da prefeitura, o prédio de telhado vermelho.',
     q_bancada: 'Dica: no fenômeno químico surge uma substância nova. No físico, a substância continua a mesma.',
     q_entrega: 'Corre, leva o laudo para a prefeita!',
-    q_fim1: 'Quando você for estudar átomos, me chama? Quero ser cientista também!'
+    q_fim1: 'O Seu Bento tem umas coisas ótimas para o laboratório. Dá uma olhada na barraca!',
+    q_ver_lab: 'Já foi ver como o laboratório ficou? Quero visitar depois!',
+    q_fim_demo: 'Quando você for estudar átomos, me chama? Quero ser cientista também!'
   };
 
   H.lia = async function () {

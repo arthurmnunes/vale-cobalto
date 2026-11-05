@@ -311,6 +311,22 @@ window.VC = window.VC || {};
     return c;
   };
 
+  // Copia cada tile com 1 px de borda repetida (evita frestas entre tiles com zoom)
+  art.extrude = function (src, size) {
+    const n = Math.round(src.width / size);
+    const s2 = size + 2;
+    const [c, ctx] = canvas(n * s2, s2);
+    for (let i = 0; i < n; i++) {
+      const sx = i * size, dx = i * s2 + 1;
+      ctx.drawImage(src, sx, 0, size, size, dx, 1, size, size);
+      ctx.drawImage(src, sx, 0, size, 1, dx, 0, size, 1);
+      ctx.drawImage(src, sx, size - 1, size, 1, dx, size + 1, size, 1);
+      ctx.drawImage(c, dx, 0, 1, s2, dx - 1, 0, 1, s2);
+      ctx.drawImage(c, dx + size - 1, 0, 1, s2, dx + size, 0, 1, s2);
+    }
+    return c;
+  };
+
   /* ---------------- Objetos ---------------- */
   function flask(ctx, x, y, col) {
     R(ctx, '#dbe8ee', x + 1, y, 2, 2);

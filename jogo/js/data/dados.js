@@ -45,7 +45,9 @@ VC.QUESTS = {
   q_volta_prefeita: { text: 'Volte à praça e fale com a Prefeita Célia.', target: { map: 'praca', id: 'prefeita' } },
   q_bancada: { text: 'Analise o relatório de ocorrências na bancada.', target: { map: 'lab', id: 'bancada' } },
   q_entrega: { text: 'Entregue o laudo à Prefeita Célia.', target: { map: 'praca', id: 'prefeita' } },
-  q_fim1: { text: 'Capítulo 1 concluído. Use sua verba na barraca do Seu Bento.', target: { map: 'praca', id: 'bento' } }
+  q_fim1: { text: 'Capítulo 1 concluído. Use sua verba na barraca do Seu Bento.', target: { map: 'praca', id: 'bento' } },
+  q_ver_lab: { text: 'Veja as melhorias no laboratório.', target: { map: 'lab' } },
+  q_fim_demo: { text: 'Fim do conteúdo disponível. O Capítulo 2 chega na próxima atualização.', target: null }
 };
 
 // Roteiro de capítulos (quadro de pedidos)

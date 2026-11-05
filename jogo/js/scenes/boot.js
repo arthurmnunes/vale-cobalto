@@ -11,7 +11,7 @@ window.VC = window.VC || {};
       const art = VC.art;
       const tx = this.textures;
 
-      tx.addCanvas('tiles', art.tiles());
+      tx.addCanvas('tiles', art.extrude(art.tiles(), 16));
 
       const objs = art.objects();
       Object.keys(objs).forEach((k) => tx.addCanvas(k, objs[k]));

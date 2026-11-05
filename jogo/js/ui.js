@@ -403,7 +403,7 @@ window.VC = window.VC || {};
             VC.state.coins -= it.price;
             VC.state.decor.push(it.id);
             VC.save(); ui.refreshHud(); ui.sfx('coin');
-            ui.toast(it.name + ' vai para o laboratório.');
+            ui.toast(it.name + ' foi entregue no laboratório.');
             render();
           });
           row.appendChild(b);
