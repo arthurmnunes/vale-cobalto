@@ -14,9 +14,20 @@ window.VC = window.VC || {};
     VC.game.scene.getScene('World').scene.restart({ map, spawn, face });
   }
 
+  // Celular: tela cheia e paisagem (o Android permite travar; o iPhone não)
   function goFullscreenOnMobile() {
-    if (VC.ui.isTouch && document.fullscreenEnabled && !document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+    if (!VC.ui.isTouch) return;
+    const lock = () => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) { /* sem suporte */ } };
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(lock).catch(() => {});
+    } else lock();
+  }
+
+  function rotateTip() {
+    const ios = /iPhone|iPod/.test(navigator.userAgent);
+    const standalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches;
+    if (ios && !standalone) {
+      $('rotateTip').textContent = 'Dica: no Safari, toque em Compartilhar e depois em "Adicionar à Tela de Início" para jogar em tela cheia.';
     }
   }
 
@@ -71,6 +82,7 @@ window.VC = window.VC || {};
 
   window.addEventListener('DOMContentLoaded', () => {
     VC.ui.init();
+    rotateTip();
     $('btnNew').addEventListener('click', newGame);
     $('btnContinue').addEventListener('click', continueGame);
     $('version').textContent = 'Versão ' + VC.VERSION;

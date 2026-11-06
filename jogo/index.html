@@ -4,6 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="theme-color" content="#14213d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vale Cobalto">
+  <link rel="preload" href="assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <meta name="description" content="Vale Cobalto: um RPG de Química para o Ensino Médio. Reabra o Laboratório Aurora e aprenda Química jogando.">
   <title>Vale Cobalto: O Laboratório Aurora</title>
   <link rel="manifest" href="manifest.webmanifest">
@@ -51,6 +56,12 @@
   </div>
 
   <div id="loading">Preparando o laboratório…</div>
+  <div id="rotate" role="alert">
+    <div class="rotate-phone" aria-hidden="true"></div>
+    <h2>Gire o celular</h2>
+    <p>Vale Cobalto é jogado com o celular deitado.</p>
+    <p class="small" id="rotateTip"></p>
+  </div>
   <div id="layer"></div>
   <div id="toasts" aria-live="polite"></div>
 

@@ -1,6 +1,6 @@
 # Vale Cobalto: O Laboratório Aurora
 
-RPG de Química para o Ensino Médio, jogado direto no navegador (celular, tablet ou computador).
+RPG de Química para o Ensino Médio, jogado direto no navegador (celular deitado, tablet ou computador).
 
 **Jogar:** https://arthurmnunes.github.io/vale-cobalto/
 
@@ -36,7 +36,7 @@ jogo/
   index.html          página do jogo
   css/style.css       interface
   lib/phaser.min.js   motor Phaser 3 (licença MIT)
-  assets/             fonte Pixelify Sans (licença OFL) e ícones
+  assets/             fontes Atkinson Hyperlegible e Pixelify Sans (licença OFL) e ícones
   js/art.js           pixel art gerada por código
   js/maps.js          mapas
   js/story.js         roteiro e missões

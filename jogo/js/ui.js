@@ -457,7 +457,11 @@ window.VC = window.VC || {};
     b.addEventListener('click', onNext);
     box.appendChild(b);
     box.hidden = false;
-    setTimeout(() => b.focus(), 20);
+    // traz o retorno e o botão para a área visível (telas baixas e iPhone)
+    setTimeout(() => {
+      try { b.focus({ preventScroll: true }); } catch (e) { b.focus(); }
+      b.scrollIntoView({ block: 'end', behavior: 'smooth' });
+    }, 30);
   }
 
   function sortGame(cfg, m) {
@@ -618,7 +622,7 @@ window.VC = window.VC || {};
         const a = (k / n) * Math.PI * 2 - Math.PI / 2 + i * 0.4;
         svg.appendChild(svgEl('circle', { cx: cx + Math.cos(a) * r, cy: cy + Math.sin(a) * r, r: 4, fill: '#f2b84b', stroke: '#1b1f2e', 'stroke-width': 1 }));
       }
-      const t = svgEl('text', { x: cx + r + 2, y: cy + 3, fill: '#a9b9cc', 'font-size': 9, 'font-family': 'Pixelify Sans, sans-serif' });
+      const t = svgEl('text', { x: cx + r + 2, y: cy + 3, fill: '#a9b9cc', 'font-size': 9, 'font-family': 'Atkinson Hyperlegible, sans-serif' });
       t.textContent = ['K', 'L', 'M'][i];
       svg.appendChild(t);
     });
@@ -818,7 +822,8 @@ window.VC = window.VC || {};
     stick.addEventListener('pointerup', reset);
     stick.addEventListener('pointercancel', reset);
 
-    // Evita zoom por toque duplo durante o jogo
+    // Evita zoom por toque duplo e por pinça (iPhone) durante o jogo
     document.addEventListener('dblclick', (e) => e.preventDefault(), { passive: false });
+    document.addEventListener('gesturestart', (e) => e.preventDefault(), { passive: false });
   };
 })();
