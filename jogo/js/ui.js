@@ -353,6 +353,7 @@ window.VC = window.VC || {};
       snd.textContent = 'Som: ' + (VC.state.sound ? 'ligado' : 'desligado');
     });
     if (document.fullscreenEnabled) add('Tela cheia', () => { ui.toggleFullscreen(); m.close(); });
+    if ((VC.state.maxCh || 1) > 1) add('Escolher capítulo', () => { m.close(); ui.chapterSelect(); });
     add('Como jogar', () => { m.close(); ui.help(); });
     add('Recomeçar do zero', async () => {
       m.close();
@@ -361,6 +362,34 @@ window.VC = window.VC || {};
     }, 'danger');
     m.content.appendChild(list);
     m.content.appendChild(el('p', 'muted small', 'O jogo salva sozinho a cada missão. Versão ' + (VC.VERSION || 'local') + '.'));
+  };
+
+  // Voltar (ou avançar) ao início de um capítulo já alcançado
+  ui.chapterSelect = function () {
+    const m = ui.modal({ title: 'Escolher capítulo' });
+    const cur = (VC.QUESTS[VC.state.quest] && VC.QUESTS[VC.state.quest].ch) || 1;
+    const max = Math.min(VC.state.maxCh || 1, VC.IMPLEMENTED);
+    m.content.appendChild(el('p', 'muted small', 'Volte ao início de um capítulo que você já alcançou. Os capítulos anteriores contam como concluídos.'));
+    const list = el('div', 'menu-list');
+    for (let n = 1; n <= max; n++) {
+      const c = VC.CHAPTERS.find((x) => x.n === n);
+      const b = el('button', 'btn chapter-pick');
+      b.appendChild(el('strong', '', 'Capítulo ' + n + ': ' + c.title));
+      b.appendChild(el('span', 'small', n === cur ? 'Você está aqui: recomeçar este capítulo' : c.topic));
+      b.addEventListener('click', async () => {
+        m.close();
+        const ok = await ui.choose('narrador', 'Ir para o início do Capítulo ' + n + '? O progresso a partir dele será refeito quando você jogar. Nomes, moedas e decoração comprada são mantidos.', ['Cancelar', 'Ir para o Capítulo ' + n]);
+        if (ok !== 1) return;
+        VC.state = VC.chapterStartState(n);
+        VC.save();
+        ui.refreshHud();
+        const st = VC.CHAPTER_DATA[n].start;
+        VC.game.scene.getScene('World').scene.restart({ map: 'praca', spawn: st.spawn, face: st.face });
+        setTimeout(() => ui.toast('Início do Capítulo ' + n + ': ' + c.title), 400);
+      });
+      list.appendChild(b);
+    }
+    m.content.appendChild(list);
   };
 
   ui.help = function () {

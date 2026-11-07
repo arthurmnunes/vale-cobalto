@@ -15,6 +15,7 @@ window.VC = window.VC || {};
       decor: [],
       stars: {},
       quest: 'q_prefeita',
+      maxCh: 1,
       map: 'praca',
       pos: null,
       sound: true
@@ -84,9 +85,36 @@ window.VC = window.VC || {};
 
   VC.setQuest = function (id) {
     VC.state.quest = id;
+    const ch = (VC.QUESTS[id] && VC.QUESTS[id].ch) || 1;
+    if (ch > (VC.state.maxCh || 1)) VC.state.maxCh = ch;
     VC.ui.refreshHud();
     VC.save();
     if (VC.world && VC.world.updateMarker) VC.world.updateMarker();
+  };
+
+  // Monta o estado do início do capítulo n, como se os anteriores tivessem acabado de ser concluídos.
+  // Mantém nomes, moedas, som, capítulo máximo, decoração comprada e estrelas dos capítulos anteriores.
+  VC.chapterStartState = function (n) {
+    const old = VC.state;
+    const s = VC.newState();
+    ['player', 'cat', 'rival', 'coins', 'sound'].forEach((k) => { s[k] = old[k]; });
+    s.maxCh = Math.max(old.maxCh || 1, n);
+    s.flags.controlsHint = true;
+    for (let c = 1; c < n; c++) {
+      const g = VC.CHAPTER_DATA[c].grants;
+      g.inv.forEach((i) => { if (!s.inv.includes(i)) s.inv.push(i); });
+      g.flags.forEach((f) => { s.flags[f] = true; });
+      g.notebook.forEach((id) => { if (!s.notebook.includes(id)) s.notebook.push(id); });
+      g.stars.forEach((k) => { s.stars[k] = old.stars[k] || 0; });
+    }
+    if (n > 1) { s.cat = s.cat || 'Mol'; s.rival = s.rival || 'Dante'; }
+    // decoração comprada é mantida (compras não se perdem ao trocar de capítulo)
+    s.decor = (old.decor || []).slice();
+    const st = VC.CHAPTER_DATA[n].start;
+    s.quest = st.quest;
+    s.map = 'praca';
+    s.pos = st.spawn;
+    return s;
   };
 
   // Substitui {player}, {cat}, {rival} nas falas

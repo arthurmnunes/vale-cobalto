@@ -106,6 +106,9 @@ window.VC = window.VC || {};
     if (st.flags.cap2Aviso) { st.flags.capAviso = 2; delete st.flags.cap2Aviso; }
     if (st.quest === 'q_fim_demo') { st.quest = 'q2_lia'; st.flags.capAviso = 2; }
     if (st.quest === 'q2_fim') { st.quest = 'q3_bento'; st.flags.capAviso = 3; }
+    const fromFlags = st.flags.cap2 ? 3 : st.flags.cap1 ? 2 : 1;
+    const fromQuest = (VC.QUESTS[st.quest] && VC.QUESTS[st.quest].ch) || 1;
+    st.maxCh = Math.max(st.maxCh || 1, fromFlags, fromQuest);
   };
 
   /* ---------- Cena do rival ---------- */

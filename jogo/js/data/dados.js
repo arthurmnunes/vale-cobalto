@@ -90,6 +90,37 @@ VC.QUESTS = {
   q3_fim: { ch: 3, text: 'Fim do conteúdo disponível. O Capítulo 4 chega na próxima atualização.', target: null }
 };
 
+// Início de cada capítulo e o que ele concede ao ser concluído (para "Escolher capítulo")
+VC.CHAPTER_DATA = {
+  1: {
+    start: { quest: 'q_prefeita', spawn: [5, 9], face: 'up' },
+    grants: {
+      inv: ['chave', 'carta', 'epi', 'balanca', 'licenca'],
+      flags: ['epi', 'estanteOk', 'rivalMet', 'cap1', 'bentoMet', 'liaMet'],
+      notebook: ['epi', 'fds', 'emergencia', 'substancia_simples', 'substancia_composta', 'mistura', 'alotropia', 'fenomeno_fisico', 'fenomeno_quimico', 'mudancas_estado'],
+      stars: ['epi', 'estante', 'laudo']
+    }
+  },
+  2: {
+    start: { quest: 'q2_lia', spawn: [5, 6], face: 'down' },
+    grants: {
+      inv: ['bunsen'],
+      flags: ['muralMeio', 'muralOk', 'cap2'],
+      notebook: ['particulas', 'numero_atomico', 'numero_massa', 'ions_isotopos', 'camadas', 'tabela', 'familias', 'teste_chama', 'bohr'],
+      stars: ['mural1', 'mural2', 'chama']
+    }
+  },
+  3: {
+    start: { quest: 'q3_bento', spawn: [5, 6], face: 'down' },
+    grants: {
+      inv: [],
+      flags: ['sinteseOk', 'oleo', 'fonteLimpa', 'cap3'],
+      notebook: ['octeto', 'ligacao_ionica', 'ligacao_covalente', 'ligacao_metalica', 'formula_ionica', 'polaridade', 'forcas_intermoleculares', 'semelhante', 'detergente'],
+      stars: ['amostras', 'formulas', 'fonte', 'detergente']
+    }
+  }
+};
+
 // Capítulos já implementados
 VC.IMPLEMENTED = 3;
 
