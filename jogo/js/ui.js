@@ -394,7 +394,7 @@ window.VC = window.VC || {};
         list.innerHTML = '';
         VC.SHOP.forEach((it) => {
           const row = el('div', 'shop-item');
-          const locked = it.lockedText || (it.needs && !VC.flag(it.needs) ? 'Disponível após o Capítulo 1' : '');
+          const locked = it.lockedText || (it.needs && !VC.flag(it.needs) ? 'Disponível após o Capítulo ' + it.needs.replace('cap', '') : '');
           const img = el('img', 'pixel'); img.alt = ''; img.src = VC.art.objectIcon(it.decor ? it.id : 'bancada');
           row.appendChild(img);
           const info = el('div', 'shop-info');
@@ -653,8 +653,23 @@ window.VC = window.VC || {};
       const svg = svgEl('svg', { viewBox: '0 0 180 180', class: 'atom', role: 'img', 'aria-label': 'Desenho do átomo' });
       row.appendChild(svg);
       const fields = el('div', 'steppers');
+      const ionBox = el('div', 'ion-box'); ionBox.hidden = true;
+      ionBox.setAttribute('aria-live', 'polite');
+      row.appendChild(ionBox);
       row.appendChild(fields);
       m.content.appendChild(row);
+      const chargeStr = (q) => (q > 0 ? (q === 1 ? '+' : q + '+') : (q === -1 ? '−' : (-q) + '−'));
+      function updateIons() {
+        if (!task.ions) return;
+        const formula = task.ions.map(([k, sym]) => (vals[k] > 0 ? sym + (vals[k] > 1 ? '_' + vals[k] : '') : '')).join('');
+        const total = task.ions.reduce((a, [k, , q]) => a + q * vals[k], 0);
+        ionBox.innerHTML = '';
+        const f = el('div', 'ion-formula'); ui.rich(f, formula || '—');
+        const c = el('div', 'ion-charge ' + (total === 0 && formula ? 'zero' : ''), 'Carga total: ' + (total > 0 ? '+' + total : total < 0 ? '−' + (-total) : '0'));
+        ionBox.appendChild(el('span', 'ion-cap', 'Fórmula'));
+        ionBox.appendChild(f);
+        ionBox.appendChild(c);
+      }
       const check = el('button', 'btn primary', 'Conferir');
       m.content.appendChild(check);
       const fb = el('div', 'feedback'); fb.hidden = true;
@@ -668,18 +683,24 @@ window.VC = window.VC || {};
         ui.rich(prompt, task.prompt);
         vals = {}; boxes = {};
         fields.innerHTML = '';
+        const ionMode = !!task.ions;
+        svg.style.display = ionMode ? 'none' : '';
+        ionBox.hidden = !ionMode;
+        row.classList.toggle('ion-mode', ionMode);
+        task.fields = ionMode ? task.ions.map(([k, sym, q]) => [k, 'Íons ' + sym + '^' + chargeStr(q)]) : task.fields;
+        const maxV = ionMode ? 6 : 30;
         task.fields.forEach(([key, label]) => {
           vals[key] = 0;
           const f = el('div', 'stepper');
-          f.appendChild(el('span', 'stepper-label', label));
+          f.appendChild(richEl('span', 'stepper-label', label));
           const minus = el('button', 'btn step', '−'); minus.setAttribute('aria-label', 'Diminuir ' + label);
           const out = el('output', 'step-val', '0');
           const plus = el('button', 'btn step', '+'); plus.setAttribute('aria-label', 'Aumentar ' + label);
           const set = (d) => {
-            vals[key] = Math.max(0, Math.min(30, vals[key] + d));
+            vals[key] = Math.max(0, Math.min(maxV, vals[key] + d));
             out.textContent = vals[key];
             f.classList.remove('bad', 'good');
-            drawAtom(svg, vals, task.shells);
+            if (ionMode) updateIons(); else drawAtom(svg, vals, task.shells);
           };
           minus.addEventListener('click', () => set(-1));
           plus.addEventListener('click', () => set(1));
@@ -687,7 +708,7 @@ window.VC = window.VC || {};
           fields.appendChild(f);
           boxes[key] = f;
         });
-        drawAtom(svg, vals, task.shells);
+        if (ionMode) updateIons(); else drawAtom(svg, vals, task.shells);
         const first = fields.querySelector('.step');
         if (first) first.focus();
       }
@@ -701,12 +722,19 @@ window.VC = window.VC || {};
         });
         if (!wrong) {
           ui.sfx('ok'); check.hidden = true; i++;
-          feedback(fb, true, 'Átomo correto!', task.why, show);
+          feedback(fb, true, task.ions ? 'Fórmula correta!' : 'Átomo correto!', task.why, show);
         } else {
           errors++; ui.sfx('err');
-          const hint = task.shells
+          let hint = task.shells
             ? 'Lembre: K recebe até 2 elétrons, L até 8, e o que sobrar vai para a M. A soma precisa dar o total de elétrons.'
             : 'Lembre: prótons = Z; nêutrons = A − Z; no átomo neutro, elétrons = prótons. Íon positivo perdeu elétrons.';
+          if (task.ions) {
+            const total = task.ions.reduce((a, [k, , q]) => a + q * vals[k], 0);
+            const all = task.ions.every(([k]) => vals[k] > 0);
+            hint = total === 0 && all
+              ? 'A carga zerou, mas a fórmula usa a menor proporção possível. Divida as quantidades pelo mesmo número.'
+              : 'A soma das cargas precisa dar zero. Dica: cruze as cargas (a carga de um vira a quantidade do outro).';
+          }
           feedback(fb, false, 'Ainda não. Confira os campos marcados em vermelho.', hint, () => { fb.hidden = true; check.focus(); }, 'Tentar de novo');
         }
       });

@@ -265,4 +265,135 @@ VC.CHALLENGES = {
       }
     ]
   }
+,
+
+  /* ================= Capítulo 3 ================= */
+
+  amostras: {
+    type: 'sort',
+    title: 'Amostras do Seu Bento',
+    prompt: 'Pelas propriedades, que tipo de ligação mantém cada amostra unida?',
+    bins: ['Ligação iônica', 'Ligação covalente', 'Ligação metálica'],
+    items: [
+      { label: 'Sal de cozinha (NaCl): cristais que conduzem eletricidade dissolvidos em água', bin: 0, why: 'Metal (Na) + não metal (Cl): o sódio transfere um elétron ao cloro. Dissolvidos, os íons se movem e conduzem corrente.' },
+      { label: 'Cloreto de cálcio (CaCl_2): pó branco que absorve umidade', bin: 0, why: 'Metal (Ca) + não metal (Cl): ligação iônica, com íons Ca^2+ e Cl^−.' },
+      { label: 'Óxido de magnésio (MgO): só derrete a 2.800 °C', bin: 0, why: 'A atração entre íons Mg^2+ e O^2− é tão forte que o ponto de fusão é altíssimo, típico de compostos iônicos.' },
+      { label: 'Açúcar (C_12H_22O_11): dissolve, mas não conduz eletricidade', bin: 1, why: 'Só não metais (C, H, O) compartilhando elétrons: forma moléculas, sem íons livres para conduzir corrente.' },
+      { label: 'Água destilada (H_2O)', bin: 1, why: 'Hidrogênio e oxigênio são não metais e compartilham pares de elétrons.' },
+      { label: 'Gás carbônico (CO_2)', bin: 1, why: 'Carbono e oxigênio compartilham elétrons em duas ligações duplas: O=C=O.' },
+      { label: 'Fio de cobre (Cu): brilha e conduz eletricidade sólido', bin: 2, why: 'O "mar de elétrons" livres conduz corrente mesmo no estado sólido.' },
+      { label: 'Papel-alumínio (Al): dobra sem quebrar', bin: 2, why: 'Na ligação metálica, as camadas de átomos deslizam sem se separar: o metal é maleável.' },
+      { label: 'Prego de ferro (Fe)', bin: 2, why: 'Átomos de um metal unidos por ligação metálica.' }
+    ]
+  },
+
+  ligacoes: {
+    type: 'quiz',
+    title: 'Como os átomos se ligam',
+    questions: [
+      {
+        q: 'Por que os átomos fazem ligações químicas?',
+        options: ['Para ficar mais pesados', 'Para ficar com a última camada completa, como os gases nobres', 'Para perder todos os elétrons'],
+        answer: 1,
+        why: 'Regra do octeto: com 8 elétrons na última camada (2, no caso do hidrogênio), o átomo fica estável.'
+      },
+      {
+        q: 'Na ligação iônica entre sódio e cloro, o que acontece com o elétron?',
+        options: ['É transferido do sódio para o cloro', 'É compartilhado pelos dois', 'Fica livre entre vários átomos'],
+        answer: 0,
+        why: 'O sódio (2-8-1) perde 1 elétron e vira Na^+; o cloro (2-8-7) ganha e vira Cl^−. Os íons opostos se atraem.'
+      },
+      {
+        q: 'Cada oxigênio tem 6 elétrons na valência. Na molécula de O_2, a ligação é:',
+        options: ['Covalente simples', 'Iônica', 'Covalente dupla'],
+        answer: 2,
+        why: 'Cada oxigênio precisa de mais 2 elétrons, então os dois compartilham 2 pares: O=O.'
+      },
+      {
+        q: 'Por que os metais conduzem eletricidade?',
+        options: ['Porque são frios', 'Porque têm elétrons livres que se movem pelo metal', 'Porque têm muitos nêutrons'],
+        answer: 1,
+        why: 'Na ligação metálica, os elétrons de valência formam um "mar de elétrons" que se desloca facilmente.'
+      }
+    ]
+  },
+
+  formulas: {
+    type: 'numbers',
+    title: 'Bancada de síntese: fórmulas',
+    tasks: [
+      {
+        prompt: 'Rótulo 1: junte íons Na^+ e Cl^− até a carga total ser zero, na menor proporção.',
+        ions: [['a', 'Na', 1], ['b', 'Cl', -1]],
+        answer: { a: 1, b: 1 },
+        why: '+1 − 1 = 0. Um de cada: NaCl, o sal de cozinha.'
+      },
+      {
+        prompt: 'Rótulo 2: íons Ca^2+ e Cl^−.',
+        ions: [['a', 'Ca', 2], ['b', 'Cl', -1]],
+        answer: { a: 1, b: 2 },
+        why: 'Uma carga +2 precisa de duas cargas −1: CaCl_2, o cloreto de cálcio.'
+      },
+      {
+        prompt: 'Rótulo 3: íons Mg^2+ e O^2−.',
+        ions: [['a', 'Mg', 2], ['b', 'O', -2]],
+        answer: { a: 1, b: 1 },
+        why: '+2 − 2 = 0: MgO, o óxido de magnésio. Usar 2 de cada também zera, mas a fórmula usa a menor proporção.'
+      },
+      {
+        prompt: 'Rótulo 4: íons Al^3+ e O^2−. Este é mais difícil!',
+        ions: [['a', 'Al', 3], ['b', 'O', -2]],
+        answer: { a: 2, b: 3 },
+        why: '2 × (+3) = +6 e 3 × (−2) = −6. Atalho: cruzar as cargas. Al_2O_3 é a alumina, presente no rubi e na safira.'
+      }
+    ]
+  },
+
+  polaridade: {
+    type: 'quiz',
+    title: 'Óleo na fonte',
+    questions: [
+      {
+        q: 'Por que a água e o óleo da fonte não se misturam?',
+        options: ['A água é polar e o óleo é apolar', 'O óleo é mais pesado que a água', 'A água está fria demais'],
+        answer: 0,
+        why: 'Moléculas polares se atraem entre si e "expulsam" as apolares. O óleo fica por cima porque é menos denso.'
+      },
+      {
+        q: 'Na molécula de água, o oxigênio:',
+        options: ['Perde elétrons para o hidrogênio', 'Atrai mais os elétrons e fica com carga parcial negativa', 'Não participa das ligações'],
+        answer: 1,
+        why: 'O oxigênio é mais eletronegativo que o hidrogênio. Como a molécula é angular, um lado fica parcialmente negativo e o outro positivo.'
+      },
+      {
+        q: 'As moléculas de água se atraem fortemente umas às outras por:',
+        options: ['Ligações iônicas', 'Ligações de hidrogênio', 'Ligações metálicas'],
+        answer: 1,
+        why: 'É a força intermolecular mais forte. Explica por que a água ferve a 100 °C e por que alguns insetos andam sobre ela.'
+      },
+      {
+        q: 'Como o detergente remove o óleo?',
+        options: ['Transforma o óleo em gás', 'Deixa a água mais pesada que o óleo', 'Tem uma ponta polar, que se liga à água, e uma cauda apolar, que se liga ao óleo'],
+        answer: 2,
+        why: 'As caudas apolares envolvem as gotas de óleo e as pontas polares ficam para fora, na água, que leva tudo embora.'
+      }
+    ]
+  },
+
+  solubilidade: {
+    type: 'sort',
+    title: 'Bancada de síntese: detergente',
+    prompt: 'Semelhante dissolve semelhante: onde cada substância se dissolve melhor?',
+    bins: ['Na água (polar)', 'No óleo (apolar)'],
+    items: [
+      { label: 'Sal de cozinha', bin: 0, why: 'Composto iônico: os íons são atraídos pelos polos da água.' },
+      { label: 'Açúcar', bin: 0, why: 'Molécula polar, com vários grupos O–H que fazem ligações de hidrogênio com a água.' },
+      { label: 'Álcool etílico', bin: 0, why: 'Tem um grupo O–H polar e se mistura com a água em qualquer proporção.' },
+      { label: 'Vinagre (ácido acético)', bin: 0, why: 'Molécula polar: dissolve bem na água.' },
+      { label: 'Gasolina', bin: 1, why: 'Mistura de hidrocarbonetos, apolares: não se mistura com a água.' },
+      { label: 'Parafina de vela', bin: 1, why: 'Hidrocarboneto sólido e apolar.' },
+      { label: 'Iodo sólido (I_2)', bin: 1, why: 'Dois átomos iguais: molécula apolar, quase não dissolve na água.' },
+      { label: 'Manteiga', bin: 1, why: 'Gorduras são apolares, por isso a louça engordurada precisa de detergente.' }
+    ]
+  }
 };

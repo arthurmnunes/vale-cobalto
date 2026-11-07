@@ -76,7 +76,7 @@ window.VC = window.VC || {};
       grid: buildPraca(),
       bg: '#1f4a2a',
       objects: [
-        { id: 'fonte', tex: 'fonte', x: 14, y: 10, w: 2, solidH: 18 },
+        { id: 'fonte', tex: () => (VC.flag('oleo') && !VC.flag('fonteLimpa') ? 'fonte_oleo' : 'fonte'), x: 14, y: 10, w: 2, solidH: 18 },
         { id: 'quadro', tex: 'quadro', x: 11, y: 8, w: 1, solidH: 8 },
         { id: 'placa_lab', tex: 'placa', x: 7, y: 5, w: 1, solidH: 6 },
         { id: 'barraca', tex: 'barraca', x: 9, y: 13, w: 2, solidH: 10, talk: 'bento' }
@@ -109,7 +109,9 @@ window.VC = window.VC || {};
         { id: 'licenca', tex: 'licenca', x: 13, y: 1, w: 1, solid: false, depth: 1, cond: () => VC.hasItem('licenca') },
         { id: 'planta', tex: 'planta', x: 1, y: 9, w: 1, solidH: 6, cond: () => VC.state.decor.includes('planta') },
         { id: 'poltrona', tex: 'poltrona', x: 13, y: 8, w: 1, solidH: 8, cond: () => VC.state.decor.includes('poltrona') },
-        { id: 'modelo', tex: 'modelo', x: 12, y: 5, w: 1, solidH: 6, cond: () => VC.state.decor.includes('modelo') }
+        { id: 'modelo', tex: 'modelo', x: 12, y: 5, w: 1, solidH: 6, cond: () => VC.state.decor.includes('modelo') },
+        { id: 'sintese', tex: 'sintese', x: 2, y: 6, w: 2, solidH: 12, cond: () => VC.flag('sinteseOk') },
+        { id: 'tubos', tex: 'tubos', x: 5, y: 2, w: 1, solidH: 6, cond: () => VC.state.decor.includes('tubos') }
       ],
       npcs: [
         { id: 'cat', sprite: 'cat', pos: () => [10, 7], face: 'down', cond: () => VC.hasItem('carta'), solid: false }

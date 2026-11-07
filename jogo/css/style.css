@@ -374,3 +374,12 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--ambar); out
 .burner { position: absolute; left: 50%; bottom: 0; width: 18px; height: 24px; margin-left: -9px; background: #6b7f8a; border: 3px solid var(--tinta); }
 @keyframes flicker { from { transform: scaleY(1) translateY(0); } to { transform: scaleY(1.08) translateY(-2px) skewX(2deg); } }
 sup { font-size: 0.72em; line-height: 0; }
+
+/* Capítulo 3: fórmulas iônicas */
+.atom-row.ion-mode { grid-template-columns: minmax(120px, 170px) 1fr; }
+.ion-box { display: grid; gap: 4px; align-content: center; justify-items: center; padding: 10px; background: var(--cobalto-900); border: 3px solid var(--tinta); min-height: 120px; }
+.ion-cap { font-size: 0.8rem; color: var(--suave); }
+.ion-formula { font-size: 2rem; font-weight: 700; color: var(--vidro); }
+.ion-charge { font-size: 0.95rem; color: var(--erro); }
+.ion-charge.zero { color: var(--ok); }
+@media (max-width: 420px) { .atom-row.ion-mode { grid-template-columns: 1fr; } }

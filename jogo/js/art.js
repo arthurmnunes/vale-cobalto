@@ -430,12 +430,39 @@ window.VC = window.VC || {};
     return c;
   };
 
-  O.fonte = () => {
+  function fonte(oil) {
     const [c, ctx] = canvas(32, 32);
     R(ctx, '#1b1f2e', 2, 12, 28, 18); R(ctx, '#9aa3a8', 3, 13, 26, 16); R(ctx, '#7f888d', 3, 26, 26, 3);
     R(ctx, '#56705a', 5, 15, 22, 9); R(ctx, '#6b866d', 7, 17, 6, 1); R(ctx, '#6b866d', 16, 20, 7, 1);
     R(ctx, '#1b1f2e', 13, 2, 6, 15); R(ctx, '#aab3b8', 14, 3, 4, 13); R(ctx, '#c9cfd2', 14, 3, 1, 13);
     R(ctx, '#7b9a80', 12, 1, 8, 2);
+    if (oil) {
+      R(ctx, '#2b2a24', 5, 15, 22, 9);
+      R(ctx, '#9b7bd0', 7, 17, 5, 1); R(ctx, '#4fb3a0', 12, 17, 4, 1); R(ctx, '#f2b84b', 16, 17, 3, 1);
+      R(ctx, '#e0675a', 9, 21, 4, 1); R(ctx, '#6fa8dc', 13, 21, 5, 1); R(ctx, '#9b7bd0', 19, 20, 4, 1);
+      R(ctx, '#2b2a24', 3, 26, 5, 3); R(ctx, '#2b2a24', 24, 27, 4, 2);
+    }
+    return c;
+  }
+  O.fonte = () => fonte(false);
+  O.fonte_oleo = () => fonte(true);
+
+  O.sintese = () => {
+    const [c, ctx] = canvas(32, 16);
+    R(ctx, '#1b1f2e', 0, 5, 32, 11); R(ctx, '#3d2716', 1, 5, 30, 3); R(ctx, '#6b4a2a', 1, 8, 30, 7);
+    R(ctx, '#55687a', 15, 8, 1, 7);
+    // modelo de molécula (água) e frascos
+    R(ctx, '#e0675a', 5, 1, 4, 4); R(ctx, '#f4f7f8', 2, 3, 3, 3); R(ctx, '#f4f7f8', 9, 3, 3, 3); R(ctx, '#1b1f2e', 4, 3, 1, 1); R(ctx, '#1b1f2e', 9, 3, 1, 1);
+    flask(ctx, 17, 0, '#9b7bd0'); flask(ctx, 23, 1, '#4fb3a0');
+    return c;
+  };
+
+  O.tubos = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#1b1f2e', 1, 9, 14, 6); R(ctx, '#8f6036', 2, 10, 12, 4);
+    [['#e0675a', 3], ['#f2b84b', 6], ['#4fb3a0', 9], ['#9b7bd0', 12]].forEach(([col, x]) => {
+      R(ctx, '#dbe8ee', x, 2, 2, 9); R(ctx, col, x, 6, 2, 4);
+    });
     return c;
   };
 
@@ -546,6 +573,8 @@ window.VC = window.VC || {};
     licenca: ['................', '..kkkkkkkkkkkk..', '..kaaaaaaaaaak..', '..kawwwwwwwwak..', '..kawbbbbbbwak..', '..kawwwwwwwwak..', '..kawbbbwrrwak..', '..kawwwwwrrwak..', '..kaaaaaaaaaak..', '..kkkkkkkkkkkk..'],
     bunsen: ['................', '.......aa.......', '......agga......', '......agga......', '.......kk.......', '.......ks.......', '.......ks.......', '.......ks.......', '......kssk......', '....kkkkkkkk....', '....ksssssssk...', '....kkkkkkkk....'],
     receita: ['................', '...kkkkkkkkk....', '...kwwwwwwwkk...', '...kwbbbbwwwk...', '...kwwwwwwwwk...', '...kwrwbbbbwk...', '...kwwwwwwwwk...', '...kwgwbbbbwk...', '...kwwwwwwwwk...', '...kwawbbbwwk...', '...kkkkkkkkkk...'],
+    amostras: ['................', '................', '..kk..kk..kk....', '..kk..kk..kk....', '.kwwkkwwkkwwk...', '.kwwkkwwkkwwk...', '.kaakkgwkkrrk...', '.kaakkggkkrrk...', '.kaakkggkkrrk...', '..kk..kk..kk....'],
+    detergente: ['................', '......kk........', '.....kggk.......', '.....kggk.......', '....kggggk......', '...kggwggk......', '...kgwwggk......', '...kgggggk......', '...kggbggk......', '...kgbbbgk......', '...kgggggk......', '....kkkkk.......'],
     moeda: ['................', '................', '.....kkkkkk.....', '....kaaaaaak....', '...kaallaaaak...', '...kaalaakaak...', '...kaaaakaaak...', '...kaaakaaaak...', '...kaaaaaaaak...', '....kaaaaaak....', '.....kkkkkk.....']
   };
   const ICON_PAL = { k: '#1b1f2e', a: '#f2b84b', w: '#f4f7f8', r: '#e0675a', b: '#2a4c8f', l: '#c8e3ec', g: '#4fb3a0', s: '#c9d3d8' };

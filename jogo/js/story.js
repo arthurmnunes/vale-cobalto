@@ -30,15 +30,11 @@ window.VC = window.VC || {};
     await wait(320);
     if (scene !== VC.world || !scene.ready) return;
 
-    if (VC.flag('cap2Aviso')) {
-      VC.flag('cap2Aviso', false);
+    const aviso = VC.state.flags.capAviso || (VC.state.flags.cap2Aviso ? 2 : 0);
+    if (aviso) {
+      delete VC.state.flags.capAviso; delete VC.state.flags.cap2Aviso; VC.save();
       ui().lock();
-      try {
-        await ui().chapterCard('Capítulo 2: O átomo e a tabela periódica', [
-          'Novo capítulo liberado! Vale Cobalto se prepara para o Festival das Luzes.',
-          'A Lia tem novidades. Procure por ela na praça.'
-        ]);
-      } finally { ui().unlock(); }
+      try { await S.chapterIntro(aviso, true); } finally { ui().unlock(); }
     }
 
     if (scene.mapKey === 'praca' && !VC.flag('controlsHint')) {
@@ -73,7 +69,7 @@ window.VC = window.VC || {};
     }
   };
 
-  const starsOf = (keys) => keys.reduce((a, k) => a + (VC.state.stars[k] || 0), 0);
+  const starsOf = (keys) => keys.reduce((a, k) => a + (VC.state.stars[k] || 0), 0) + ' de ' + keys.length * 3;
 
   S.endOfDemo = function () {
     const next = VC.CHAPTERS.find((c) => c.n === VC.IMPLEMENTED + 1);
@@ -85,21 +81,31 @@ window.VC = window.VC || {};
     ]);
   };
 
-  S.startChapter2 = async function () {
-    VC.setQuest('q2_lia');
-    await ui().chapterCard('Capítulo 2: O átomo e a tabela periódica', [
-      'Vale Cobalto se prepara para o Festival das Luzes.',
-      'A Lia tem novidades. Procure por ela na praça.'
-    ]);
+  const CHAPTER_START = {
+    2: { quest: 'q2_lia', lines: ['Vale Cobalto se prepara para o Festival das Luzes.', 'A Lia tem novidades. Procure por ela na praça.'] },
+    3: { quest: 'q3_bento', lines: ['Depois do festival, a cidade volta à rotina. Mas o Seu Bento está com um problema na barraca.', 'Vá falar com ele na praça.'] }
   };
+
+  S.chapterIntro = function (n, isNew) {
+    const ch = VC.CHAPTERS.find((c) => c.n === n);
+    const lines = CHAPTER_START[n].lines.slice();
+    if (isNew) lines.unshift('Novo capítulo liberado!');
+    return ui().chapterCard('Capítulo ' + n + ': ' + ch.title, lines);
+  };
+
+  S.startChapter = async function (n) {
+    VC.setQuest(CHAPTER_START[n].quest);
+    await S.chapterIntro(n, false);
+  };
+  S.startChapter2 = () => S.startChapter(2);
 
   // Corrige jogos salvos de versões anteriores
   S.migrate = function () {
-    if (VC.state.quest === 'q_fim1' && VC.state.decor.length > 0) VC.state.quest = 'q_ver_lab';
-    if (VC.state.quest === 'q_fim_demo') {
-      VC.state.quest = 'q2_lia';
-      VC.state.flags.cap2Aviso = true;
-    }
+    const st = VC.state;
+    if (st.quest === 'q_fim1' && st.decor.length > 0) st.quest = 'q_ver_lab';
+    if (st.flags.cap2Aviso) { st.flags.capAviso = 2; delete st.flags.cap2Aviso; }
+    if (st.quest === 'q_fim_demo') { st.quest = 'q2_lia'; st.flags.capAviso = 2; }
+    if (st.quest === 'q2_fim') { st.quest = 'q3_bento'; st.flags.capAviso = 3; }
   };
 
   /* ---------- Cena do rival ---------- */
@@ -166,8 +172,43 @@ window.VC = window.VC || {};
     VC.setQuest('q2_fim');
     await ui().chapterCard('Capítulo 2 concluído', [
       'O Festival das Luzes foi um sucesso, e o mural da Profa. Ítala voltou a brilhar.',
-      'Estrelas: ' + starsOf(['mural1', 'mural2', 'chama']) + ' de 9. A prefeitura pagou 120 moedas pelos fogos.',
+      'Estrelas: ' + starsOf(['mural1', 'mural2', 'chama']) + '. A prefeitura pagou 120 moedas pelos fogos.',
       'O Grupo Vex saiu da praça sem contrato.'
+    ]);
+    await S.startChapter(3);
+  }
+
+  /* ---------- Capítulo 3 ---------- */
+  async function oilScene(scene) {
+    await say('narrador', 'Um caminhão do Grupo Vex atravessa a praça... e algo escuro escorre para dentro da fonte.');
+    VC.flag('oleo', true);
+    scene.refreshObject('fonte');
+    scene.scripted = true;
+    try {
+      scene.addNpc({ id: 'rival', sprite: 'rival', pos: () => [20, 12], face: 'left', solid: false });
+      await scene.walkNpc('rival', [16, 12], 60);
+      await say('rival', 'Ops. Um vazamentozinho de óleo do nosso caminhão. Nada que um pouco de água não resolva.');
+      const c = await ui().choose('player', 'Responder:', ['Água sozinha não tira óleo, {rival}.', 'O Grupo Vex vai limpar isso?']);
+      await say('rival', c === 0 ? 'Então mostre o que sabe, gênio.' : 'O Grupo Vex tem coisas mais importantes a fazer.');
+      await scene.walkNpc('rival', [20, 12], 70);
+      scene.removeNpc('rival');
+    } finally { scene.scripted = false; }
+    VC.setQuest('q3_fonte');
+  }
+
+  async function finalCap3() {
+    await talk([
+      ['prefeita', 'A fonte está limpa! E sem jogar mais química perigosa na água. Como você conseguiu?'],
+      ['player', 'Detergente: uma ponta gosta de água, a outra gosta de óleo. Ele junta os dois e a água leva tudo.'],
+      ['prefeita', 'Genial. E o Grupo Vex vai pagar uma multa pelo vazamento. Parte dela fica com o Aurora.']
+    ]);
+    VC.addCoins(120);
+    VC.flag('cap3', true);
+    VC.setQuest('q3_fim');
+    await ui().chapterCard('Capítulo 3 concluído', [
+      'As amostras do Seu Bento ganharam rótulos novos e a fonte da praça está limpa.',
+      'Estrelas: ' + starsOf(['amostras', 'formulas', 'fonte', 'detergente']) + '. A multa do Grupo Vex rendeu 120 moedas ao Aurora.',
+      'A bancada de síntese da Profa. Ítala voltou a funcionar.'
     ]);
     await S.endOfDemo();
   }
@@ -216,13 +257,17 @@ window.VC = window.VC || {};
       const stars = starsOf(['epi', 'estante', 'laudo']);
       await ui().chapterCard('Capítulo 1 concluído', [
         'Você reabriu o Laboratório Aurora e conquistou a licença provisória.',
-        'Estrelas: ' + stars + ' de 9. Conceitos no Caderno: ' + VC.state.notebook.length + '.',
+        'Estrelas: ' + stars + '. Conceitos no Caderno: ' + VC.state.notebook.length + '.',
         'Próximo: Capítulo 2, O átomo e a tabela periódica.',
         'Enquanto isso, use sua verba na barraca do Seu Bento para equipar o laboratório.'
       ]);
       return;
     }
     if (q() === 'q_bancada') { await say('prefeita', 'O relatório está com você. Analise tudo na bancada do laboratório!'); return; }
+    if (q() === 'q3_prefeita') { await finalCap3(); return; }
+    if (q() === 'q3_fim') { await say('prefeita', 'A fonte nunca brilhou tanto, {player}. E o Grupo Vex aprendeu a lição.'); return; }
+    if (['q3_fonte', 'q3_detergente', 'q3_limpar'].includes(q())) { await say('prefeita', 'Que desastre na fonte! Conto com você para limpar isso, {player}.'); return; }
+    if (q().indexOf('q3_') === 0) { await say('prefeita', 'O Seu Bento está precisando de você. Coitado, a barraca virou uma bagunça.'); return; }
     if (q() === 'q2_entrega') { await festivalScene(scene); return; }
     if (q() === 'q2_fim') { await say('prefeita', 'Até hoje a cidade fala dos fogos do festival, {player}. Que espetáculo!'); return; }
     if (q().indexOf('q2_') === 0) { await say('prefeita', 'O Festival das Luzes está chegando! A Lia me contou que você está ajudando.'); return; }
@@ -230,7 +275,28 @@ window.VC = window.VC || {};
     await say('prefeita', 'O laboratório é todo seu. Mostre do que ele é capaz!');
   };
 
-  H.bento = async function () {
+  H.bento = async function (scene) {
+    if (q() === 'q3_bento') {
+      await talk([
+        ['bento', '{player}, que bom que você veio! Uma caixa caiu da carroça e os frascos perderam os rótulos.'],
+        ['bento', 'Tem sal, açúcar, metais... Se eu vender a coisa errada, é um perigo.'],
+        ['bento', 'Leve as amostras para o laboratório. Você descobre o que é cada uma?']
+      ]);
+      VC.addItem('amostras');
+      VC.setQuest('q3_amostras');
+      return;
+    }
+    if (q() === 'q3_rotulos') {
+      await talk([
+        ['bento', 'Rótulos novos, com fórmula e tudo! NaCl, CaCl_2, MgO, Al_2O_3... Ficou profissional.'],
+        ['bento', 'Tome 40 moedas. E pode levar a estante de tubos de ensaio quando quiser, já está à venda.']
+      ]);
+      VC.removeItem('rotulos');
+      VC.addCoins(40);
+      ui().toast('Missão concluída: O estoque misturado');
+      await oilScene(scene);
+      return;
+    }
     if (q() === 'q2_bento') {
       await talk([
         ['bento', 'Fogos para o festival? Então você vai precisar de uma chama forte e limpa.'],
@@ -274,7 +340,16 @@ window.VC = window.VC || {};
     q2_bento: 'Para fazer fogos, precisa de chama forte. O Seu Bento deve ter alguma coisa.',
     q2_chama: 'Teste de chama! Cada metal deixa a chama de uma cor. Quero ver!',
     q2_entrega: 'Corre, leva a receita dos fogos para a prefeita!',
-    q2_fim: 'Tirei 10 na prova do átomo! Obrigada, {player}. Quando tiver ligações químicas, me chama!'
+    q2_fim: 'Tirei 10 na prova do átomo! Obrigada, {player}. Quando tiver ligações químicas, me chama!',
+    q3_bento: 'Tirei 10 na prova do átomo! O Seu Bento estava procurando você, parecia preocupado.',
+    q3_amostras: 'Dica: metal com não metal costuma ser ligação iônica; só não metais, covalente; só metal, metálica.',
+    q3_formulas: 'Fórmula de íons é como uma balança: as cargas positivas e negativas têm que se anular.',
+    q3_rotulos: 'Os rótulos ficaram prontos? Leva para o Seu Bento!',
+    q3_fonte: 'Que nojo, óleo na fonte! Por que será que não mistura com a água?',
+    q3_detergente: 'Lá em casa a gente tira gordura da panela com detergente. Será que funciona na fonte?',
+    q3_limpar: 'Vai lá limpar a fonte! Eu fico de olho.',
+    q3_prefeita: 'A fonte ficou ótima! Conta para a prefeita!',
+    q3_fim: 'Ligações químicas são tipo amizades: uns dão, uns dividem, uns compartilham com todo mundo!'
   };
 
   H.lia = async function () {
@@ -304,7 +379,10 @@ window.VC = window.VC || {};
     q2_mural: '{cat} encara o mural apagado, com as orelhas em pé.',
     q2_familias: '{cat} dá uma patada no canto do mural onde ficam os gases nobres.',
     q2_chama: '{cat} se afasta da bancada. Gatos e chamas não combinam.',
-    q2_fim: '{cat} ainda está assustado com os fogos de ontem.'
+    q2_fim: '{cat} ainda está assustado com os fogos de ontem.',
+    q3_amostras: '{cat} cheira um frasco de sal e torce o nariz.',
+    q3_formulas: '{cat} sentou bem em cima das anotações da bancada de síntese.',
+    q3_detergente: '{cat} observa as bolhas de sabão com muita desconfiança.'
   };
 
   H.cat = async function () {
@@ -369,6 +447,21 @@ window.VC = window.VC || {};
   };
 
   H.bancada = async function (scene) {
+    if (q() === 'q3_amostras') {
+      await say('narrador', 'Você testa cada amostra: brilho, dureza, ponto de fusão e se conduz eletricidade.');
+      const r = await ui().challenge(['amostras', 'ligacoes'], 'Amostras identificadas');
+      VC.state.stars.amostras = r.stars;
+      VC.learn(['octeto', 'ligacao_ionica', 'ligacao_covalente', 'ligacao_metalica']);
+      VC.addCoins(15 + 10 * r.stars);
+      await talk([
+        ['narrador', 'Para escrever as fórmulas dos rótulos, você precisa de mais espaço.'],
+        ['narrador', 'Debaixo de uma lona no canto, você encontra a bancada de síntese da Profa. Ítala, com modelos de moléculas.']
+      ]);
+      VC.flag('sinteseOk', true);
+      scene.refreshObject('sintese');
+      VC.setQuest('q3_formulas');
+      return;
+    }
     if (q() === 'q2_chama') {
       await say('narrador', 'Bico de Bunsen aceso, chama azul e limpa. Um sal de cada vez na alça de platina.');
       const r = await ui().challenge('chama', 'Teste de chama concluído');
@@ -434,9 +527,63 @@ window.VC = window.VC || {};
   H.lousa = async function () { await say('narrador', 'Você rabisca na lousa: H_2O, CO_2, NaCl, O_3. Ficou bonito.'); };
   H.licenca = async function () { await say('narrador', 'Licença provisória de funcionamento. O Aurora está oficialmente de volta!'); };
   H.planta = async function () { await say('narrador', 'A samambaia gosta da luz do laboratório. Plantas fazem fotossíntese: um fenômeno químico!'); };
+  H.sintese = async function () {
+    if (q() === 'q3_formulas') {
+      await say('narrador', 'Cada rótulo precisa da fórmula certa: a soma das cargas dos íons tem que dar zero.');
+      const r = await ui().challenge('formulas', 'Rótulos prontos');
+      VC.state.stars.formulas = r.stars;
+      VC.learn('formula_ionica');
+      VC.addCoins(15 + 10 * r.stars);
+      VC.removeItem('amostras');
+      VC.addItem('rotulos');
+      VC.setQuest('q3_rotulos');
+      return;
+    }
+    if (q() === 'q3_detergente') {
+      await say('narrador', 'Para fazer o detergente certo, primeiro você testa o que se dissolve na água e o que se dissolve no óleo.');
+      const r = await ui().challenge('solubilidade', 'Detergente pronto');
+      VC.state.stars.detergente = r.stars;
+      VC.learn(['semelhante', 'detergente']);
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'Uma molécula com ponta polar e cauda apolar: o detergente está pronto.');
+      VC.addItem('detergente');
+      VC.setQuest('q3_limpar');
+      return;
+    }
+    await say('narrador', 'A bancada de síntese da Profa. Ítala: modelos de moléculas, frascos e anotações nas margens.');
+  };
+
+  H.tubos = async function () { await say('narrador', 'Tubos de ensaio coloridos, prontos para pequenas reações.'); };
+
   H.modelo = async function () { await say('narrador', 'Um modelo atômico de Bohr: núcleo no centro e elétrons girando em camadas.'); };
   H.poltrona = async function () { await say('narrador', 'Uma poltrona confortável. {cat} já decidiu que ela é dele.'); };
-  H.fonte = async function () { await say('narrador', 'A água da fonte vem do rio. Está turva e tem um leve cheiro de ovo podre.'); };
+  H.fonte = async function (scene) {
+    if (q() === 'q3_fonte') {
+      await say('narrador', 'Uma mancha escura boia sobre a água, com reflexos coloridos. Embaixo dela, a água continua do mesmo jeito.');
+      const r = await ui().challenge('polaridade', 'Problema entendido');
+      VC.state.stars.fonte = r.stars;
+      VC.learn(['polaridade', 'forcas_intermoleculares']);
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'Água sozinha não resolve. Você precisa de uma molécula que goste das duas coisas: um detergente.');
+      VC.setQuest('q3_detergente');
+      return;
+    }
+    if (q() === 'q3_limpar') {
+      await talk([
+        ['narrador', 'Você espalha o detergente e mexe a água com cuidado.'],
+        ['narrador', 'As caudas apolares envolvem as gotas de óleo, e a água da fonte leva tudo para o filtro.']
+      ]);
+      VC.removeItem('detergente');
+      VC.flag('fonteLimpa', true);
+      scene.refreshObject('fonte');
+      ui().sfx('win');
+      VC.setQuest('q3_prefeita');
+      return;
+    }
+    if (VC.flag('oleo') && !VC.flag('fonteLimpa')) { await say('narrador', 'Uma mancha de óleo boia na fonte, com reflexos coloridos.'); return; }
+    if (VC.flag('fonteLimpa')) { await say('narrador', 'Sem óleo, a fonte voltou ao normal. A água ainda vem turva do rio, mas isso é um problema para outro dia.'); return; }
+    await say('narrador', 'A água da fonte vem do rio. Está turva e tem um leve cheiro de ovo podre.');
+  };
   H.placa_lab = async function () { await say('narrador', 'Laboratório Aurora. Fundado pela Profa. Ítala Ferraz.'); };
   H.quadro = async function () { await ui().roadmap(); };
 

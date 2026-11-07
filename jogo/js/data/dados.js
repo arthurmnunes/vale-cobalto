@@ -11,7 +11,10 @@ VC.ITEMS = {
   laudo: { name: 'Laudo técnico', icon: 'laudo', desc: 'Sua análise dos fenômenos da cidade. Entregue à Prefeita Célia.' },
   licenca: { name: 'Licença provisória', icon: 'licenca', desc: 'Autoriza o funcionamento do Laboratório Aurora. Pendurada na parede do laboratório.' },
   bunsen: { name: 'Bico de Bunsen', icon: 'bunsen', desc: 'Queimador a gás com chama forte e regulável. Presente do Seu Bento para o festival.' },
-  receita: { name: 'Receita dos fogos', icon: 'receita', desc: 'Que sal produz cada cor: sódio, cobre, estrôncio e potássio. Entregue à Prefeita Célia.' }
+  receita: { name: 'Receita dos fogos', icon: 'receita', desc: 'Que sal produz cada cor: sódio, cobre, estrôncio e potássio. Entregue à Prefeita Célia.' },
+  amostras: { name: 'Amostras sem rótulo', icon: 'amostras', desc: 'Frascos do Seu Bento que perderam os rótulos. Identifique-os na bancada.' },
+  rotulos: { name: 'Rótulos novos', icon: 'relatorio', desc: 'Fórmulas corretas para os frascos do Seu Bento: NaCl, CaCl_2, MgO e Al_2O_3.' },
+  detergente: { name: 'Detergente', icon: 'detergente', desc: 'Molécula com ponta polar e cauda apolar: une a água ao óleo. Para limpar a fonte.' }
 };
 
 // Loja do Seu Bento
@@ -20,7 +23,8 @@ VC.SHOP = [
   { id: 'poltrona', name: 'Poltrona de leitura', price: 45, desc: 'Para estudar com conforto.', decor: true },
   { id: 'lousa', name: 'Lousa branca', price: 60, desc: 'Para rabiscar fórmulas na parede.', decor: true },
   { id: 'modelo', name: 'Modelo atômico', price: 50, desc: 'Um átomo de Bohr com órbitas de arame.', decor: true, needs: 'cap1' },
-  { id: 'tubos', name: 'Tubos de ensaio', price: 40, desc: 'Para reações em pequena escala.', lockedText: 'Disponível no Capítulo 3' }
+  { id: 'tubos', name: 'Estante de tubos de ensaio', price: 40, desc: 'Tubos coloridos para reações em pequena escala.', decor: true, needs: 'cap2' },
+  { id: 'phmetro', name: 'Medidor de pH', price: 90, desc: 'Mede a acidez de soluções.', lockedText: 'Disponível no Capítulo 4' }
 ];
 
 // Caderno do Laboratório (conceitos aprendidos)
@@ -43,6 +47,15 @@ VC.NOTEBOOK = {
   tabela: { title: 'Tabela periódica', text: 'Período (linha) = número de camadas. Família ou grupo (coluna) = mesmo número de elétrons na camada de valência, por isso propriedades parecidas.' },
   familias: { title: 'Famílias', text: 'Grupo 1: metais alcalinos (Li, Na, K). Grupo 2: alcalino-terrosos (Mg, Ca). Grupo 17: halogênios (F, Cl, Br). Grupo 18: gases nobres (He, Ne, Ar), com a camada de valência completa.' },
   teste_chama: { title: 'Teste de chama', text: 'Na chama, os elétrons absorvem energia e saltam para camadas mais externas. Ao voltar, emitem luz de cor característica: sódio amarelo, potássio lilás, cobre verde-azulado, estrôncio vermelho.' },
+  octeto: { title: 'Regra do octeto', text: 'Os átomos tendem a fazer ligações até ficar com 8 elétrons na última camada, como os gases nobres. O hidrogênio fica estável com 2, como o hélio.' },
+  ligacao_ionica: { title: 'Ligação iônica', text: 'Entre metal e não metal: o metal transfere elétrons e vira cátion; o não metal recebe e vira ânion. Formam cristais duros, quebradiços, que conduzem eletricidade quando dissolvidos ou fundidos. Ex.: NaCl.' },
+  ligacao_covalente: { title: 'Ligação covalente', text: 'Entre não metais: os átomos compartilham pares de elétrons. Pode ser simples (H_2), dupla (O_2) ou tripla (N_2). Formam moléculas, como H_2O e CO_2, que em geral não conduzem eletricidade.' },
+  ligacao_metalica: { title: 'Ligação metálica', text: 'Entre átomos de metais: os elétrons da camada de valência ficam livres, formando um "mar de elétrons". Por isso metais conduzem eletricidade e calor, têm brilho e podem ser dobrados e esticados em fios.' },
+  formula_ionica: { title: 'Fórmula iônica', text: 'A soma das cargas deve dar zero, na menor proporção possível. Atalho: cruzar as cargas. Al^3+ e O^2− formam Al_2O_3, pois 2 × (+3) + 3 × (−2) = 0.' },
+  polaridade: { title: 'Polaridade', text: 'Quando um átomo atrai mais os elétrons (é mais eletronegativo), a molécula pode ficar com um lado parcialmente negativo e outro positivo: é polar, como a água. Óleos e gorduras são apolares.' },
+  forcas_intermoleculares: { title: 'Forças intermoleculares', text: 'Atrações entre moléculas. A mais forte é a ligação de hidrogênio (H ligado a F, O ou N), que explica o alto ponto de ebulição da água e a tensão superficial que sustenta insetos na água.' },
+  semelhante: { title: 'Semelhante dissolve semelhante', text: 'Substâncias polares e iônicas se dissolvem bem em solventes polares, como a água. Substâncias apolares se dissolvem em solventes apolares, como óleo e gasolina.' },
+  detergente: { title: 'Detergente', text: 'Molécula longa com uma ponta polar (atraída pela água) e uma cauda apolar (atraída pelo óleo). As caudas envolvem as gotas de óleo e a água as leva embora.' },
   bohr: { title: 'Modelo de Bohr', text: 'Os elétrons giram em camadas com energia definida. Só mudam de camada absorvendo ou emitindo uma quantidade exata de energia, o que explica as cores do teste de chama.' }
 };
 
@@ -65,17 +78,26 @@ VC.QUESTS = {
   q2_bento: { ch: 2, text: 'Fale com o Seu Bento sobre os fogos do festival.', target: { map: 'praca', id: 'bento' } },
   q2_chama: { ch: 2, text: 'Faça o teste de chama na bancada.', target: { map: 'lab', id: 'bancada' } },
   q2_entrega: { ch: 2, text: 'Leve a receita dos fogos à Prefeita Célia.', target: { map: 'praca', id: 'prefeita' } },
-  q2_fim: { ch: 2, text: 'Fim do conteúdo disponível. O Capítulo 3 chega na próxima atualização.', target: null }
+  q2_fim: { ch: 2, text: 'Fim do conteúdo disponível. O Capítulo 3 chega na próxima atualização.', target: null },
+  q3_bento: { ch: 3, text: 'O Seu Bento pediu ajuda. Vá até a barraca.', target: { map: 'praca', id: 'bento' } },
+  q3_amostras: { ch: 3, text: 'Identifique as amostras do Seu Bento na bancada.', target: { map: 'lab', id: 'bancada' } },
+  q3_formulas: { ch: 3, text: 'Escreva as fórmulas dos rótulos na bancada de síntese.', target: { map: 'lab', id: 'sintese' } },
+  q3_rotulos: { ch: 3, text: 'Entregue os rótulos novos ao Seu Bento.', target: { map: 'praca', id: 'bento' } },
+  q3_fonte: { ch: 3, text: 'Examine a fonte suja de óleo.', target: { map: 'praca', id: 'fonte' } },
+  q3_detergente: { ch: 3, text: 'Prepare um detergente na bancada de síntese.', target: { map: 'lab', id: 'sintese' } },
+  q3_limpar: { ch: 3, text: 'Use o detergente para limpar a fonte.', target: { map: 'praca', id: 'fonte' } },
+  q3_prefeita: { ch: 3, text: 'Conte à Prefeita Célia que a fonte está limpa.', target: { map: 'praca', id: 'prefeita' } },
+  q3_fim: { ch: 3, text: 'Fim do conteúdo disponível. O Capítulo 4 chega na próxima atualização.', target: null }
 };
 
 // Capítulos já implementados
-VC.IMPLEMENTED = 2;
+VC.IMPLEMENTED = 3;
 
 // Roteiro de capítulos (quadro de pedidos)
 VC.CHAPTERS = [
   { n: 1, short: 'Fundamentos', title: 'Fundamentos da Química', topic: 'Segurança, substâncias, misturas e fenômenos', reward: 'Licença provisória e balança' },
   { n: 2, short: 'O átomo', title: 'O átomo e a tabela periódica', topic: 'Partículas, distribuição eletrônica, famílias', reward: 'Bico de Bunsen e mural restaurado' },
-  { n: 3, title: 'Ligações e interações', topic: 'Iônica, covalente, metálica e polaridade', reward: 'Bancada de síntese' },
+  { n: 3, short: 'Ligações', title: 'Ligações e interações', topic: 'Iônica, covalente, metálica e polaridade', reward: 'Bancada de síntese' },
   { n: 4, title: 'Compostos e reações inorgânicas', topic: 'Ácidos, bases, sais, óxidos e balanceamento', reward: 'Medidor de pH e capela' },
   { n: 5, title: 'Grandezas e estequiometria', topic: 'Mol, massa molar e proporções', reward: 'Balança analítica' },
   { n: 6, title: 'Soluções e misturas', topic: 'Concentração, diluição e separação', reward: 'Destilador e a Fórmula Aurora' }
