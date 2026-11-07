@@ -13,7 +13,7 @@ Você herda o Laboratório Aurora da Profa. Ítala Ferraz, sua antiga orientador
 | Ação | Teclado | Celular |
 |---|---|---|
 | Mover | WASD ou setas | Joystick |
-| Conversar / examinar | E ou Espaço | Botão A |
+| Conversar / examinar | E ou Espaço | Botão E |
 | Mochila | I | Ícone da mochila |
 | Caderno do Laboratório | C | Ícone do caderno |
 | Menu | Esc | Ícone de menu |

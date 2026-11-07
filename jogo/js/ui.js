@@ -366,7 +366,7 @@ window.VC = window.VC || {};
   ui.help = function () {
     const m = ui.modal({ title: 'Como jogar' });
     const rows = ui.isTouch
-      ? [['Joystick', 'Mover'], ['Botão A', 'Conversar, examinar e avançar textos'], ['Mochila', 'Ver itens'], ['Caderno', 'Rever conceitos aprendidos']]
+      ? [['Joystick', 'Mover'], ['Botão E', 'Conversar, examinar e avançar textos'], ['Mochila', 'Ver itens'], ['Caderno', 'Rever conceitos aprendidos']]
       : [['WASD ou setas', 'Mover'], ['E ou Espaço', 'Conversar, examinar e avançar textos'], ['I', 'Mochila'], ['C', 'Caderno do Laboratório'], ['Esc', 'Menu']];
     const t = el('table', 'keys');
     rows.forEach(([k, v]) => { const tr = el('tr'); tr.appendChild(el('th', '', k)); tr.appendChild(el('td', '', v)); t.appendChild(tr); });
@@ -464,14 +464,43 @@ window.VC = window.VC || {};
     }, 30);
   }
 
+  const shuffle = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  };
+
+  // Banco de questões: sorteia sem repetir; questões erradas só voltam se o banco acabar
+  function makeDeck(list) {
+    let pool = shuffle(list), missed = [];
+    return {
+      draw() {
+        if (!pool.length) { pool = shuffle(missed); missed = []; }
+        return pool.shift();
+      },
+      miss(item) { missed.push(item); }
+    };
+  }
+
+  function progressBar(m, need) {
+    const head = el('div', 'progress-row');
+    const prog = el('div', 'progress'); const bar = el('div', 'bar'); prog.appendChild(bar);
+    const score = el('span', 'score');
+    head.appendChild(prog); head.appendChild(score);
+    m.content.appendChild(head);
+    return (correct) => {
+      bar.style.width = (correct / need * 100) + '%';
+      score.textContent = 'Acertos: ' + correct + ' de ' + need;
+    };
+  }
+
   function sortGame(cfg, m) {
     return new Promise((resolve) => {
-      const queue = cfg.items.slice().sort(() => Math.random() - 0.5);
+      const need = cfg.need || cfg.items.length;
+      const deck = makeDeck(cfg.items);
       let errors = 0, correct = 0;
-      const total = cfg.items.length;
       m.content.appendChild(richEl('p', 'prompt', cfg.prompt));
-      const prog = el('div', 'progress'); const bar = el('div', 'bar'); prog.appendChild(bar);
-      m.content.appendChild(prog);
+      const setProgress = progressBar(m, need);
       const card = el('div', 'card');
       m.content.appendChild(card);
       const bins = el('div', 'bins');
@@ -488,9 +517,9 @@ window.VC = window.VC || {};
       function setBins(on) { buttons.forEach((b) => { b.disabled = !on; }); }
       function next() {
         fb.hidden = true;
-        bar.style.width = (correct / total * 100) + '%';
-        if (!queue.length) { resolve({ errors }); return; }
-        current = queue.shift();
+        setProgress(correct);
+        if (correct >= need) { resolve({ errors }); return; }
+        current = deck.draw();
         ui.rich(card, current.label);
         card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
         setBins(true);
@@ -500,12 +529,12 @@ window.VC = window.VC || {};
         setBins(false);
         if (i === current.bin) {
           correct++; ui.sfx('ok');
-          bar.style.width = (correct / total * 100) + '%';
+          setProgress(correct);
           feedback(fb, true, 'Certo: ' + cfg.bins[i] + '.', current.why, next);
         } else {
           errors++; ui.sfx('err');
-          queue.push(current);
-          feedback(fb, false, 'Ainda não. A resposta é: ' + cfg.bins[current.bin] + '.', current.why + ' Esse item volta para o fim da fila.', next);
+          deck.miss(current);
+          feedback(fb, false, 'Ainda não. A resposta é: ' + cfg.bins[current.bin] + '.', current.why, next);
         }
       }
       next();
@@ -514,9 +543,10 @@ window.VC = window.VC || {};
 
   function quizGame(cfg, m) {
     return new Promise((resolve) => {
-      let i = 0, errors = 0;
-      const prog = el('div', 'progress'); const bar = el('div', 'bar'); prog.appendChild(bar);
-      m.content.appendChild(prog);
+      const need = cfg.need || cfg.questions.length;
+      const deck = makeDeck(cfg.questions);
+      let correct = 0, errors = 0;
+      const setProgress = progressBar(m, need);
       const q = el('p', 'card question');
       m.content.appendChild(q);
       const opts = el('div', 'options');
@@ -525,9 +555,9 @@ window.VC = window.VC || {};
       m.content.appendChild(fb);
       function show() {
         fb.hidden = true;
-        bar.style.width = (i / cfg.questions.length * 100) + '%';
-        if (i >= cfg.questions.length) { resolve({ errors }); return; }
-        const item = cfg.questions[i];
+        setProgress(correct);
+        if (correct >= need) { resolve({ errors }); return; }
+        const item = deck.draw();
         ui.rich(q, item.q);
         if (item.flame) q.prepend(flameEl(item.flame));
         opts.innerHTML = '';
@@ -537,8 +567,8 @@ window.VC = window.VC || {};
             opts.querySelectorAll('button').forEach((x) => { x.disabled = true; });
             opts.children[item.answer].classList.add('right');
             const ok = k === item.answer;
-            if (!ok) { b.classList.add('wrong'); errors++; ui.sfx('err'); } else ui.sfx('ok');
-            i++;
+            if (!ok) { b.classList.add('wrong'); errors++; deck.miss(item); ui.sfx('err'); } else { correct++; ui.sfx('ok'); }
+            setProgress(correct);
             feedback(fb, ok, ok ? 'Correto!' : 'Não foi dessa vez.', item.why, show);
           });
           opts.appendChild(b);

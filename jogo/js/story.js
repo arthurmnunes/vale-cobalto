@@ -39,7 +39,7 @@ window.VC = window.VC || {};
 
     if (scene.mapKey === 'praca' && !VC.flag('controlsHint')) {
       VC.flag('controlsHint', true);
-      ui().toast(ui().isTouch ? 'Use o joystick para andar e o botão A para conversar.' : 'WASD ou setas para andar, E para conversar. Menu no Esc.');
+      ui().toast(ui().isTouch ? 'Use o joystick para andar e o botão E para conversar.' : 'WASD ou setas para andar, E para conversar. Menu no Esc.');
     }
 
     if (scene.mapKey === 'lab' && q() === 'q_entrar') {
@@ -179,19 +179,27 @@ window.VC = window.VC || {};
   }
 
   /* ---------- Capítulo 3 ---------- */
+  // A fonte é abastecida pelo rio: o óleo vazou de um tambor no depósito do Grupo Vex, rio acima
   async function oilScene(scene) {
-    await say('narrador', 'Um caminhão do Grupo Vex atravessa a praça... e algo escuro escorre para dentro da fonte.');
     VC.flag('oleo', true);
     scene.refreshObject('fonte');
     scene.scripted = true;
     try {
-      scene.addNpc({ id: 'rival', sprite: 'rival', pos: () => [20, 12], face: 'left', solid: false });
-      await scene.walkNpc('rival', [16, 12], 60);
-      await say('rival', 'Ops. Um vazamentozinho de óleo do nosso caminhão. Nada que um pouco de água não resolva.');
-      const c = await ui().choose('player', 'Responder:', ['Água sozinha não tira óleo, {rival}.', 'O Grupo Vex vai limpar isso?']);
-      await say('rival', c === 0 ? 'Então mostre o que sabe, gênio.' : 'O Grupo Vex tem coisas mais importantes a fazer.');
-      await scene.walkNpc('rival', [20, 12], 70);
+      await say('prefeita', '{player}! Venha ver a fonte! A água está saindo do cano com uma mancha de óleo!');
+      await scene.walkNpc('prefeita', [17, 8], 75);
+      scene.addNpc({ id: 'rival', sprite: 'rival', pos: () => [24, 12], face: 'left', solid: false });
+      await scene.walkNpc('rival', [19, 9], 60);
+      await talk([
+        ['rival', 'Antes que alguém pergunte: foi um acidente. Um tambor velho rachou no nosso depósito, na beira do rio, rio acima.'],
+        ['prefeita', 'E a fonte puxa água do rio. O óleo desceu pelo cano e veio parar no meio da praça.'],
+        ['rival', 'O Grupo Vex já trocou os tambores. A limpeza... fica com quem entende do assunto, não é?']
+      ]);
+      const c = await ui().choose('player', 'Responder:', ['Acidente ou não, a cidade não pode ficar assim.', 'Água sozinha não tira óleo. Deixa comigo.']);
+      await say('rival', c === 0 ? 'Por isso mesmo eu vim avisar. Boa sorte.' : 'Quero ver como você vai resolver isso, então.');
+      await scene.walkNpc('rival', [24, 12], 70);
       scene.removeNpc('rival');
+      await say('prefeita', 'Conto com você, {player}. Vou voltar para a prefeitura e avisar a população.');
+      await scene.walkNpc('prefeita', [23, 6], 75);
     } finally { scene.scripted = false; }
     VC.setQuest('q3_fonte');
   }
@@ -200,7 +208,7 @@ window.VC = window.VC || {};
     await talk([
       ['prefeita', 'A fonte está limpa! E sem jogar mais química perigosa na água. Como você conseguiu?'],
       ['player', 'Detergente: uma ponta gosta de água, a outra gosta de óleo. Ele junta os dois e a água leva tudo.'],
-      ['prefeita', 'Genial. E o Grupo Vex vai pagar uma multa pelo vazamento. Parte dela fica com o Aurora.']
+      ['prefeita', 'Genial. E o Grupo Vex vai pagar uma multa por guardar tambores de óleo na beira do rio. Parte dela fica com o Aurora.']
     ]);
     VC.addCoins(120);
     VC.flag('cap3', true);
@@ -345,7 +353,7 @@ window.VC = window.VC || {};
     q3_amostras: 'Dica: metal com não metal costuma ser ligação iônica; só não metais, covalente; só metal, metálica.',
     q3_formulas: 'Fórmula de íons é como uma balança: as cargas positivas e negativas têm que se anular.',
     q3_rotulos: 'Os rótulos ficaram prontos? Leva para o Seu Bento!',
-    q3_fonte: 'Que nojo, óleo na fonte! Por que será que não mistura com a água?',
+    q3_fonte: 'Óleo na fonte! Veio pelo cano do rio, do depósito do Grupo Vex. E não mistura com a água... por quê?',
     q3_detergente: 'Lá em casa a gente tira gordura da panela com detergente. Será que funciona na fonte?',
     q3_limpar: 'Vai lá limpar a fonte! Eu fico de olho.',
     q3_prefeita: 'A fonte ficou ótima! Conta para a prefeita!',
@@ -559,7 +567,7 @@ window.VC = window.VC || {};
   H.poltrona = async function () { await say('narrador', 'Uma poltrona confortável. {cat} já decidiu que ela é dele.'); };
   H.fonte = async function (scene) {
     if (q() === 'q3_fonte') {
-      await say('narrador', 'Uma mancha escura boia sobre a água, com reflexos coloridos. Embaixo dela, a água continua do mesmo jeito.');
+      await say('narrador', 'O óleo chega pelo cano que traz a água do rio e forma uma mancha escura, com reflexos coloridos, por cima da água.');
       const r = await ui().challenge('polaridade', 'Problema entendido');
       VC.state.stars.fonte = r.stars;
       VC.learn(['polaridade', 'forcas_intermoleculares']);

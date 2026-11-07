@@ -383,3 +383,7 @@ sup { font-size: 0.72em; line-height: 0; }
 .ion-charge { font-size: 0.95rem; color: var(--erro); }
 .ion-charge.zero { color: var(--ok); }
 @media (max-width: 420px) { .atom-row.ion-mode { grid-template-columns: 1fr; } }
+
+/* Progresso dos desafios com contador de acertos */
+.progress-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.score { font-size: 0.9rem; color: var(--vidro); white-space: nowrap; }
