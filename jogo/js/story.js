@@ -1,4 +1,4 @@
-/* Vale Cobalto - roteiro do Capítulo 1 */
+/* Vale Cobalto - roteiro dos capítulos */
 window.VC = window.VC || {};
 
 (function () {
@@ -83,7 +83,8 @@ window.VC = window.VC || {};
 
   const CHAPTER_START = {
     2: { quest: 'q2_lia', lines: ['Vale Cobalto se prepara para o Festival das Luzes.', 'A Lia tem novidades. Procure por ela na praça.'] },
-    3: { quest: 'q3_bento', lines: ['Depois do festival, a cidade volta à rotina. Mas o Seu Bento está com um problema na barraca.', 'Vá falar com ele na praça.'] }
+    3: { quest: 'q3_bento', lines: ['Depois do festival, a cidade volta à rotina. Mas o Seu Bento está com um problema na barraca.', 'Vá falar com ele na praça.'] },
+    4: { quest: 'q4_prefeita', lines: ['A primavera chega a Vale Cobalto, mas a horta comunitária, perto do rio, não vai nada bem.', 'A Prefeita Célia quer falar com você.'] }
   };
 
   S.chapterIntro = function (n, isNew) {
@@ -106,7 +107,8 @@ window.VC = window.VC || {};
     if (st.flags.cap2Aviso) { st.flags.capAviso = 2; delete st.flags.cap2Aviso; }
     if (st.quest === 'q_fim_demo') { st.quest = 'q2_lia'; st.flags.capAviso = 2; }
     if (st.quest === 'q2_fim') { st.quest = 'q3_bento'; st.flags.capAviso = 3; }
-    const fromFlags = st.flags.cap2 ? 3 : st.flags.cap1 ? 2 : 1;
+    if (st.quest === 'q3_fim') { st.quest = 'q4_prefeita'; st.flags.capAviso = 4; }
+    const fromFlags = st.flags.cap3 ? 4 : st.flags.cap2 ? 3 : st.flags.cap1 ? 2 : 1;
     const fromQuest = (VC.QUESTS[st.quest] && VC.QUESTS[st.quest].ch) || 1;
     st.maxCh = Math.max(st.maxCh || 1, fromFlags, fromQuest);
   };
@@ -221,6 +223,66 @@ window.VC = window.VC || {};
       'Estrelas: ' + starsOf(['amostras', 'formulas', 'fonte', 'detergente']) + '. A multa do Grupo Vex rendeu 120 moedas ao Aurora.',
       'A bancada de síntese da Profa. Ítala voltou a funcionar.'
     ]);
+    await S.startChapter(4);
+  }
+
+  /* ---------- Capítulo 4 ---------- */
+  // A caldeira do Grupo Vex queima carvão com enxofre: o SO_2 volta como chuva ácida sobre a horta
+  async function rainScene(scene) {
+    scene.scripted = true;
+    try {
+      await scene.walkNpc('prefeita', [20, 13], 75);
+      await say('prefeita', 'As folhas já estão mais verdes! Mas me diga, {player}: por que o solo ficou ácido, para começo de conversa?');
+      scene.addNpc({ id: 'rival', sprite: 'rival', pos: () => [28, 13], face: 'left', solid: false });
+      await scene.walkNpc('rival', [25, 13], 60);
+      await talk([
+        ['rival', 'Eu sei a resposta, e não gosto dela. A caldeira velha do Grupo Vex queima carvão com enxofre.'],
+        ['rival', 'A fumaça leva SO_2 para as nuvens, e ele volta como chuva ácida. Bem em cima desta horta.'],
+        ['prefeita', 'Então quero um relatório ambiental com todas as reações, balanceadas, para a agência do estado.'],
+        ['rival', 'A minha equipe entrega primeiro, Prefeita. Equações são a nossa especialidade.']
+      ]);
+      const c = await ui().choose('player', 'Responder:', ['Que bom que você assumiu, {rival}. Vamos ver quem termina antes.', 'Lavoisier não perdoa: nenhum átomo pode sumir.']);
+      await say('rival', c === 0 ? 'Assumir não é perder. A corrida começa agora.' : 'Ha! Então conte direitinho cada átomo.');
+      await scene.walkNpc('rival', [28, 13], 70);
+      scene.removeNpc('rival');
+      await say('prefeita', 'Os voluntários guardaram água da última chuva. Leve para o laboratório e descubra o que tem nela.');
+      VC.addItem('agua_chuva');
+      await scene.walkNpc('prefeita', [23, 6], 75);
+    } finally { scene.scripted = false; }
+    VC.setQuest('q4_chuva');
+  }
+
+  async function finalCap4(scene) {
+    await talk([
+      ['prefeita', 'O relatório ambiental! Cada reação balanceada, da chaminé ao filtro. A agência vai adorar.'],
+      ['prefeita', 'Olhe quem chegou.']
+    ]);
+    scene.scripted = true;
+    try {
+      scene.addNpc({ id: 'rival', sprite: 'rival', pos: () => [28, 8], face: 'left', solid: false });
+      await scene.walkNpc('rival', [24, 7], 60);
+      await talk([
+        ['rival', 'Atrasado, eu sei. A minha equipe errou o balanceamento do sulfato de cálcio. Duas vezes.'],
+        ['rival', 'Mas o Grupo Vex instalou um filtro com cal na caldeira. A base retém o SO_2 antes de ele sair pela chaminé.'],
+        ['prefeita', 'Ácido com base. Até o Grupo Vex aprendeu a neutralizar.']
+      ]);
+      const c = await ui().choose('player', 'Responder:', ['Obrigado pelo filtro, {rival}. A horta agradece.', 'Da próxima vez, conte os oxigênios por último.']);
+      await say('rival', c === 0 ? 'Não se acostume. Mas... de nada.' : 'Hum. Vou anotar a dica. Só desta vez.');
+      await scene.walkNpc('rival', [28, 8], 70);
+      scene.removeNpc('rival');
+    } finally { scene.scripted = false; }
+    await say('prefeita', 'A prefeitura comprou um presente para o Aurora: um medidor de pH e uma capela, para trabalhar com segurança com gases e vapores.');
+    VC.removeItem('relatorio_amb');
+    VC.addItem('phmetro');
+    VC.flag('capelaOk', true);
+    VC.addCoins(120);
+    VC.flag('cap4', true);
+    VC.setQuest('q4_fim');
+    await ui().chapterCard('Capítulo 4 concluído', [
+      'A horta comunitária voltou a dar repolhos, tomates e alfaces, e a caldeira do Grupo Vex ganhou um filtro.',
+      'Estrelas: ' + starsOf(['funcoes', 'indicador', 'calagem', 'chuva', 'equacoes']) + '. A prefeitura pagou 120 moedas pelo relatório.',
+      'O medidor de pH está na mochila, e a capela já foi instalada no laboratório.'
+    ]);
     await S.endOfDemo();
   }
 
@@ -275,6 +337,19 @@ window.VC = window.VC || {};
       return;
     }
     if (q() === 'q_bancada') { await say('prefeita', 'O relatório está com você. Analise tudo na bancada do laboratório!'); return; }
+    if (q() === 'q4_prefeita') {
+      await talk([
+        ['prefeita', '{player}, preciso de ajuda com a horta comunitária, aquela perto do rio.'],
+        ['prefeita', 'As folhas estão amarelando, os tomates não crescem e os repolhos estão murchos. Os voluntários já não sabem o que fazer.'],
+        ['prefeita', 'Dê uma olhada no canteiro e no galpão de ferramentas. Tem muito produto lá, e ninguém sabe direito o que é cada um.']
+      ]);
+      VC.setQuest('q4_horta');
+      return;
+    }
+    if (q() === 'q4_entrega') { await finalCap4(scene); return; }
+    if (q() === 'q4_fim') { await say('prefeita', 'A horta nunca deu tantos tomates, {player}. E a chuva da semana passada já veio menos ácida.'); return; }
+    if (['q4_chuva', 'q4_equacoes'].includes(q())) { await say('prefeita', 'Quero o relatório ambiental antes do Grupo Vex. Conto com você!'); return; }
+    if (q().indexOf('q4_') === 0) { await say('prefeita', 'A horta está nas suas mãos, {player}. Ela fica perto do rio, à direita da fonte.'); return; }
     if (q() === 'q3_prefeita') { await finalCap3(); return; }
     if (q() === 'q3_fim') { await say('prefeita', 'A fonte nunca brilhou tanto, {player}. E o Grupo Vex aprendeu a lição.'); return; }
     if (['q3_fonte', 'q3_detergente', 'q3_limpar'].includes(q())) { await say('prefeita', 'Que desastre na fonte! Conto com você para limpar isso, {player}.'); return; }
@@ -360,7 +435,15 @@ window.VC = window.VC || {};
     q3_detergente: 'Lá em casa a gente tira gordura da panela com detergente. Será que funciona na fonte?',
     q3_limpar: 'Vai lá limpar a fonte! Eu fico de olho.',
     q3_prefeita: 'A fonte ficou ótima! Conta para a prefeita!',
-    q3_fim: 'Ligações químicas são tipo amizades: uns dão, uns dividem, uns compartilham com todo mundo!'
+    q3_fim: 'Ligações químicas são tipo amizades: uns dão, uns dividem, uns compartilham com todo mundo!',
+    q4_prefeita: 'A prefeita estava procurando você. Acho que é sobre a horta: está tudo amarelo lá!',
+    q4_horta: 'A horta fica perto do rio, à direita da fonte. Dica: ácido começa com H, base tem OH, óxido tem só dois elementos e um deles é o O.',
+    q4_indicador: 'Sabia que o suco de repolho roxo muda de cor? Fica vermelho no limão e verde no sabão!',
+    q4_calagem: 'Se o solo está ácido, precisa de algo que neutralize. Ácido mais base dá sal e água!',
+    q4_chuva: 'Chuva ácida? Então o problema veio do céu! Leva a água para a bancada.',
+    q4_equacoes: 'Balancear é contar átomos: cada um precisa aparecer igual dos dois lados. Só mexe nos números da frente!',
+    q4_entrega: 'Corre, entrega o relatório antes do Grupo Vex!',
+    q4_fim: 'Plantei repolho roxo em casa. Agora eu tenho meu próprio indicador de pH!'
   };
 
   H.lia = async function () {
@@ -393,7 +476,11 @@ window.VC = window.VC || {};
     q2_fim: '{cat} ainda está assustado com os fogos de ontem.',
     q3_amostras: '{cat} cheira um frasco de sal e torce o nariz.',
     q3_formulas: '{cat} sentou bem em cima das anotações da bancada de síntese.',
-    q3_detergente: '{cat} observa as bolhas de sabão com muita desconfiança.'
+    q3_detergente: '{cat} observa as bolhas de sabão com muita desconfiança.',
+    q4_indicador: '{cat} cheira o repolho roxo e decide que não é comida de gato.',
+    q4_chuva: '{cat} detesta chuva. Ácida, então, nem se fala.',
+    q4_equacoes: '{cat} empurra uma molécula de O_2 do modelo para fora da bancada. Agora faltam dois oxigênios.',
+    q4_fim: '{cat} dorme em cima da capela nova, que está quentinha.'
   };
 
   H.cat = async function () {
@@ -458,6 +545,29 @@ window.VC = window.VC || {};
   };
 
   H.bancada = async function (scene) {
+    if (q() === 'q4_indicador') {
+      await say('narrador', 'Você pica o repolho roxo, ferve com água e coa. O suco roxo é o indicador. Uma gota em cada tubo de ensaio.');
+      const r = await ui().challenge('indicador', 'Solo testado');
+      VC.state.stars.indicador = r.stars;
+      VC.learn(['ph', 'indicador']);
+      VC.addCoins(15 + 10 * r.stars);
+      VC.removeItem('repolho');
+      VC.removeItem('solo');
+      await say('narrador', 'O solo da horta está ácido demais. No galpão, você tinha visto um saco de calcário. É hora de usar.');
+      VC.setQuest('q4_calagem');
+      return;
+    }
+    if (q() === 'q4_chuva') {
+      await say('narrador', 'Uma gota de indicador na água da chuva: ela fica rosa. Hora de entender de onde vem esse ácido.');
+      const r = await ui().challenge('chuva', 'Chuva analisada');
+      VC.state.stars.chuva = r.stars;
+      VC.learn(['oxido', 'chuva_acida']);
+      VC.addCoins(15 + 10 * r.stars);
+      VC.removeItem('agua_chuva');
+      await say('narrador', 'Agora falta escrever as reações do relatório, balanceadas. Na bancada de síntese, com os modelos de moléculas.');
+      VC.setQuest('q4_equacoes');
+      return;
+    }
     if (q() === 'q3_amostras') {
       await say('narrador', 'Você testa cada amostra: brilho, dureza, ponto de fusão e se conduz eletricidade.');
       const r = await ui().challenge(['amostras', 'ligacoes'], 'Amostras identificadas');
@@ -561,8 +671,58 @@ window.VC = window.VC || {};
       VC.setQuest('q3_limpar');
       return;
     }
+    if (q() === 'q4_equacoes') {
+      await say('narrador', 'Você monta cada reação com os modelos de moléculas. Nenhum átomo pode sumir nem aparecer do nada.');
+      const r = await ui().challenge('equacoes', 'Relatório pronto');
+      VC.state.stars.equacoes = r.stars;
+      VC.learn(['lavoisier', 'balanceamento']);
+      VC.addCoins(15 + 10 * r.stars);
+      VC.addItem('relatorio_amb');
+      VC.setQuest('q4_entrega');
+      return;
+    }
     await say('narrador', 'A bancada de síntese da Profa. Ítala: modelos de moléculas, frascos e anotações nas margens.');
   };
+
+  H.horta = async function (scene) {
+    if (q() === 'q4_horta') {
+      await talk([
+        ['narrador', 'Folhas amareladas, tomates miúdos e repolhos murchos. Ao lado do canteiro, o galpão está cheio de sacos e frascos misturados.'],
+        ['narrador', 'Antes de testar qualquer coisa, melhor saber o que é cada produto.']
+      ]);
+      const r = await ui().challenge('funcoes', 'Galpão organizado');
+      VC.state.stars.funcoes = r.stars;
+      VC.learn(['acido', 'base', 'sal', 'oxido']);
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'Você colhe um repolho roxo, o único que ainda está firme, e guarda um pouco de terra do canteiro.');
+      VC.addItem('repolho');
+      VC.addItem('solo');
+      VC.setQuest('q4_indicador');
+      return;
+    }
+    if (q() === 'q4_calagem') {
+      await say('narrador', 'Você espalha o calcário no canteiro e mistura bem com a terra.');
+      const r = await ui().challenge('calagem', 'Solo corrigido');
+      VC.state.stars.calagem = r.stars;
+      VC.learn('neutralizacao');
+      VC.addCoins(15 + 10 * r.stars);
+      VC.flag('hortaOk', true);
+      scene.refreshObject('horta');
+      ui().sfx('win');
+      await say('narrador', 'Alguns dias depois, a horta está verde de novo: repolhos roxos firmes e os primeiros tomates vermelhos.');
+      ui().toast('Missão concluída: Solo ácido na horta');
+      await rainScene(scene);
+      return;
+    }
+    if (VC.flag('hortaOk')) { await say('narrador', 'A horta comunitária, verde e cheia: repolhos roxos, tomates e alfaces. Nada como um solo com o pH certo.'); return; }
+    if (q().indexOf('q4_') === 0) { await say('narrador', 'O canteiro continua amarelado. O solo precisa de cuidado.'); return; }
+    await say('narrador', 'A horta comunitária de Vale Cobalto. As folhas andam meio amareladas.');
+  };
+
+  H.capela = async function () {
+    await say('narrador', 'A capela de exaustão: um exaustor puxa gases e vapores para fora do laboratório. Reações com ácidos fortes, só aqui dentro.');
+  };
+  H.cartaz_ph = async function () { await say('narrador', 'O cartaz da escala de pH: vermelho, rosa, roxo, azul, verde e amarelo. Do ácido forte à base forte.'); };
 
   H.tubos = async function () { await say('narrador', 'Tubos de ensaio coloridos, prontos para pequenas reações.'); };
 

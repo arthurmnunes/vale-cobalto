@@ -608,5 +608,250 @@ VC.CHALLENGES = {
       { label: 'Querosene', bin: 1, why: 'Hidrocarbonetos apolares, como a gasolina.' },
       { label: 'Graxa de motor', bin: 1, why: 'Derivada do petróleo: apolar, sai com solvente ou detergente, não com água pura.' }
     ]
+  },
+
+  /* ================= Capítulo 4 ================= */
+
+  funcoes: {
+    type: 'sort',
+    need: 6,
+    title: 'Galpão da horta',
+    prompt: 'Organize os produtos do galpão: cada um é ácido, base, sal ou óxido?',
+    bins: ['Ácido', 'Base', 'Sal', 'Óxido'],
+    items: [
+      { label: 'Ácido muriático (HCl), para limpar pedras', bin: 0, why: 'Em água libera H^+ e Cl^−. Começa com H e é ácido de Arrhenius.' },
+      { label: 'Ácido sulfúrico (H_2SO_4), da bateria do trator', bin: 0, why: 'Libera H^+ em água. É um dos ácidos mais usados na indústria.' },
+      { label: 'Ácido fosfórico (H_3PO_4), do refrigerante de cola', bin: 0, why: 'Libera H^+ em água. Dá o gosto levemente azedo ao refrigerante.' },
+      { label: 'Ácido nítrico (HNO_3), usado para fazer adubo', bin: 0, why: 'Libera H^+ em água. Reagindo com bases, forma nitratos, que são fertilizantes.' },
+      { label: 'Água com gás (H_2CO_3)', bin: 0, why: 'O CO_2 dissolvido na água forma ácido carbônico, um ácido fraco.' },
+      { label: 'Soda cáustica (NaOH)', bin: 1, why: 'Em água libera OH^−: é uma base forte e corrosiva. Só com luvas e óculos!' },
+      { label: 'Cal hidratada (Ca(OH)_2)', bin: 1, why: 'Hidróxido de cálcio: libera OH^− em água. Usada em obras e na agricultura.' },
+      { label: 'Leite de magnésia (Mg(OH)_2)', bin: 1, why: 'Hidróxido de magnésio, uma base fraca usada como antiácido.' },
+      { label: 'Hidróxido de potássio (KOH)', bin: 1, why: 'Metal alcalino com o grupo OH: base forte.' },
+      { label: 'Amoníaco de limpeza (NH_4OH)', bin: 1, why: 'A amônia dissolvida em água forma hidróxido de amônio, uma base fraca.' },
+      { label: 'Calcário (CaCO_3)', bin: 2, why: 'Cátion Ca^2+ com o ânion carbonato (CO_3^2−): é um sal. Também é o mármore e a casca de ovo.' },
+      { label: 'Bicarbonato de sódio (NaHCO_3)', bin: 2, why: 'Cátion Na^+ com o ânion bicarbonato: um sal com caráter levemente básico.' },
+      { label: 'Gesso agrícola (CaSO_4)', bin: 2, why: 'Sulfato de cálcio: cátion de uma base (Ca^2+) e ânion de um ácido (SO_4^2−).' },
+      { label: 'Salitre (KNO_3), adubo', bin: 2, why: 'Nitrato de potássio: sal que fornece nitrogênio e potássio às plantas.' },
+      { label: 'Sulfato de cobre (CuSO_4), da calda bordalesa', bin: 2, why: 'Sal azul usado, junto com cal, para proteger plantas contra fungos.' },
+      { label: 'Sal de cozinha (NaCl)', bin: 2, why: 'O sal mais conhecido: Na^+ da base NaOH e Cl^− do ácido HCl.' },
+      { label: 'Cal virgem (CaO)', bin: 3, why: 'Dois elementos, sendo um deles o oxigênio: óxido. Com água, vira cal hidratada.' },
+      { label: 'Ferrugem da enxada (Fe_2O_3)', bin: 3, why: 'Óxido de ferro: o ferro reagiu com o oxigênio do ar e a umidade.' },
+      { label: 'Areia (SiO_2)', bin: 3, why: 'Dióxido de silício: dois elementos, um deles o oxigênio.' },
+      { label: 'Pomada de óxido de zinco (ZnO)', bin: 3, why: 'Óxido de zinco, usado em pomadas contra assaduras.' },
+      { label: 'Gás carbônico (CO_2) do extintor', bin: 3, why: 'Óxido de carbono. Com água, forma ácido carbônico: é um óxido ácido.' }
+    ]
+  },
+
+  indicador: {
+    type: 'quiz',
+    need: 3,
+    title: 'Indicador de repolho roxo',
+    questions: [
+      {
+        tube: '#d8264a',
+        q: 'Suco de limão com o indicador de repolho roxo ficou assim. A solução é:',
+        options: ['Ácida', 'Neutra', 'Básica'],
+        answer: 0,
+        why: 'Vermelho indica ácido forte, com pH perto de 2. O limão tem ácido cítrico.'
+      },
+      {
+        tube: '#7a4aa8',
+        q: 'Água destilada com o indicador ficou roxa. A solução é:',
+        options: ['Ácida', 'Neutra', 'Básica'],
+        answer: 1,
+        why: 'Roxo é a cor do indicador no meio neutro, com pH perto de 7.'
+      },
+      {
+        tube: '#3c6fd0',
+        q: 'Bicarbonato de sódio dissolvido em água ficou azul. A solução é:',
+        options: ['Ácida', 'Neutra', 'Básica'],
+        answer: 2,
+        why: 'Azul indica meio levemente básico, com pH perto de 8. Por isso o bicarbonato alivia a azia.'
+      },
+      {
+        tube: '#3aa35a',
+        q: 'Sabão em pó dissolvido em água ficou verde. A solução é:',
+        options: ['Ácida', 'Neutra', 'Básica'],
+        answer: 2,
+        why: 'Verde indica meio básico, com pH perto de 11. Sabões e detergentes em pó costumam ser básicos.'
+      },
+      {
+        tube: '#e8d23a',
+        q: 'Uma gota de soda cáustica (NaOH) deixou o indicador amarelo. Isso indica:',
+        options: ['Ácido forte', 'Meio neutro', 'Base forte'],
+        answer: 2,
+        why: 'Amarelo é a cor do repolho roxo em pH perto de 13 ou 14, típico de bases fortes como o NaOH.'
+      },
+      {
+        tube: '#c2508c',
+        q: 'A amostra de solo da horta, misturada com água e filtrada, deixou o indicador rosa. O solo está:',
+        options: ['Ácido, com pH abaixo de 7', 'Neutro, com pH 7', 'Básico, com pH acima de 7'],
+        answer: 0,
+        why: 'Rosa indica pH perto de 4 ou 5. Em solo ácido demais, as raízes não absorvem bem os nutrientes e as folhas amarelam.'
+      },
+      {
+        q: 'Por que o suco de repolho roxo muda de cor?',
+        options: ['Ele tem antocianinas, pigmentos que mudam de cor conforme o pH', 'Ele apodrece em contato com o ácido', 'A luz do laboratório muda a cor dele'],
+        answer: 0,
+        why: 'As antocianinas mudam de estrutura conforme a quantidade de H^+ do meio, e cada estrutura tem uma cor.'
+      },
+      {
+        q: 'Na escala de pH, quanto menor o número:',
+        options: ['Mais básica é a solução', 'Mais ácida é a solução', 'Mais neutra é a solução'],
+        answer: 1,
+        why: 'pH baixo significa muitos íons H^+. Cada unidade a menos representa 10 vezes mais acidez.'
+      },
+      {
+        q: 'A fenolftaleína é incolor no ácido. Que cor ela fica em uma base?',
+        options: ['Azul', 'Rosa', 'Continua incolor'],
+        answer: 1,
+        why: 'A fenolftaleína fica rosa em meio básico. É um dos indicadores mais usados em laboratório.'
+      }
+    ]
+  },
+
+  calagem: {
+    type: 'quiz',
+    need: 3,
+    title: 'Corrigindo o solo',
+    questions: [
+      {
+        q: 'O solo da horta está ácido. O que adicionar para corrigir?',
+        options: ['Vinagre', 'Calcário (CaCO_3)', 'Mais adubo ácido'],
+        answer: 1,
+        why: 'O calcário reage com o ácido do solo e eleva o pH. Os agricultores chamam isso de calagem.'
+      },
+      {
+        q: 'Complete a neutralização: HCl + NaOH → ? + H_2O',
+        options: ['NaCl', 'NaOH_2', 'HClO'],
+        answer: 0,
+        why: 'Ácido + base → sal + água. O Na^+ da base e o Cl^− do ácido formam o sal NaCl.'
+      },
+      {
+        q: 'Na neutralização, o H^+ do ácido se junta ao OH^− da base e forma:',
+        options: ['Gás oxigênio', 'Água (H_2O)', 'Gás hidrogênio'],
+        answer: 1,
+        why: 'H^+ + OH^− → H_2O. Por isso toda neutralização entre ácido e base de Arrhenius forma água.'
+      },
+      {
+        q: 'Segundo Arrhenius, uma base é a substância que, em água, libera:',
+        options: ['Íons H^+', 'Íons OH^−', 'Íons Na^+'],
+        answer: 1,
+        why: 'Bases liberam o íon hidróxido, OH^−. Ácidos liberam H^+.'
+      },
+      {
+        q: 'Quem tem azia toma leite de magnésia (Mg(OH)_2). Por que funciona?',
+        options: ['A base neutraliza o excesso de ácido do estômago', 'O leite esfria o estômago', 'O magnésio produz mais ácido'],
+        answer: 0,
+        why: 'O suco gástrico tem ácido clorídrico. Uma base fraca neutraliza o excesso e alivia a queimação.'
+      },
+      {
+        q: 'O calcário reage com o ácido do solo e solta bolhas. Que gás é esse?',
+        options: ['Gás oxigênio (O_2)', 'Gás carbônico (CO_2)', 'Gás cloro (Cl_2)'],
+        answer: 1,
+        why: 'CaCO_3 + 2 H^+ → Ca^2+ + H_2O + CO_2. O carbonato vira gás carbônico e água.'
+      },
+      {
+        q: 'H_2SO_4 + 2 NaOH → Na_2SO_4 + 2 H_2O. Que sal se formou?',
+        options: ['Sulfato de sódio (Na_2SO_4)', 'Cloreto de sódio (NaCl)', 'Hidróxido de sódio (NaOH)'],
+        answer: 0,
+        why: 'O Na^+ da base se une ao ânion sulfato (SO_4^2−) do ácido sulfúrico.'
+      },
+      {
+        q: 'Um ácido e uma base são misturados na proporção exata. O pH final fica perto de:',
+        options: ['1', '7', '14'],
+        answer: 1,
+        why: 'Quando todo o H^+ reage com todo o OH^−, a solução fica neutra, com pH perto de 7 (para ácido e base fortes).'
+      }
+    ]
+  },
+
+  chuva: {
+    type: 'quiz',
+    need: 3,
+    title: 'Água da chuva',
+    questions: [
+      {
+        tube: '#c2508c',
+        q: 'A água da chuva deixou o indicador rosa: pH perto de 4,5. A chuva normal tem pH perto de 5,6. Por que até a chuva normal é um pouco ácida?',
+        options: ['O CO_2 do ar se dissolve na água e forma ácido carbônico', 'A água da chuva é salgada', 'As nuvens são feitas de ácido'],
+        answer: 0,
+        why: 'CO_2 + H_2O → H_2CO_3, um ácido fraco. A chuva só é chamada de ácida quando o pH fica abaixo de 5,6.'
+      },
+      {
+        q: 'A caldeira do Grupo Vex queima carvão com enxofre e libera SO_2. Na atmosfera, ele:',
+        options: ['Vira oxigênio puro', 'Reage com o oxigênio e a água e forma ácido sulfúrico', 'Se transforma em sal de cozinha'],
+        answer: 1,
+        why: 'O SO_2 vira SO_3, que com a água forma H_2SO_4. É a principal causa da chuva ácida.'
+      },
+      {
+        q: 'SO_2 e CO_2 formam ácidos quando reagem com a água. Por isso são chamados de:',
+        options: ['Óxidos ácidos', 'Óxidos básicos', 'Sais'],
+        answer: 0,
+        why: 'Óxidos de não metais costumam ser ácidos: com água, formam ácidos.'
+      },
+      {
+        q: 'Cal virgem (CaO) com água forma cal hidratada, Ca(OH)_2. O CaO é um:',
+        options: ['Óxido ácido', 'Óxido básico', 'Ácido'],
+        answer: 1,
+        why: 'Óxidos de metais costumam ser básicos: com água, formam bases.'
+      },
+      {
+        q: 'Por que as estátuas de mármore (CaCO_3) da praça se desgastam com a chuva ácida?',
+        options: ['O ácido reage com o carbonato e o transforma em CO_2 e um sal solúvel', 'A chuva é forte demais', 'O mármore derrete com o calor'],
+        answer: 0,
+        why: 'CaCO_3 + H_2SO_4 → CaSO_4 + H_2O + CO_2. O mármore vai sendo consumido pela reação.'
+      },
+      {
+        q: 'Como uma caldeira pode lançar menos SO_2 no ar?',
+        options: ['Com um filtro que usa cal para reter o SO_2 da fumaça', 'Pintando a chaminé de branco', 'Ligando a caldeira só à noite'],
+        answer: 0,
+        why: 'A cal, que é básica, reage com o SO_2, que é ácido, e o gás fica preso no filtro na forma de sal.'
+      },
+      {
+        q: 'Os motores dos carros liberam óxidos de nitrogênio (NO_2). Com a água da chuva, eles formam:',
+        options: ['Ácido nítrico (HNO_3)', 'Amônia (NH_3)', 'Gás nitrogênio puro'],
+        answer: 0,
+        why: 'Os óxidos de nitrogênio também causam chuva ácida, formando ácido nítrico.'
+      },
+      {
+        q: 'Um óxido é um composto formado por dois elementos, sendo o mais eletronegativo deles:',
+        options: ['O hidrogênio', 'O oxigênio', 'Um metal'],
+        answer: 1,
+        why: 'CO_2, CaO, Fe_2O_3 e SiO_2: todos têm o oxigênio e mais um elemento.'
+      }
+    ]
+  },
+
+  equacoes: {
+    type: 'numbers',
+    title: 'Bancada de síntese: equações',
+    tasks: [
+      {
+        prompt: 'Equação 1: a formação da água. Ajuste os coeficientes até cada átomo ter a mesma quantidade nos dois lados.',
+        eq: [[['a', 'H_2', { H: 2 }], ['b', 'O_2', { O: 2 }]], [['c', 'H_2O', { H: 2, O: 1 }]]],
+        answer: { a: 2, b: 1, c: 2 },
+        why: '2 H_2 + O_2 → 2 H_2O: 4 H e 2 O de cada lado. Lavoisier: os átomos só se reorganizam.'
+      },
+      {
+        prompt: 'Equação 2: na chaminé, o SO_2 reage com o oxigênio do ar e vira SO_3.',
+        eq: [[['a', 'SO_2', { S: 1, O: 2 }], ['b', 'O_2', { O: 2 }]], [['c', 'SO_3', { S: 1, O: 3 }]]],
+        answer: { a: 2, b: 1, c: 2 },
+        why: '2 SO_2 + O_2 → 2 SO_3: 2 S e 6 O de cada lado. Depois, SO_3 + H_2O → H_2SO_4, o ácido da chuva.'
+      },
+      {
+        prompt: 'Equação 3: a queima do gás metano (CH_4) que aquece a caldeira nova.',
+        eq: [[['a', 'CH_4', { C: 1, H: 4 }], ['b', 'O_2', { O: 2 }]], [['c', 'CO_2', { C: 1, O: 2 }], ['d', 'H_2O', { H: 2, O: 1 }]]],
+        answer: { a: 1, b: 2, c: 1, d: 2 },
+        why: 'CH_4 + 2 O_2 → CO_2 + 2 H_2O. Dica: comece pelo C e pelo H, e deixe o O, que aparece em dois lugares, para o fim.'
+      },
+      {
+        prompt: 'Equação 4: o filtro de cal neutraliza o ácido sulfúrico. Este é mais difícil!',
+        eq: [[['a', 'Ca(OH)_2', { Ca: 1, O: 2, H: 2 }], ['b', 'H_2SO_4', { H: 2, S: 1, O: 4 }]], [['c', 'CaSO_4', { Ca: 1, S: 1, O: 4 }], ['d', 'H_2O', { H: 2, O: 1 }]]],
+        answer: { a: 1, b: 1, c: 1, d: 2 },
+        why: 'Ca(OH)_2 + H_2SO_4 → CaSO_4 + 2 H_2O. Base + ácido → sal + água: os 2 OH^− e os 2 H^+ formam 2 moléculas de água.'
+      }
+    ]
   }
 };

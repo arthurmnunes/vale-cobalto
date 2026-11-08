@@ -589,6 +589,7 @@ window.VC = window.VC || {};
         const item = deck.draw();
         ui.rich(q, item.q);
         if (item.flame) q.prepend(flameEl(item.flame));
+        if (item.tube) q.prepend(tubeEl(item.tube));
         opts.innerHTML = '';
         item.options.forEach((o, k) => {
           const b = richEl('button', 'btn option', o);
@@ -658,6 +659,17 @@ window.VC = window.VC || {};
     return w;
   }
 
+  // Tubo de ensaio com o indicador de repolho roxo
+  function tubeEl(color) {
+    const w = el('div', 'tube-wrap');
+    w.setAttribute('aria-hidden', 'true');
+    const t = el('div', 'tube');
+    t.style.setProperty('--liquid', color);
+    t.appendChild(el('div', 'liquid'));
+    w.appendChild(t);
+    return w;
+  }
+
   // Desenho simples do átomo (modelo de Bohr)
   const SVGNS = 'http://www.w3.org/2000/svg';
   function svgEl(tag, attrs) {
@@ -718,6 +730,27 @@ window.VC = window.VC || {};
       row.appendChild(fields);
       m.content.appendChild(row);
       const chargeStr = (q) => (q > 0 ? (q === 1 ? '+' : q + '+') : (q === -1 ? '−' : (-q) + '−'));
+      // Balanceamento: soma os átomos de cada elemento em um lado da equação
+      const species = () => task.eq[0].concat(task.eq[1]);
+      const elements = () => {
+        const out = [];
+        species().forEach(([, , atoms]) => Object.keys(atoms).forEach((e) => { if (!out.includes(e)) out.push(e); }));
+        return out;
+      };
+      const countSide = (side, e) => side.reduce((a, [k, , atoms]) => a + (atoms[e] || 0) * vals[k], 0);
+      function updateEq() {
+        const side = (list) => list.map(([k, f]) => (vals[k] > 1 ? vals[k] + ' ' : '') + f).join(' + ');
+        ionBox.innerHTML = '';
+        ionBox.appendChild(el('span', 'ion-cap', 'Equação'));
+        const f = el('div', 'eq-formula'); ui.rich(f, side(task.eq[0]) + ' → ' + side(task.eq[1]));
+        ionBox.appendChild(f);
+        const list = el('div', 'eq-atoms');
+        elements().forEach((e) => {
+          const l = countSide(task.eq[0], e), r = countSide(task.eq[1], e);
+          list.appendChild(el('span', 'eq-atom ' + (l === r ? 'zero' : ''), e + ': ' + l + (l === r ? ' = ' : ' ≠ ') + r));
+        });
+        ionBox.appendChild(list);
+      }
       function updateIons() {
         if (!task.ions) return;
         const formula = task.ions.map(([k, sym]) => (vals[k] > 0 ? sym + (vals[k] > 1 ? '_' + vals[k] : '') : '')).join('');
@@ -742,24 +775,27 @@ window.VC = window.VC || {};
         ui.rich(prompt, task.prompt);
         vals = {}; boxes = {};
         fields.innerHTML = '';
-        const ionMode = !!task.ions;
-        svg.style.display = ionMode ? 'none' : '';
-        ionBox.hidden = !ionMode;
+        const ionMode = !!task.ions, eqMode = !!task.eq;
+        const update = () => (eqMode ? updateEq() : ionMode ? updateIons() : drawAtom(svg, vals, task.shells));
+        svg.style.display = ionMode || eqMode ? 'none' : '';
+        ionBox.hidden = !(ionMode || eqMode);
         row.classList.toggle('ion-mode', ionMode);
-        task.fields = ionMode ? task.ions.map(([k, sym, q]) => [k, 'Íons ' + sym + '^' + chargeStr(q)]) : task.fields;
-        const maxV = ionMode ? 6 : 30;
+        row.classList.toggle('eq-mode', eqMode);
+        if (ionMode) task.fields = task.ions.map(([k, sym, q]) => [k, 'Íons ' + sym + '^' + chargeStr(q)]);
+        if (eqMode) task.fields = species().map(([k, f]) => [k, f]);
+        const maxV = ionMode || eqMode ? 6 : 30, minV = eqMode ? 1 : 0;
         task.fields.forEach(([key, label]) => {
-          vals[key] = 0;
+          vals[key] = minV;
           const f = el('div', 'stepper');
           f.appendChild(richEl('span', 'stepper-label', label));
           const minus = el('button', 'btn step', '−'); minus.setAttribute('aria-label', 'Diminuir ' + label);
-          const out = el('output', 'step-val', '0');
+          const out = el('output', 'step-val', String(minV));
           const plus = el('button', 'btn step', '+'); plus.setAttribute('aria-label', 'Aumentar ' + label);
           const set = (d) => {
-            vals[key] = Math.max(0, Math.min(maxV, vals[key] + d));
+            vals[key] = Math.max(minV, Math.min(maxV, vals[key] + d));
             out.textContent = vals[key];
             f.classList.remove('bad', 'good');
-            if (ionMode) updateIons(); else drawAtom(svg, vals, task.shells);
+            update();
           };
           minus.addEventListener('click', () => set(-1));
           plus.addEventListener('click', () => set(1));
@@ -767,7 +803,7 @@ window.VC = window.VC || {};
           fields.appendChild(f);
           boxes[key] = f;
         });
-        if (ionMode) updateIons(); else drawAtom(svg, vals, task.shells);
+        update();
         const first = fields.querySelector('.step');
         if (first) first.focus();
       }
@@ -781,7 +817,7 @@ window.VC = window.VC || {};
         });
         if (!wrong) {
           ui.sfx('ok'); check.hidden = true; i++;
-          feedback(fb, true, task.ions ? 'Fórmula correta!' : 'Átomo correto!', task.why, show);
+          feedback(fb, true, task.eq ? 'Equação balanceada!' : task.ions ? 'Fórmula correta!' : 'Átomo correto!', task.why, show);
         } else {
           errors++; ui.sfx('err');
           let hint = task.shells
@@ -794,7 +830,13 @@ window.VC = window.VC || {};
               ? 'A carga zerou, mas a fórmula usa a menor proporção possível. Divida as quantidades pelo mesmo número.'
               : 'A soma das cargas precisa dar zero. Dica: cruze as cargas (a carga de um vira a quantidade do outro).';
           }
-          feedback(fb, false, 'Ainda não. Confira os campos marcados em vermelho.', hint, () => { fb.hidden = true; check.focus(); }, 'Tentar de novo');
+          if (task.eq) {
+            const off = elements().filter((e) => countSide(task.eq[0], e) !== countSide(task.eq[1], e));
+            hint = !off.length
+              ? 'Os átomos estão iguais nos dois lados, mas a equação usa os menores números inteiros possíveis. Divida todos os coeficientes pelo mesmo número.'
+              : 'Ainda não fecha: ' + off.map((e) => e + ' tem ' + countSide(task.eq[0], e) + ' à esquerda e ' + countSide(task.eq[1], e) + ' à direita').join('; ') + '. Mude só os coeficientes, nunca os números pequenos das fórmulas.';
+          }
+          feedback(fb, false, task.eq ? 'Ainda não está balanceada.' : 'Ainda não. Confira os campos marcados em vermelho.', hint, () => { fb.hidden = true; check.focus(); }, 'Tentar de novo');
         }
       });
       show();
