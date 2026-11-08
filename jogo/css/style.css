@@ -391,3 +391,20 @@ sup { font-size: 0.72em; line-height: 0; }
 /* Escolher capítulo */
 .chapter-pick { display: grid; gap: 2px; }
 .chapter-pick .small { color: var(--vidro); font-weight: 400; opacity: 0.85; }
+
+/* Capítulo 4: indicador de repolho roxo e balanceamento */
+.tube-wrap { display: flex; justify-content: center; margin: 0 auto 10px; padding: 8px 0; width: 96px; background: var(--cobalto-900); border: 3px solid var(--tinta); }
+.tube { position: relative; width: 26px; height: 78px; border: 3px solid #dbe8ee; border-top: 0; border-radius: 0 0 14px 14px; background: rgba(219, 232, 238, 0.12); overflow: hidden; }
+.tube .liquid { position: absolute; left: 0; right: 0; bottom: 0; height: 58%; background: var(--liquid); box-shadow: inset 4px 0 0 rgba(255, 255, 255, 0.25); }
+.atom-row.eq-mode { grid-template-columns: 1fr; }
+.eq-formula { font-size: clamp(1.15rem, 3.6vw, 1.6rem); font-weight: 700; color: var(--vidro); text-align: center; }
+.eq-atoms { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; }
+.eq-atom { font-size: 0.95rem; color: var(--erro); }
+.eq-atom.zero { color: var(--ok); }
+.atom-row.eq-mode .ion-box { min-height: 0; }
+.atom-row.eq-mode .steppers { grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); }
+.atom-row.eq-mode .stepper { grid-template-columns: minmax(5.5rem, 1fr) 44px 2ch 44px; }
+@media (max-height: 500px) {
+  .tube-wrap { width: 80px; padding: 4px 0; }
+  .tube { height: 58px; width: 22px; }
+}

@@ -457,6 +457,53 @@ window.VC = window.VC || {};
     return c;
   };
 
+  // Horta comunitária: canteiro de madeira com repolhos roxos, tomates e alfaces
+  function horta(ok) {
+    const [c, ctx] = canvas(48, 32);
+    R(ctx, '#1b1f2e', 0, 12, 48, 20); R(ctx, '#7a4f2c', 1, 13, 46, 18); R(ctx, '#8f6036', 1, 13, 46, 1);
+    R(ctx, ok ? '#5a3a22' : '#8a6a48', 3, 15, 42, 13);
+    for (let x = 4; x < 44; x += 5) R(ctx, ok ? '#4a2e1a' : '#7a5a3a', x, 18, 3, 1);
+    if (!ok) { R(ctx, '#b8a27a', 6, 24, 5, 1); R(ctx, '#b8a27a', 30, 22, 6, 1); }
+    const leaf = ok ? '#3f8a4a' : '#b5a23e', leafD = ok ? '#2f6b3a' : '#8a7a30';
+    // repolhos roxos
+    [[5, 10], [17, 11]].forEach(([x, y]) => {
+      R(ctx, leafD, x, y + 4, 9, 3); R(ctx, ok ? '#6b3f8f' : '#8a6a8a', x + 1, y, 7, 6); R(ctx, ok ? '#8f5ab8' : '#a08aa0', x + 2, y + 1, 4, 2);
+    });
+    // tomateiro com estaca
+    R(ctx, '#5a3d22', 33, 1, 1, 22);
+    R(ctx, leaf, 30, 4, 7, 14); R(ctx, leafD, 31, 8, 5, 2); R(ctx, leafD, 30, 14, 6, 2);
+    if (ok) { R(ctx, '#e0675a', 31, 7, 2, 2); R(ctx, '#e0675a', 35, 11, 2, 2); R(ctx, '#e0675a', 32, 15, 2, 2); }
+    else { R(ctx, '#6b5a2a', 34, 9, 2, 1); R(ctx, '#6b5a2a', 30, 16, 2, 1); }
+    // alfaces
+    [[39, 17], [10, 22], [24, 21]].forEach(([x, y]) => { R(ctx, leafD, x, y, 6, 4); R(ctx, leaf, x + 1, y - 1, 4, 3); });
+    // plaquinha
+    R(ctx, '#3d2716', 44, 2, 1, 12); R(ctx, '#1b1f2e', 40, 2, 8, 6); R(ctx, '#f0ead8', 41, 3, 6, 4); R(ctx, '#3f8a4a', 42, 4, 4, 2);
+    return c;
+  }
+  O.horta = () => horta(false);
+  O.horta_ok = () => horta(true);
+
+  // Capela de exaustão: armário com janela de vidro e duto no teto
+  O.capela = () => {
+    const [c, ctx] = canvas(32, 32);
+    R(ctx, '#55687a', 13, 0, 6, 4); R(ctx, '#1b1f2e', 12, 0, 1, 4); R(ctx, '#1b1f2e', 19, 0, 1, 4);
+    R(ctx, '#1b1f2e', 1, 3, 30, 29); R(ctx, '#c9d3d8', 2, 4, 28, 27); R(ctx, '#aab4b8', 2, 4, 28, 3);
+    R(ctx, '#1b1f2e', 4, 8, 24, 13); R(ctx, '#9cc7d9', 5, 9, 22, 11); R(ctx, '#c8e3ec', 6, 10, 6, 2); R(ctx, '#7aa8bd', 5, 17, 22, 3);
+    flask(ctx, 9, 13, '#e0675a'); flask(ctx, 19, 14, '#4fb3a0');
+    R(ctx, '#e8edef', 3, 21, 26, 3); R(ctx, '#6b7f8a', 3, 24, 26, 7); R(ctx, '#55687a', 15, 24, 1, 7);
+    R(ctx, '#7bc67e', 24, 5, 2, 1); R(ctx, '#f2b84b', 27, 5, 1, 1);
+    return c;
+  };
+
+  // Cartaz da escala de pH com as cores do repolho roxo
+  O.cartaz_ph = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#1b1f2e', 1, 2, 14, 12); R(ctx, '#f0ead8', 2, 3, 12, 10);
+    ['#d8264a', '#c2508c', '#7a4aa8', '#3c6fd0', '#3aa35a', '#e8d23a'].forEach((col, i) => R(ctx, col, 2 + i * 2, 6, 2, 4));
+    R(ctx, '#2a4c8f', 4, 4, 8, 1); R(ctx, '#8fa3a8', 3, 11, 10, 1);
+    return c;
+  };
+
   O.tubos = () => {
     const [c, ctx] = canvas(16, 16);
     R(ctx, '#1b1f2e', 1, 9, 14, 6); R(ctx, '#8f6036', 2, 10, 12, 4);
@@ -575,9 +622,13 @@ window.VC = window.VC || {};
     receita: ['................', '...kkkkkkkkk....', '...kwwwwwwwkk...', '...kwbbbbwwwk...', '...kwwwwwwwwk...', '...kwrwbbbbwk...', '...kwwwwwwwwk...', '...kwgwbbbbwk...', '...kwwwwwwwwk...', '...kwawbbbwwk...', '...kkkkkkkkkk...'],
     amostras: ['................', '................', '..kk..kk..kk....', '..kk..kk..kk....', '.kwwkkwwkkwwk...', '.kwwkkwwkkwwk...', '.kaakkgwkkrrk...', '.kaakkggkkrrk...', '.kaakkggkkrrk...', '..kk..kk..kk....'],
     detergente: ['................', '......kk........', '.....kggk.......', '.....kggk.......', '....kggggk......', '...kggwggk......', '...kgwwggk......', '...kgggggk......', '...kggbggk......', '...kgbbbgk......', '...kgggggk......', '....kkkkk.......'],
+    repolho: ['................', '................', '.....kkkkkk.....', '...kkvvvvvvkk...', '..kvvpvvvvpvvk..', '..kvpvvppvvpvk..', '..kvvvpvvpvvvk..', '..kgvvvpvvvvgk..', '...kggvvvvggk...', '....kkggggkk....', '......kkkk......'],
+    solo: ['................', '................', '.....kkkkkk.....', '....kwwwwwwk....', '....kkkkkkkk....', '....kwttttwk....', '....kwtnttwk....', '....kwttnnwk....', '....kwttttwk....', '....kwwwwwwk....', '.....kkkkkk.....'],
+    agua_chuva: ['................', '.......k........', '......kbk.......', '.....kbbbk......', '....kbllbbk.....', '....kbbbbbk.....', '.....kbbbk......', '......kkk.......', '....kwwwwwk.....', '....kwbbbwk.....', '....kwbbbwk.....', '.....kkkkk......'],
+    phmetro: ['................', '...kkkkkkkk.....', '...ksssssssk....', '...ksggggssk....', '...ksgkkgssk....', '...ksggggssk....', '...ksssssssk....', '...ksaskrssk....', '...kkkkkkkkk....', '.......k........', '.......k........', '.......kk.......'],
     moeda: ['................', '................', '.....kkkkkk.....', '....kaaaaaak....', '...kaallaaaak...', '...kaalaakaak...', '...kaaaakaaak...', '...kaaakaaaak...', '...kaaaaaaaak...', '....kaaaaaak....', '.....kkkkkk.....']
   };
-  const ICON_PAL = { k: '#1b1f2e', a: '#f2b84b', w: '#f4f7f8', r: '#e0675a', b: '#2a4c8f', l: '#c8e3ec', g: '#4fb3a0', s: '#c9d3d8' };
+  const ICON_PAL = { k: '#1b1f2e', a: '#f2b84b', w: '#f4f7f8', r: '#e0675a', b: '#2a4c8f', l: '#c8e3ec', g: '#4fb3a0', s: '#c9d3d8', v: '#6b3f8f', p: '#a77ad0', t: '#7a4f2c', n: '#5a3a22' };
 
   art.icon = function (key) {
     const rows = ICONS[key] || ICONS.carta;

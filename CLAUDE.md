@@ -40,13 +40,12 @@ O jogador herda o Laboratório Aurora da Profa. Ítala Ferraz, sua antiga orient
 | 1 | Fundamentos: segurança, substâncias, misturas, fenômenos, mudanças de estado | Publicado |
 | 2 | O átomo e a tabela periódica: partículas, íons, isótopos, camadas, famílias, teste de chama (missões: O mural apagado; Festival das Luzes) | Publicado (issue #3) |
 | 3 | Ligações e interações: iônica, covalente, metálica, fórmulas iônicas, polaridade, solubilidade (missões: O estoque misturado; Óleo na fonte) | Publicado (issue #7) |
-| 4 | Compostos e reações inorgânicas: ácidos, bases, sais, óxidos, balanceamento | **Próximo** |
-| 5 | Grandezas e estequiometria: mol, massa molar, proporções | Planejado |
+| 4 | Compostos e reações inorgânicas: ácidos, bases, sais, óxidos, pH, neutralização, chuva ácida, balanceamento (missões: Solo ácido na horta; A chuva ácida) | Publicado (issue #13) |
+| 5 | Grandezas e estequiometria: mol, massa molar, proporções | **Próximo** |
 | 6 | Soluções e misturas: concentração, diluição, separação; final do jogo | Planejado |
 
 ### Planejamento dos próximos capítulos
 
-- **Cap. 4:** corrigir o solo ácido da horta (neutralização); indicador de repolho roxo; balancear equações. Recompensa: medidor/fitas de pH e capela.
 - **Cap. 5:** grande encomenda; calcular mol e massa sem desperdício, em disputa com o rival. Recompensa: balança analítica e verba extra.
 - **Cap. 6:** concentração e diluição; separação de misturas; a Fórmula Aurora purifica o rio. Recompensa: destilador.
 - **Missão final (13ª):** Congresso Internacional, reconciliação com o rival, aparição da Profa. Ítala e indicação ao Nobel.
@@ -100,4 +99,4 @@ README.md
 
 ## Próximo passo
 
-Conferir as issues abertas (`gh issue list`) e, se não houver pendências, criar a issue do **Capítulo 4** e implementá-lo.
+Conferir as issues abertas (`gh issue list`) e, se não houver pendências, criar a issue do **Capítulo 5** e implementá-lo.

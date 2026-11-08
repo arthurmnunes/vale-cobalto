@@ -14,7 +14,12 @@ VC.ITEMS = {
   receita: { name: 'Receita dos fogos', icon: 'receita', desc: 'Que sal produz cada cor: sódio, cobre, estrôncio e potássio. Entregue à Prefeita Célia.' },
   amostras: { name: 'Amostras sem rótulo', icon: 'amostras', desc: 'Frascos do Seu Bento que perderam os rótulos. Identifique-os na bancada.' },
   rotulos: { name: 'Rótulos novos', icon: 'relatorio', desc: 'Fórmulas corretas para os frascos do Seu Bento: NaCl, CaCl_2, MgO e Al_2O_3.' },
-  detergente: { name: 'Detergente', icon: 'detergente', desc: 'Molécula com ponta polar e cauda apolar: une a água ao óleo. Para limpar a fonte.' }
+  detergente: { name: 'Detergente', icon: 'detergente', desc: 'Molécula com ponta polar e cauda apolar: une a água ao óleo. Para limpar a fonte.' },
+  repolho: { name: 'Repolho roxo', icon: 'repolho', desc: 'Colhido na horta. O suco dele muda de cor conforme a acidez: um indicador natural.' },
+  solo: { name: 'Amostra de solo', icon: 'solo', desc: 'Terra da horta comunitária, onde as folhas estão amareladas. Teste na bancada.' },
+  agua_chuva: { name: 'Água da chuva', icon: 'agua_chuva', desc: 'Guardada pelos voluntários da horta na última chuva. Analise na bancada.' },
+  relatorio_amb: { name: 'Relatório ambiental', icon: 'laudo', desc: 'As reações da chuva ácida e do filtro, todas balanceadas. Entregue à Prefeita Célia.' },
+  phmetro: { name: 'Medidor de pH', icon: 'phmetro', desc: 'Mede a acidez de uma solução com precisão, de 0 a 14. Presente da prefeitura.' }
 };
 
 // Loja do Seu Bento
@@ -24,7 +29,8 @@ VC.SHOP = [
   { id: 'lousa', name: 'Lousa branca', price: 60, desc: 'Para rabiscar fórmulas na parede.', decor: true },
   { id: 'modelo', name: 'Modelo atômico', price: 50, desc: 'Um átomo de Bohr com órbitas de arame.', decor: true, needs: 'cap1' },
   { id: 'tubos', name: 'Estante de tubos de ensaio', price: 40, desc: 'Tubos coloridos para reações em pequena escala.', decor: true, needs: 'cap2' },
-  { id: 'phmetro', name: 'Medidor de pH', price: 90, desc: 'Mede a acidez de soluções.', lockedText: 'Disponível no Capítulo 4' }
+  { id: 'cartaz_ph', name: 'Cartaz da escala de pH', price: 35, desc: 'As cores do repolho roxo, do ácido ao básico.', decor: true, needs: 'cap3' },
+  { id: 'vidraria', name: 'Kit de vidraria volumétrica', price: 90, desc: 'Balões, pipetas e buretas para medidas precisas.', lockedText: 'Disponível no Capítulo 5' }
 ];
 
 // Caderno do Laboratório (conceitos aprendidos)
@@ -56,6 +62,16 @@ VC.NOTEBOOK = {
   forcas_intermoleculares: { title: 'Forças intermoleculares', text: 'Atrações entre moléculas. A mais forte é a ligação de hidrogênio (H ligado a F, O ou N), que explica o alto ponto de ebulição da água e a tensão superficial que sustenta insetos na água.' },
   semelhante: { title: 'Semelhante dissolve semelhante', text: 'Substâncias polares e iônicas se dissolvem bem em solventes polares, como a água. Substâncias apolares se dissolvem em solventes apolares, como óleo e gasolina.' },
   detergente: { title: 'Detergente', text: 'Molécula longa com uma ponta polar (atraída pela água) e uma cauda apolar (atraída pelo óleo). As caudas envolvem as gotas de óleo e a água as leva embora.' },
+  acido: { title: 'Ácidos', text: 'Segundo Arrhenius, em água liberam íons H^+ (que formam H_3O^+). Têm sabor azedo e deixam o indicador de repolho roxo vermelho ou rosa. Exemplos: HCl, H_2SO_4, H_3PO_4 e o ácido acético do vinagre.' },
+  base: { title: 'Bases', text: 'Segundo Arrhenius, em água liberam íons OH^− (hidróxido). Têm sabor adstringente e são escorregadias ao tato. Exemplos: NaOH (soda cáustica), Ca(OH)_2 (cal hidratada) e Mg(OH)_2 (leite de magnésia).' },
+  sal: { title: 'Sais', text: 'Compostos iônicos com o cátion de uma base e o ânion de um ácido. São formados na neutralização. Exemplos: NaCl, CaCO_3 (calcário), CaSO_4 (gesso) e KNO_3 (fertilizante).' },
+  oxido: { title: 'Óxidos', text: 'Compostos de dois elementos em que o oxigênio é o mais eletronegativo. Óxido ácido + água forma ácido (CO_2, SO_2). Óxido básico + água forma base (CaO, Na_2O).' },
+  ph: { title: 'Escala de pH', text: 'Mede a acidez de 0 a 14 (a 25 °C). pH menor que 7: ácido. Igual a 7: neutro. Maior que 7: básico. Cada unidade a menos significa 10 vezes mais íons H^+.' },
+  indicador: { title: 'Indicador ácido-base', text: 'Substância que muda de cor com o pH. O repolho roxo (antocianinas) fica vermelho ou rosa no ácido, roxo no neutro, azul ou verde na base e amarelo na base forte. A fenolftaleína fica incolor no ácido e rosa na base.' },
+  neutralizacao: { title: 'Neutralização', text: 'Ácido + base → sal + água. O H^+ do ácido e o OH^− da base formam H_2O. Ex.: HCl + NaOH → NaCl + H_2O. A calagem usa calcário para neutralizar o solo ácido.' },
+  chuva_acida: { title: 'Chuva ácida', text: 'A chuva normal já tem pH perto de 5,6, por causa do CO_2 do ar. Óxidos de enxofre (SO_2) e de nitrogênio (NO_2), lançados por caldeiras e motores, formam ácidos sulfúrico e nítrico e baixam ainda mais o pH. Ela corrói mármore e acidifica solos e lagos.' },
+  lavoisier: { title: 'Lei de Lavoisier', text: 'Em um sistema fechado, a massa total antes e depois da reação é a mesma. Os átomos não somem nem aparecem: só se reorganizam em substâncias novas.' },
+  balanceamento: { title: 'Balanceamento', text: 'Coeficientes (os números na frente das fórmulas) igualam a quantidade de cada átomo nos dois lados, nos menores números inteiros. Nunca se mudam os índices das fórmulas. Ex.: 2 H_2 + O_2 → 2 H_2O.' },
   bohr: { title: 'Modelo de Bohr', text: 'Os elétrons giram em camadas com energia definida. Só mudam de camada absorvendo ou emitindo uma quantidade exata de energia, o que explica as cores do teste de chama.' }
 };
 
@@ -87,7 +103,15 @@ VC.QUESTS = {
   q3_detergente: { ch: 3, text: 'Prepare um detergente na bancada de síntese.', target: { map: 'lab', id: 'sintese' } },
   q3_limpar: { ch: 3, text: 'Use o detergente para limpar a fonte.', target: { map: 'praca', id: 'fonte' } },
   q3_prefeita: { ch: 3, text: 'Conte à Prefeita Célia que a fonte está limpa.', target: { map: 'praca', id: 'prefeita' } },
-  q3_fim: { ch: 3, text: 'Fim do conteúdo disponível. O Capítulo 4 chega na próxima atualização.', target: null }
+  q3_fim: { ch: 3, text: 'Fim do conteúdo disponível. O Capítulo 4 chega na próxima atualização.', target: null },
+  q4_prefeita: { ch: 4, text: 'A Prefeita Célia quer falar com você sobre a horta.', target: { map: 'praca', id: 'prefeita' } },
+  q4_horta: { ch: 4, text: 'Examine a horta comunitária, perto do rio.', target: { map: 'praca', id: 'horta' } },
+  q4_indicador: { ch: 4, text: 'Prepare o indicador de repolho roxo e teste o solo na bancada.', target: { map: 'lab', id: 'bancada' } },
+  q4_calagem: { ch: 4, text: 'Corrija o solo ácido da horta.', target: { map: 'praca', id: 'horta' } },
+  q4_chuva: { ch: 4, text: 'Analise a água da chuva na bancada.', target: { map: 'lab', id: 'bancada' } },
+  q4_equacoes: { ch: 4, text: 'Balanceie as equações do relatório na bancada de síntese.', target: { map: 'lab', id: 'sintese' } },
+  q4_entrega: { ch: 4, text: 'Entregue o relatório ambiental à Prefeita Célia.', target: { map: 'praca', id: 'prefeita' } },
+  q4_fim: { ch: 4, text: 'Fim do conteúdo disponível. O Capítulo 5 chega na próxima atualização.', target: null }
 };
 
 // Início de cada capítulo e o que ele concede ao ser concluído (para "Escolher capítulo")
@@ -118,18 +142,27 @@ VC.CHAPTER_DATA = {
       notebook: ['octeto', 'ligacao_ionica', 'ligacao_covalente', 'ligacao_metalica', 'formula_ionica', 'polaridade', 'forcas_intermoleculares', 'semelhante', 'detergente'],
       stars: ['amostras', 'formulas', 'fonte', 'detergente']
     }
+  },
+  4: {
+    start: { quest: 'q4_prefeita', spawn: [5, 6], face: 'down' },
+    grants: {
+      inv: ['phmetro'],
+      flags: ['hortaOk', 'capelaOk', 'cap4'],
+      notebook: ['acido', 'base', 'sal', 'oxido', 'ph', 'indicador', 'neutralizacao', 'chuva_acida', 'lavoisier', 'balanceamento'],
+      stars: ['funcoes', 'indicador', 'calagem', 'chuva', 'equacoes']
+    }
   }
 };
 
 // Capítulos já implementados
-VC.IMPLEMENTED = 3;
+VC.IMPLEMENTED = 4;
 
 // Roteiro de capítulos (quadro de pedidos)
 VC.CHAPTERS = [
   { n: 1, short: 'Fundamentos', title: 'Fundamentos da Química', topic: 'Segurança, substâncias, misturas e fenômenos', reward: 'Licença provisória e balança' },
   { n: 2, short: 'O átomo', title: 'O átomo e a tabela periódica', topic: 'Partículas, distribuição eletrônica, famílias', reward: 'Bico de Bunsen e mural restaurado' },
   { n: 3, short: 'Ligações', title: 'Ligações e interações', topic: 'Iônica, covalente, metálica e polaridade', reward: 'Bancada de síntese' },
-  { n: 4, title: 'Compostos e reações inorgânicas', topic: 'Ácidos, bases, sais, óxidos e balanceamento', reward: 'Medidor de pH e capela' },
+  { n: 4, short: 'Reações', title: 'Compostos e reações inorgânicas', topic: 'Ácidos, bases, sais, óxidos e balanceamento', reward: 'Medidor de pH e capela' },
   { n: 5, title: 'Grandezas e estequiometria', topic: 'Mol, massa molar e proporções', reward: 'Balança analítica' },
   { n: 6, title: 'Soluções e misturas', topic: 'Concentração, diluição e separação', reward: 'Destilador e a Fórmula Aurora' }
 ];
