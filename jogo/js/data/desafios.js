@@ -53,7 +53,7 @@ VC.CHALLENGES = {
   // Missão 1c: organizar a estante
   estante: {
     type: 'sort',
-    need: 10,
+    need: 6,
     title: 'Estante de reagentes',
     prompt: 'Classifique cada frasco na prateleira certa.',
     bins: ['Substância simples', 'Substância composta', 'Mistura'],
@@ -84,7 +84,7 @@ VC.CHALLENGES = {
   // Missão 2a: relatório de ocorrências
   fenomenos: {
     type: 'sort',
-    need: 10,
+    need: 6,
     title: 'Relatório de ocorrências',
     prompt: 'Cada ocorrência da cidade é um fenômeno físico ou químico?',
     bins: ['Fenômeno físico', 'Fenômeno químico'],
@@ -115,7 +115,7 @@ VC.CHALLENGES = {
   // Missão 2b: mudanças de estado
   estados: {
     type: 'quiz',
-    need: 4,
+    need: 3,
     title: 'Mudanças de estado',
     questions: [
       {
@@ -257,7 +257,7 @@ VC.CHALLENGES = {
 
   familias: {
     type: 'sort',
-    need: 11,
+    need: 6,
     title: 'Mural das famílias',
     prompt: 'Coloque cada elemento na sua família da tabela periódica.',
     bins: ['Metais alcalinos', 'Alcalino-terrosos', 'Halogênios', 'Gases nobres'],
@@ -333,7 +333,7 @@ VC.CHALLENGES = {
 
   chama: {
     type: 'quiz',
-    need: 5,
+    need: 3,
     title: 'Teste de chama',
     questions: [
       {
@@ -415,7 +415,7 @@ VC.CHALLENGES = {
 
   amostras: {
     type: 'sort',
-    need: 9,
+    need: 6,
     title: 'Amostras do Seu Bento',
     prompt: 'Pelas propriedades, que tipo de ligação mantém cada amostra unida?',
     bins: ['Ligação iônica', 'Ligação covalente', 'Ligação metálica'],
@@ -443,7 +443,7 @@ VC.CHALLENGES = {
 
   ligacoes: {
     type: 'quiz',
-    need: 4,
+    need: 3,
     title: 'Como os átomos se ligam',
     questions: [
       {
@@ -530,7 +530,7 @@ VC.CHALLENGES = {
 
   polaridade: {
     type: 'quiz',
-    need: 4,
+    need: 3,
     title: 'Óleo na fonte',
     questions: [
       {
@@ -586,7 +586,7 @@ VC.CHALLENGES = {
 
   solubilidade: {
     type: 'sort',
-    need: 8,
+    need: 6,
     title: 'Bancada de síntese: detergente',
     prompt: 'Semelhante dissolve semelhante: onde cada substância se dissolve melhor?',
     bins: ['Na água (polar)', 'No óleo (apolar)'],
