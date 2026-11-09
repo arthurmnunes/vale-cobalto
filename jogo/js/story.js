@@ -84,7 +84,8 @@ window.VC = window.VC || {};
   const CHAPTER_START = {
     2: { quest: 'q2_lia', lines: ['Vale Cobalto se prepara para o Festival das Luzes.', 'A Lia tem novidades. Procure por ela na praça.'] },
     3: { quest: 'q3_bento', lines: ['Depois do festival, a cidade volta à rotina. Mas o Seu Bento está com um problema na barraca.', 'Vá falar com ele na praça.'] },
-    4: { quest: 'q4_prefeita', lines: ['A primavera chega a Vale Cobalto, mas a horta comunitária, perto do rio, não vai nada bem.', 'A Prefeita Célia quer falar com você.'] }
+    4: { quest: 'q4_prefeita', lines: ['A primavera chega a Vale Cobalto, mas a horta comunitária, perto do rio, não vai nada bem.', 'A Prefeita Célia quer falar com você.'] },
+    5: { quest: 'q5_prefeita', lines: ['A temporada de chuvas se aproxima, e a estação de tratamento de água precisa se preparar.', 'A Prefeita Célia tem uma encomenda grande para o Aurora.'] }
   };
 
   S.chapterIntro = function (n, isNew) {
@@ -108,7 +109,8 @@ window.VC = window.VC || {};
     if (st.quest === 'q_fim_demo') { st.quest = 'q2_lia'; st.flags.capAviso = 2; }
     if (st.quest === 'q2_fim') { st.quest = 'q3_bento'; st.flags.capAviso = 3; }
     if (st.quest === 'q3_fim') { st.quest = 'q4_prefeita'; st.flags.capAviso = 4; }
-    const fromFlags = st.flags.cap3 ? 4 : st.flags.cap2 ? 3 : st.flags.cap1 ? 2 : 1;
+    if (st.quest === 'q4_fim') { st.quest = 'q5_prefeita'; st.flags.capAviso = 5; }
+    const fromFlags = st.flags.cap4 ? 5 : st.flags.cap3 ? 4 : st.flags.cap2 ? 3 : st.flags.cap1 ? 2 : 1;
     const fromQuest = (VC.QUESTS[st.quest] && VC.QUESTS[st.quest].ch) || 1;
     st.maxCh = Math.max(st.maxCh || 1, fromFlags, fromQuest);
   };
@@ -283,6 +285,65 @@ window.VC = window.VC || {};
       'Estrelas: ' + starsOf(['funcoes', 'indicador', 'calagem', 'chuva', 'equacoes']) + '. A prefeitura pagou 120 moedas pelo relatório.',
       'O medidor de pH está na mochila, e a capela já foi instalada no laboratório.'
     ]);
+    await S.startChapter(5);
+  }
+
+  /* ---------- Capítulo 5 ---------- */
+  // Encomenda da estação de tratamento de água: o Grupo Vex propõe "o dobro, por garantia"
+  async function orderScene(scene) {
+    await talk([
+      ['prefeita', '{player}, a temporada de chuvas está chegando, e a estação de tratamento de água precisa de uma grande encomenda de reagentes.'],
+      ['prefeita', 'Sulfato de alumínio e cal. Juntos, eles agrupam a sujeira da água em flocos, que afundam e depois são filtrados.'],
+      ['prefeita', 'A prefeitura vai escolher um fornecedor. E olhe só quem também se candidatou.']
+    ]);
+    scene.scripted = true;
+    try {
+      scene.addNpc({ id: 'rival', sprite: 'rival', pos: () => [28, 8], face: 'left', solid: false });
+      await scene.walkNpc('rival', [24, 7], 60);
+      await talk([
+        ['rival', 'O Grupo Vex manda o dobro de tudo, Prefeita. Por garantia. Sobra é melhor do que falta.'],
+        ['prefeita', 'Sobra é dinheiro jogado fora, {rival}. E reagente em excesso na água acaba indo parar no rio.'],
+        ['prefeita', 'Quero a quantidade exata, calculada pela química. Quem acertar fica com o contrato.']
+      ]);
+      const c = await ui().choose('player', 'Responder:', ['Exatidão é com o Aurora.', 'Que vença o melhor cálculo, {rival}.']);
+      await say('rival', c === 0 ? 'Veremos. O Grupo Vex tem calculadoras muito caras.' : 'Combinado. E o melhor cálculo vai ser o meu.');
+      await scene.walkNpc('rival', [28, 8], 70);
+      scene.removeNpc('rival');
+    } finally { scene.scripted = false; }
+    await say('prefeita', 'Aqui está o pedido da estação. Comece organizando as grandezas no laboratório: massa, mol, volume... Isso é com você.');
+    VC.addItem('pedido');
+    VC.setQuest('q5_grandezas');
+  }
+
+  async function finalCap5(scene) {
+    await talk([
+      ['prefeita', 'A planilha da encomenda! Cada saco calculado pela equação, em mol e em gramas. Sem sobra e sem falta.'],
+      ['prefeita', 'E aí vem a outra proposta.']
+    ]);
+    scene.scripted = true;
+    try {
+      scene.addNpc({ id: 'rival', sprite: 'rival', pos: () => [28, 8], face: 'left', solid: false });
+      await scene.walkNpc('rival', [24, 7], 60);
+      await talk([
+        ['rival', 'A proposta do Grupo Vex tinha o dobro de cal. Refiz as contas ontem à noite...'],
+        ['rival', 'O sulfato de alumínio é o reagente limitante. Metade da nossa cal ia sobrar sem reagir. Direto para o rio.'],
+        ['rival', 'O seu cálculo está certo, {player}. Não vou esquecer essa.']
+      ]);
+      const c = await ui().choose('player', 'Responder:', ['Bom saber que você confere as contas, {rival}.', 'Na próxima, calcule antes de mandar o dobro.']);
+      await say('rival', c === 0 ? 'Sempre confiro. Só que dessa vez conferi tarde demais.' : 'Ha! Anotado. O Grupo Vex aprende rápido.');
+      await scene.walkNpc('rival', [28, 8], 70);
+      scene.removeNpc('rival');
+    } finally { scene.scripted = false; }
+    await say('prefeita', 'O contrato é do Aurora. Aqui está o pagamento, com uma verba extra para o laboratório. E a balança analítica a prefeitura já pagou ao Seu Bento: agora ela é do Aurora.');
+    VC.removeItem('planilha');
+    VC.addCoins(150);
+    VC.flag('cap5', true);
+    VC.setQuest('q5_fim');
+    await ui().chapterCard('Capítulo 5 concluído', [
+      'A estação de tratamento recebeu a encomenda exata, e nenhum saco de cal vai parar no rio.',
+      'Estrelas: ' + starsOf(['grandezas', 'massas', 'calculo']) + '. O contrato rendeu 150 moedas ao Aurora.',
+      'A balança analítica agora faz parte do laboratório.'
+    ]);
     await S.endOfDemo();
   }
 
@@ -337,6 +398,10 @@ window.VC = window.VC || {};
       return;
     }
     if (q() === 'q_bancada') { await say('prefeita', 'O relatório está com você. Analise tudo na bancada do laboratório!'); return; }
+    if (q() === 'q5_prefeita') { await orderScene(scene); return; }
+    if (q() === 'q5_entrega') { await finalCap5(scene); return; }
+    if (q() === 'q5_fim') { await say('prefeita', 'A estação de tratamento já recebeu tudo, {player}. Nenhum saco sobrando.'); return; }
+    if (q().indexOf('q5_') === 0) { await say('prefeita', 'A estação conta com o cálculo exato, {player}. Sem sobra e sem falta!'); return; }
     if (q() === 'q4_prefeita') {
       await talk([
         ['prefeita', '{player}, preciso de ajuda com a horta comunitária, aquela perto do rio.'],
@@ -362,6 +427,17 @@ window.VC = window.VC || {};
   };
 
   H.bento = async function (scene) {
+    if (q() === 'q5_bento') {
+      await talk([
+        ['bento', 'Uma encomenda para a estação de tratamento? Então balança de cozinha não serve.'],
+        ['bento', 'Tenho uma balança analítica guardada: mede até a décima de miligrama, 0,0001 g. Vou instalar no Aurora agora mesmo.'],
+        ['bento', 'E leve esta tabela de massas atômicas. Sem ela, nada de massa molar.']
+      ]);
+      VC.flag('analiticaOk', true);
+      VC.addItem('tabela_massas');
+      VC.setQuest('q5_massas');
+      return;
+    }
     if (q() === 'q3_bento') {
       await talk([
         ['bento', '{player}, que bom que você veio! Uma caixa caiu da carroça e os frascos perderam os rótulos.'],
@@ -443,7 +519,14 @@ window.VC = window.VC || {};
     q4_chuva: 'Chuva ácida? Então o problema veio do céu! Leva a água para a bancada.',
     q4_equacoes: 'Balancear é contar átomos: cada um precisa aparecer igual dos dois lados. Só mexe nos números da frente!',
     q4_entrega: 'Corre, entrega o relatório antes do Grupo Vex!',
-    q4_fim: 'Plantei repolho roxo em casa. Agora eu tenho meu próprio indicador de pH!'
+    q4_fim: 'Plantei repolho roxo em casa. Agora eu tenho meu próprio indicador de pH!',
+    q5_prefeita: 'A prefeita está procurando você! Parece que é uma encomenda grande.',
+    q5_grandezas: 'Mol é como uma dúzia, só que gigante: 6,02 × 10^23 unidades!',
+    q5_bento: 'Para uma encomenda tão precisa, balança comum não serve. O Seu Bento tem de tudo!',
+    q5_massas: 'Massa molar é só somar as massas dos átomos da fórmula. E o número fora do parêntese multiplica tudo o que está dentro!',
+    q5_calculo: 'Os coeficientes da equação são como uma receita de bolo: sempre na mesma proporção.',
+    q5_entrega: 'Leva a planilha para a prefeita! Quero ver a cara do Grupo Vex.',
+    q5_fim: 'Calculei quantos mol de água cabem no meu copo: uns 11 mol! É muita molécula.'
   };
 
   H.lia = async function () {
@@ -480,7 +563,11 @@ window.VC = window.VC || {};
     q4_indicador: '{cat} cheira o repolho roxo e decide que não é comida de gato.',
     q4_chuva: '{cat} detesta chuva. Ácida, então, nem se fala.',
     q4_equacoes: '{cat} empurra uma molécula de O_2 do modelo para fora da bancada. Agora faltam dois oxigênios.',
-    q4_fim: '{cat} dorme em cima da capela nova, que está quentinha.'
+    q4_fim: '{cat} dorme em cima da capela nova, que está quentinha.',
+    q5_grandezas: '{cat} tenta contar os grãos de sal da bancada. Desiste no terceiro.',
+    q5_massas: '{cat} encosta o bigode na balança analítica, e o visor treme na quarta casa decimal.',
+    q5_calculo: '{cat} senta em cima das contas. Talvez seja o jeito dele de ajudar.',
+    q5_fim: '{cat} dorme ao lado da balança analítica. Em cima dela, nem pensar.'
   };
 
   H.cat = async function () {
@@ -545,6 +632,16 @@ window.VC = window.VC || {};
   };
 
   H.bancada = async function (scene) {
+    if (q() === 'q5_grandezas') {
+      await say('narrador', 'Massa, mol, volume, número de partículas... Antes de calcular qualquer coisa, cada grandeza precisa da unidade certa.');
+      const r = await ui().challenge(['grandezas', 'unidades'], 'Grandezas organizadas');
+      VC.state.stars.grandezas = r.stars;
+      VC.learn(['mol', 'avogadro', 'massa_atomica', 'volume_molar']);
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'Para uma encomenda tão grande, a balança da bancada não basta. O Seu Bento deve ter algo mais preciso.');
+      VC.setQuest('q5_bento');
+      return;
+    }
     if (q() === 'q4_indicador') {
       await say('narrador', 'Você pica o repolho roxo, ferve com água e coa. O suco roxo é o indicador. Uma gota em cada tubo de ensaio.');
       const r = await ui().challenge('indicador', 'Solo testado');
@@ -649,6 +746,18 @@ window.VC = window.VC || {};
   H.licenca = async function () { await say('narrador', 'Licença provisória de funcionamento. O Aurora está oficialmente de volta!'); };
   H.planta = async function () { await say('narrador', 'A samambaia gosta da luz do laboratório. Plantas fazem fotossíntese: um fenômeno químico!'); };
   H.sintese = async function () {
+    if (q() === 'q5_calculo') {
+      await say('narrador', 'Os coeficientes da equação balanceada são a receita da reação: dizem quantos mol de cada substância reagem e se formam.');
+      const r = await ui().challenge(['proporcoes', 'limitante'], 'Encomenda calculada');
+      VC.state.stars.calculo = r.stars;
+      VC.learn(['estequiometria', 'limitante', 'proust']);
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'A planilha está pronta: cada reagente em mol e em gramas, na proporção exata da equação.');
+      VC.removeItem('pedido');
+      VC.addItem('planilha');
+      VC.setQuest('q5_entrega');
+      return;
+    }
     if (q() === 'q3_formulas') {
       await say('narrador', 'Cada rótulo precisa da fórmula certa: a soma das cargas dos íons tem que dar zero.');
       const r = await ui().challenge('formulas', 'Rótulos prontos');
@@ -718,6 +827,22 @@ window.VC = window.VC || {};
     if (q().indexOf('q4_') === 0) { await say('narrador', 'O canteiro continua amarelado. O solo precisa de cuidado.'); return; }
     await say('narrador', 'A horta comunitária de Vale Cobalto. As folhas andam meio amareladas.');
   };
+
+  H.analitica = async function () {
+    if (q() === 'q5_massas') {
+      await say('narrador', 'Com a tabela de massas atômicas, você calcula a massa molar de cada reagente e confere tudo na balança analítica.');
+      const r = await ui().challenge(['massa_molar', 'conversoes'], 'Massas conferidas');
+      VC.state.stars.massas = r.stars;
+      VC.learn(['massa_molar', 'conversao']);
+      VC.addCoins(15 + 10 * r.stars);
+      ui().toast('Missão concluída: A grande encomenda');
+      await say('narrador', 'Falta o principal: quanto de cada reagente a estação vai usar. A resposta está na equação da reação.');
+      VC.setQuest('q5_calculo');
+      return;
+    }
+    await say('narrador', 'A balança analítica: precisão de 0,0001 g, dentro de uma caixinha de vidro para nenhuma corrente de ar atrapalhar a pesagem.');
+  };
+  H.poster_mol = async function () { await say('narrador', 'O pôster do mol: 6,02 × 10^23. Se fossem grãos de arroz, cobririam a Terra inteira com uma camada de dezenas de metros.'); };
 
   H.capela = async function () {
     await say('narrador', 'A capela de exaustão: um exaustor puxa gases e vapores para fora do laboratório. Reações com ácidos fortes, só aqui dentro.');

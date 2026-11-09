@@ -495,6 +495,28 @@ window.VC = window.VC || {};
     return c;
   };
 
+  // Balança analítica: mesinha com capela de vidro e visor digital
+  O.analitica = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#3d2716', 1, 10, 14, 2); R(ctx, '#3d2716', 2, 12, 2, 4); R(ctx, '#3d2716', 12, 12, 2, 4);
+    R(ctx, '#1b1f2e', 2, 1, 12, 9); R(ctx, '#c8e3ec', 3, 2, 10, 5); R(ctx, '#e8f4f8', 3, 2, 3, 1);
+    R(ctx, '#aab4b8', 6, 5, 4, 1); R(ctx, '#7aa8bd', 7, 4, 2, 1);
+    R(ctx, '#e8edef', 3, 7, 10, 2); R(ctx, '#1b1f2e', 4, 7, 5, 2); R(ctx, '#7bc67e', 5, 7, 3, 1);
+    R(ctx, '#f2b84b', 11, 7, 1, 1);
+    return c;
+  };
+
+  // Pôster do mol: molécula estilizada e uma barra com o "6,02"
+  O.poster_mol = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#1b1f2e', 2, 1, 12, 14); R(ctx, '#f4f7f8', 3, 2, 10, 12);
+    R(ctx, '#2a4c8f', 4, 3, 8, 3);
+    R(ctx, '#e0675a', 7, 7, 2, 2); R(ctx, '#4fb3a0', 5, 9, 2, 2); R(ctx, '#4fb3a0', 9, 9, 2, 2);
+    R(ctx, '#8fa3a8', 6, 9, 1, 1); R(ctx, '#8fa3a8', 9, 8, 1, 1);
+    R(ctx, '#f2b84b', 4, 12, 8, 1);
+    return c;
+  };
+
   // Cartaz da escala de pH com as cores do repolho roxo
   O.cartaz_ph = () => {
     const [c, ctx] = canvas(16, 16);

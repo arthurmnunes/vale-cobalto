@@ -114,6 +114,8 @@ window.VC = window.VC || {};
         { id: 'sintese', tex: 'sintese', x: 2, y: 6, w: 2, solidH: 12, cond: () => VC.flag('sinteseOk') },
         { id: 'tubos', tex: 'tubos', x: 5, y: 2, w: 1, solidH: 6, cond: () => VC.state.decor.includes('tubos') },
         { id: 'capela', tex: 'capela', x: 13, y: 5, w: 2, solidH: 12, cond: () => VC.flag('capelaOk') },
+        { id: 'analitica', tex: 'analitica', x: 3, y: 9, w: 1, solidH: 8, cond: () => VC.flag('analiticaOk') },
+        { id: 'poster_mol', tex: 'poster_mol', x: 5, y: 1, w: 1, solid: false, depth: 1, cond: () => VC.state.decor.includes('poster_mol') },
         { id: 'cartaz_ph', tex: 'cartaz_ph', x: 10, y: 1, w: 1, solid: false, depth: 1, cond: () => VC.state.decor.includes('cartaz_ph') }
       ],
       npcs: [

@@ -41,12 +41,11 @@ O jogador herda o Laboratório Aurora da Profa. Ítala Ferraz, sua antiga orient
 | 2 | O átomo e a tabela periódica: partículas, íons, isótopos, camadas, famílias, teste de chama (missões: O mural apagado; Festival das Luzes) | Publicado (issue #3) |
 | 3 | Ligações e interações: iônica, covalente, metálica, fórmulas iônicas, polaridade, solubilidade (missões: O estoque misturado; Óleo na fonte) | Publicado (issue #7) |
 | 4 | Compostos e reações inorgânicas: ácidos, bases, sais, óxidos, pH, neutralização, chuva ácida, balanceamento (missões: Solo ácido na horta; A chuva ácida) | Publicado (issue #13) |
-| 5 | Grandezas e estequiometria: mol, massa molar, proporções | **Próximo** |
-| 6 | Soluções e misturas: concentração, diluição, separação; final do jogo | Planejado |
+| 5 | Grandezas e estequiometria: mol, Avogadro, massa molar, conversões, proporções, reagente limitante (missões: A grande encomenda; Sem sobra e sem falta) | Publicado (issue #16) |
+| 6 | Soluções e misturas: concentração, diluição, separação; final do jogo | **Próximo** |
 
 ### Planejamento dos próximos capítulos
 
-- **Cap. 5:** grande encomenda; calcular mol e massa sem desperdício, em disputa com o rival. Recompensa: balança analítica e verba extra.
 - **Cap. 6:** concentração e diluição; separação de misturas; a Fórmula Aurora purifica o rio. Recompensa: destilador.
 - **Missão final (13ª):** Congresso Internacional, reconciliação com o rival, aparição da Profa. Ítala e indicação ao Nobel.
 
@@ -79,7 +78,8 @@ README.md
 ### Padrões do código
 
 - Quests por capítulo com prefixo `qN_` e campo `ch: N` em `dados.js`.
-- Capítulo concluído = flag `capN`. Ao adicionar um capítulo, atualizar `VC.IMPLEMENTED`.
+- Capítulo concluído = flag `capN`. Ao adicionar um capítulo, atualizar `VC.IMPLEMENTED` e criar a entrada em `VC.CHAPTER_DATA` (o que o capítulo concede e onde começa), usada por "Escolher capítulo" no menu.
+- Desafio `numbers` tem modos: átomo (padrão), `shells`, `ions`, `eq` (balanceamento) e `calc` (cálculos com contadores).
 - Transição entre capítulos em `story.js` (`S.startChapterN`) e tela de fim de conteúdo (`S.endOfDemo`).
 - **Compatibilidade de saves:** jogos salvos no fim do conteúdo anterior devem continuar no novo capítulo sem recomeçar (tratar em `S.migrate`).
 - Atualizar a tabela de capítulos do `README.md` a cada capítulo publicado.
@@ -99,4 +99,4 @@ README.md
 
 ## Próximo passo
 
-Conferir as issues abertas (`gh issue list`) e, se não houver pendências, criar a issue do **Capítulo 5** e implementá-lo.
+Conferir as issues abertas (`gh issue list`) e, se não houver pendências, criar a issue do **Capítulo 6** (último, com a missão final) e implementá-lo.

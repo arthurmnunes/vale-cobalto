@@ -19,7 +19,10 @@ VC.ITEMS = {
   solo: { name: 'Amostra de solo', icon: 'solo', desc: 'Terra da horta comunitária, onde as folhas estão amareladas. Teste na bancada.' },
   agua_chuva: { name: 'Água da chuva', icon: 'agua_chuva', desc: 'Guardada pelos voluntários da horta na última chuva. Analise na bancada.' },
   relatorio_amb: { name: 'Relatório ambiental', icon: 'laudo', desc: 'As reações da chuva ácida e do filtro, todas balanceadas. Entregue à Prefeita Célia.' },
-  phmetro: { name: 'Medidor de pH', icon: 'phmetro', desc: 'Mede a acidez de uma solução com precisão, de 0 a 14. Presente da prefeitura.' }
+  phmetro: { name: 'Medidor de pH', icon: 'phmetro', desc: 'Mede a acidez de uma solução com precisão, de 0 a 14. Presente da prefeitura.' },
+  pedido: { name: 'Pedido da estação', icon: 'relatorio', desc: 'Encomenda da estação de tratamento de água: sulfato de alumínio, Al_2(SO_4)_3, e cal hidratada, Ca(OH)_2. Quantidade exata, sem sobra.' },
+  tabela_massas: { name: 'Tabela de massas atômicas', icon: 'receita', desc: 'H = 1, C = 12, N = 14, O = 16, Na = 23, Al = 27, S = 32, Cl = 35,5, Ca = 40 (em u).' },
+  planilha: { name: 'Planilha da encomenda', icon: 'laudo', desc: 'Cada reagente calculado pela equação balanceada, em mol e em gramas. Entregue à Prefeita Célia.' }
 };
 
 // Loja do Seu Bento
@@ -30,6 +33,7 @@ VC.SHOP = [
   { id: 'modelo', name: 'Modelo atômico', price: 50, desc: 'Um átomo de Bohr com órbitas de arame.', decor: true, needs: 'cap1' },
   { id: 'tubos', name: 'Estante de tubos de ensaio', price: 40, desc: 'Tubos coloridos para reações em pequena escala.', decor: true, needs: 'cap2' },
   { id: 'cartaz_ph', name: 'Cartaz da escala de pH', price: 35, desc: 'As cores do repolho roxo, do ácido ao básico.', decor: true, needs: 'cap3' },
+  { id: 'poster_mol', name: 'Pôster do mol', price: 35, desc: '6,02 × 10²³: o número de Avogadro na parede.', decor: true, needs: 'cap4' },
   { id: 'vidraria', name: 'Kit de vidraria volumétrica', price: 90, desc: 'Balões, pipetas e buretas para medidas precisas.', lockedText: 'Disponível no Capítulo 5' }
 ];
 
@@ -71,6 +75,15 @@ VC.NOTEBOOK = {
   neutralizacao: { title: 'Neutralização', text: 'Ácido + base → sal + água. O H^+ do ácido e o OH^− da base formam H_2O. Ex.: HCl + NaOH → NaCl + H_2O. A calagem usa calcário para neutralizar o solo ácido.' },
   chuva_acida: { title: 'Chuva ácida', text: 'A chuva normal já tem pH perto de 5,6, por causa do CO_2 do ar. Óxidos de enxofre (SO_2) e de nitrogênio (NO_2), lançados por caldeiras e motores, formam ácidos sulfúrico e nítrico e baixam ainda mais o pH. Ela corrói mármore e acidifica solos e lagos.' },
   lavoisier: { title: 'Lei de Lavoisier', text: 'Em um sistema fechado, a massa total antes e depois da reação é a mesma. Os átomos não somem nem aparecem: só se reorganizam em substâncias novas.' },
+  mol: { title: 'Mol', text: 'Unidade de quantidade de matéria no SI. 1 mol contém 6,02 × 10^23 entidades (átomos, moléculas ou íons), assim como 1 dúzia contém 12 unidades.' },
+  avogadro: { title: 'Constante de Avogadro', text: 'É o número de entidades em 1 mol: 6,02 × 10^23. Ela faz a ponte entre o mundo dos átomos e as quantidades que pesamos no laboratório.' },
+  massa_atomica: { title: 'Massa atômica', text: 'Massa de um átomo em unidades de massa atômica (u), comparada a 1/12 da massa do carbono-12. Está na tabela periódica: H = 1 u, C = 12 u, O = 16 u.' },
+  massa_molar: { title: 'Massa molar (M)', text: 'Massa de 1 mol, em g/mol: soma das massas dos átomos da fórmula. Água: 2 × 1 + 16 = 18 g/mol. O número fora do parêntese multiplica tudo o que está dentro: Ca(OH)_2 = 40 + 2 × (16 + 1) = 74 g/mol.' },
+  volume_molar: { title: 'Volume molar', text: 'Nas CNTP (0 °C e 1 atm), 1 mol de qualquer gás ocupa cerca de 22,4 L.' },
+  conversao: { title: 'Massa e mol', text: 'n = m ÷ M. Exemplo: 36 g de água ÷ 18 g/mol = 2 mol. O caminho inverso: m = n × M.' },
+  estequiometria: { title: 'Estequiometria', text: 'Cálculo das quantidades de reagentes e produtos. Os coeficientes da equação balanceada dão a proporção em mol: em 2 H_2 + O_2 → 2 H_2O, são 2 mol de H_2 para 1 mol de O_2, formando 2 mol de água.' },
+  limitante: { title: 'Reagente limitante', text: 'É o reagente que acaba primeiro e define quanto produto se forma. O reagente em excesso sobra sem reagir: é desperdício de dinheiro e pode virar resíduo.' },
+  proust: { title: 'Lei de Proust', text: 'Uma substância tem sempre a mesma proporção em massa entre seus elementos. Na água, sempre 1 g de hidrogênio para 8 g de oxigênio.' },
   balanceamento: { title: 'Balanceamento', text: 'Coeficientes (os números na frente das fórmulas) igualam a quantidade de cada átomo nos dois lados, nos menores números inteiros. Nunca se mudam os índices das fórmulas. Ex.: 2 H_2 + O_2 → 2 H_2O.' },
   bohr: { title: 'Modelo de Bohr', text: 'Os elétrons giram em camadas com energia definida. Só mudam de camada absorvendo ou emitindo uma quantidade exata de energia, o que explica as cores do teste de chama.' }
 };
@@ -111,7 +124,14 @@ VC.QUESTS = {
   q4_chuva: { ch: 4, text: 'Analise a água da chuva na bancada.', target: { map: 'lab', id: 'bancada' } },
   q4_equacoes: { ch: 4, text: 'Balanceie as equações do relatório na bancada de síntese.', target: { map: 'lab', id: 'sintese' } },
   q4_entrega: { ch: 4, text: 'Entregue o relatório ambiental à Prefeita Célia.', target: { map: 'praca', id: 'prefeita' } },
-  q4_fim: { ch: 4, text: 'Fim do conteúdo disponível. O Capítulo 5 chega na próxima atualização.', target: null }
+  q4_fim: { ch: 4, text: 'Fim do conteúdo disponível. O Capítulo 5 chega na próxima atualização.', target: null },
+  q5_prefeita: { ch: 5, text: 'A Prefeita Célia tem uma encomenda grande para o Aurora.', target: { map: 'praca', id: 'prefeita' } },
+  q5_grandezas: { ch: 5, text: 'Organize as grandezas da encomenda na bancada.', target: { map: 'lab', id: 'bancada' } },
+  q5_bento: { ch: 5, text: 'Peça ao Seu Bento uma balança mais precisa.', target: { map: 'praca', id: 'bento' } },
+  q5_massas: { ch: 5, text: 'Calcule as massas molares na balança analítica.', target: { map: 'lab', id: 'analitica' } },
+  q5_calculo: { ch: 5, text: 'Calcule a encomenda pela equação na bancada de síntese.', target: { map: 'lab', id: 'sintese' } },
+  q5_entrega: { ch: 5, text: 'Entregue a planilha da encomenda à Prefeita Célia.', target: { map: 'praca', id: 'prefeita' } },
+  q5_fim: { ch: 5, text: 'Fim do conteúdo disponível. O Capítulo 6 chega na próxima atualização.', target: null }
 };
 
 // Início de cada capítulo e o que ele concede ao ser concluído (para "Escolher capítulo")
@@ -151,11 +171,20 @@ VC.CHAPTER_DATA = {
       notebook: ['acido', 'base', 'sal', 'oxido', 'ph', 'indicador', 'neutralizacao', 'chuva_acida', 'lavoisier', 'balanceamento'],
       stars: ['funcoes', 'indicador', 'calagem', 'chuva', 'equacoes']
     }
+  },
+  5: {
+    start: { quest: 'q5_prefeita', spawn: [5, 6], face: 'down' },
+    grants: {
+      inv: [],
+      flags: ['analiticaOk', 'cap5'],
+      notebook: ['mol', 'avogadro', 'massa_atomica', 'volume_molar', 'massa_molar', 'conversao', 'estequiometria', 'limitante', 'proust'],
+      stars: ['grandezas', 'massas', 'calculo']
+    }
   }
 };
 
 // Capítulos já implementados
-VC.IMPLEMENTED = 4;
+VC.IMPLEMENTED = 5;
 
 // Roteiro de capítulos (quadro de pedidos)
 VC.CHAPTERS = [
@@ -163,7 +192,7 @@ VC.CHAPTERS = [
   { n: 2, short: 'O átomo', title: 'O átomo e a tabela periódica', topic: 'Partículas, distribuição eletrônica, famílias', reward: 'Bico de Bunsen e mural restaurado' },
   { n: 3, short: 'Ligações', title: 'Ligações e interações', topic: 'Iônica, covalente, metálica e polaridade', reward: 'Bancada de síntese' },
   { n: 4, short: 'Reações', title: 'Compostos e reações inorgânicas', topic: 'Ácidos, bases, sais, óxidos e balanceamento', reward: 'Medidor de pH e capela' },
-  { n: 5, title: 'Grandezas e estequiometria', topic: 'Mol, massa molar e proporções', reward: 'Balança analítica' },
+  { n: 5, short: 'Estequiometria', title: 'Grandezas e estequiometria', topic: 'Mol, massa molar e proporções', reward: 'Balança analítica' },
   { n: 6, title: 'Soluções e misturas', topic: 'Concentração, diluição e separação', reward: 'Destilador e a Fórmula Aurora' }
 ];
 

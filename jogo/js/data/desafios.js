@@ -853,5 +853,258 @@ VC.CHALLENGES = {
         why: 'Ca(OH)_2 + H_2SO_4 → CaSO_4 + 2 H_2O. Base + ácido → sal + água: os 2 OH^− e os 2 H^+ formam 2 moléculas de água.'
       }
     ]
+  },
+
+  /* ================= Capítulo 5 ================= */
+
+  grandezas: {
+    type: 'quiz',
+    need: 3,
+    title: 'Grandezas da encomenda',
+    questions: [
+      {
+        q: 'Quantas entidades (átomos, moléculas ou íons) existem em 1 mol?',
+        options: ['12', '6,02 × 10^23', '100'],
+        answer: 1,
+        why: 'É a constante de Avogadro. O mol funciona como uma dúzia, só que muito maior: 1 mol = 6,02 × 10^23 unidades.'
+      },
+      {
+        q: 'Qual é a unidade de quantidade de matéria no Sistema Internacional?',
+        options: ['Grama (g)', 'Litro (L)', 'Mol (mol)'],
+        answer: 2,
+        why: 'Massa se mede em gramas, volume em litros e quantidade de matéria em mol.'
+      },
+      {
+        q: 'A massa molar da água é 18 g/mol. Isso significa que:',
+        options: ['1 mol de moléculas de água tem massa de 18 g', 'Uma molécula de água tem massa de 18 g', '18 mol de água têm massa de 1 g'],
+        answer: 0,
+        why: 'Massa molar é a massa de 1 mol. Uma única molécula de água tem massa de apenas 18 u, minúscula.'
+      },
+      {
+        q: 'A massa atômica do carbono é 12 u. Qual é a massa de 1 mol de átomos de carbono?',
+        options: ['12 u', '12 g', '6,02 g'],
+        answer: 1,
+        why: 'O número é o mesmo, mas a unidade muda: 1 átomo tem 12 u, e 1 mol de átomos tem 12 g.'
+      },
+      {
+        q: 'Nas CNTP (0 °C e 1 atm), quanto espaço ocupa 1 mol de qualquer gás?',
+        options: ['1 L', '22,4 L', '6,02 L'],
+        answer: 1,
+        why: 'É o volume molar dos gases nas CNTP: cerca de 22,4 L, seja oxigênio, nitrogênio ou gás carbônico.'
+      },
+      {
+        q: 'Quantas moléculas existem em 2 mol de gás carbônico (CO_2)?',
+        options: ['2 moléculas', '6,02 × 10^23 moléculas', '12,04 × 10^23 moléculas'],
+        answer: 2,
+        why: '2 × 6,02 × 10^23 = 12,04 × 10^23 moléculas (o mesmo que 1,204 × 10^24).'
+      }
+    ]
+  },
+
+  unidades: {
+    type: 'sort',
+    need: 6,
+    title: 'Caderno de encomendas',
+    prompt: 'Que grandeza cada anotação está medindo?',
+    bins: ['Massa', 'Quantidade de matéria', 'Volume', 'Número de entidades'],
+    items: [
+      { label: '18 g de água', bin: 0, why: 'Grama (g) é unidade de massa.' },
+      { label: '2,5 kg de cal', bin: 0, why: 'Quilograma (kg) é unidade de massa: 2,5 kg = 2.500 g.' },
+      { label: '500 mg de vitamina C', bin: 0, why: 'Miligrama (mg) é a milésima parte do grama: unidade de massa.' },
+      { label: '2 mol de gás oxigênio', bin: 1, why: 'Mol é a unidade de quantidade de matéria.' },
+      { label: '0,5 mol de sal de cozinha', bin: 1, why: 'Meio mol: quantidade de matéria.' },
+      { label: '3 mol de átomos de ferro', bin: 1, why: 'Mol conta entidades em "pacotes" de 6,02 × 10^23.' },
+      { label: '22,4 L de gás nas CNTP', bin: 2, why: 'Litro (L) é unidade de volume. Esse é o volume de 1 mol de gás nas CNTP.' },
+      { label: '1,5 L de água', bin: 2, why: 'Litro é unidade de volume.' },
+      { label: '250 mL de soro', bin: 2, why: 'Mililitro (mL) é a milésima parte do litro: unidade de volume.' },
+      { label: '6,02 × 10^23 moléculas de água', bin: 3, why: 'É uma contagem de moléculas: número de entidades (no caso, exatamente 1 mol).' },
+      { label: '3 × 10^20 átomos de ouro', bin: 3, why: 'Contagem de átomos: número de entidades.' },
+      { label: '1,2 × 10^24 íons Na^+', bin: 3, why: 'Contagem de íons: número de entidades (cerca de 2 mol).' }
+    ]
+  },
+
+  massa_molar: {
+    type: 'quiz',
+    need: 3,
+    title: 'Balança analítica: massas molares',
+    questions: [
+      {
+        q: 'Massas atômicas: H = 1 e O = 16. Qual é a massa molar da água, H_2O?',
+        options: ['17 g/mol', '18 g/mol', '34 g/mol'],
+        answer: 1,
+        why: '2 átomos de H e 1 de O: 2 × 1 + 16 = 18 g/mol.'
+      },
+      {
+        q: 'C = 12 e O = 16. Qual é a massa molar do gás carbônico, CO_2?',
+        options: ['28 g/mol', '44 g/mol', '56 g/mol'],
+        answer: 1,
+        why: '12 + 2 × 16 = 44 g/mol.'
+      },
+      {
+        q: 'Na = 23 e Cl = 35,5. Qual é a massa molar do sal de cozinha, NaCl?',
+        options: ['58,5 g/mol', '47 g/mol', '70 g/mol'],
+        answer: 0,
+        why: '23 + 35,5 = 58,5 g/mol.'
+      },
+      {
+        q: 'Ca = 40, C = 12 e O = 16. Qual é a massa molar do calcário, CaCO_3?',
+        options: ['68 g/mol', '112 g/mol', '100 g/mol'],
+        answer: 2,
+        why: '40 + 12 + 3 × 16 = 100 g/mol.'
+      },
+      {
+        q: 'H = 1, S = 32 e O = 16. Qual é a massa molar do ácido sulfúrico, H_2SO_4?',
+        options: ['98 g/mol', '49 g/mol', '82 g/mol'],
+        answer: 0,
+        why: '2 × 1 + 32 + 4 × 16 = 98 g/mol.'
+      },
+      {
+        q: 'Ca = 40, O = 16 e H = 1. Qual é a massa molar da cal hidratada, Ca(OH)_2?',
+        options: ['57 g/mol', '58 g/mol', '74 g/mol'],
+        answer: 2,
+        why: 'O 2 fora do parêntese multiplica o OH inteiro: 40 + 2 × (16 + 1) = 74 g/mol.'
+      },
+      {
+        q: 'Al = 27, S = 32 e O = 16. Qual é a massa molar do sulfato de alumínio, Al_2(SO_4)_3?',
+        options: ['123 g/mol', '342 g/mol', '150 g/mol'],
+        answer: 1,
+        why: '2 × 27 + 3 × (32 + 4 × 16) = 54 + 288 = 342 g/mol.'
+      },
+      {
+        q: 'Ca = 40 e O = 16. Qual é a massa molar da cal virgem, CaO?',
+        options: ['56 g/mol', '40 g/mol', '72 g/mol'],
+        answer: 0,
+        why: '40 + 16 = 56 g/mol.'
+      }
+    ]
+  },
+
+  conversoes: {
+    type: 'quiz',
+    need: 3,
+    title: 'Balança analítica: massa e mol',
+    questions: [
+      {
+        q: 'Quantos mol há em 36 g de água (M = 18 g/mol)?',
+        options: ['0,5 mol', '2 mol', '648 mol'],
+        answer: 1,
+        why: 'n = m ÷ M = 36 ÷ 18 = 2 mol.'
+      },
+      {
+        q: 'Quantos mol há em 88 g de gás carbônico (M = 44 g/mol)?',
+        options: ['2 mol', '44 mol', '0,5 mol'],
+        answer: 0,
+        why: 'n = 88 ÷ 44 = 2 mol.'
+      },
+      {
+        q: 'Qual é a massa de 0,5 mol de gás oxigênio, O_2 (M = 32 g/mol)?',
+        options: ['64 g', '32 g', '16 g'],
+        answer: 2,
+        why: 'm = n × M = 0,5 × 32 = 16 g.'
+      },
+      {
+        q: 'Qual é a massa de 3 mol de cal virgem, CaO (M = 56 g/mol)?',
+        options: ['168 g', '59 g', '18,7 g'],
+        answer: 0,
+        why: 'm = 3 × 56 = 168 g.'
+      },
+      {
+        q: '3,01 × 10^23 moléculas de água correspondem a quantos mol?',
+        options: ['3,01 mol', '0,5 mol', '2 mol'],
+        answer: 1,
+        why: 'É metade de 6,02 × 10^23, então meio mol.'
+      },
+      {
+        q: 'Quantos litros ocupam 2 mol de gás nitrogênio nas CNTP?',
+        options: ['22,4 L', '11,2 L', '44,8 L'],
+        answer: 2,
+        why: '2 × 22,4 L = 44,8 L.'
+      },
+      {
+        q: 'Quantos mol há em 740 g de cal hidratada, Ca(OH)_2 (M = 74 g/mol)?',
+        options: ['10 mol', '74 mol', '1 mol'],
+        answer: 0,
+        why: 'n = 740 ÷ 74 = 10 mol.'
+      }
+    ]
+  },
+
+  proporcoes: {
+    type: 'numbers',
+    title: 'Bancada de síntese: a encomenda',
+    tasks: [
+      {
+        calc: true,
+        prompt: '2 H_2 + O_2 → 2 H_2O. Para formar 6 mol de água, quantos mol de cada reagente são necessários?',
+        fields: [['a', 'mol de H_2'], ['b', 'mol de O_2']],
+        answer: { a: 6, b: 3 },
+        why: 'A proporção é 2 : 1 : 2. Para 6 mol de água (3 vezes a receita), são 6 mol de H_2 e 3 mol de O_2.'
+      },
+      {
+        calc: true,
+        prompt: 'N_2 + 3 H_2 → 2 NH_3. Com 2 mol de N_2, quantos mol de H_2 são consumidos e quantos mol de amônia se formam?',
+        fields: [['a', 'mol de H_2'], ['b', 'mol de NH_3']],
+        answer: { a: 6, b: 4 },
+        why: 'Proporção 1 : 3 : 2. Com o dobro de N_2, tudo dobra: 6 mol de H_2 e 4 mol de NH_3.'
+      },
+      {
+        calc: true,
+        prompt: 'C + O_2 → CO_2. Você tem 24 g de carvão (C = 12 g/mol). Quantos mol de carbono são? Quantos mol de CO_2 se formam?',
+        fields: [['a', 'mol de C'], ['b', 'mol de CO_2']],
+        answer: { a: 2, b: 2 },
+        why: 'Primeiro a massa vira mol: 24 ÷ 12 = 2 mol de C. A proporção é 1 : 1, então formam-se 2 mol de CO_2.'
+      },
+      {
+        calc: true,
+        prompt: 'Na estação: Al_2(SO_4)_3 + 3 Ca(OH)_2 → 2 Al(OH)_3 + 3 CaSO_4. Para 2 mol de sulfato de alumínio, quantos mol de cal hidratada são necessários? Quantos mol de Al(OH)_3, o floco que prende a sujeira, se formam?',
+        fields: [['a', 'mol de Ca(OH)_2'], ['b', 'mol de Al(OH)_3']],
+        answer: { a: 6, b: 4 },
+        why: 'Proporção 1 : 3 : 2 : 3. Com 2 mol de sulfato de alumínio, são 6 mol de cal e formam-se 4 mol de Al(OH)_3. Nem um saco a mais.'
+      }
+    ]
+  },
+
+  limitante: {
+    type: 'quiz',
+    need: 3,
+    title: 'Sem sobra e sem falta',
+    questions: [
+      {
+        q: 'O Grupo Vex quer mandar o dobro de cal "por garantia". O que acontece com o excesso?',
+        options: ['Forma o dobro de produto', 'Sobra sem reagir: é desperdício e pode virar resíduo', 'Faz a reação acontecer mais rápido e some'],
+        answer: 1,
+        why: 'A quantidade de produto é limitada pelo reagente que acaba primeiro. O que passa da proporção sobra sem reagir.'
+      },
+      {
+        q: '2 H_2 + O_2 → 2 H_2O. Há 4 mol de H_2 e 5 mol de O_2. Qual é o reagente limitante?',
+        options: ['O_2', 'Nenhum, estão na proporção certa', 'H_2'],
+        answer: 2,
+        why: '4 mol de H_2 só reagem com 2 mol de O_2. O H_2 acaba primeiro, e sobram 3 mol de O_2 em excesso.'
+      },
+      {
+        q: 'Nessa mesma mistura (4 mol de H_2 e 5 mol de O_2), quantos mol de água se formam?',
+        options: ['4 mol', '5 mol', '9 mol'],
+        answer: 0,
+        why: 'Quem manda é o limitante: 4 mol de H_2 formam 4 mol de água. O O_2 em excesso não ajuda.'
+      },
+      {
+        q: 'Uma receita usa 2 ovos e 1 xícara de farinha por bolo. Você tem 10 ovos e 3 xícaras. Quantos bolos dá para fazer?',
+        options: ['5 bolos', '3 bolos', '13 bolos'],
+        answer: 1,
+        why: 'A farinha é o "reagente limitante": dá para 3 bolos, e sobram 4 ovos em excesso.'
+      },
+      {
+        q: 'Pela Lei de Lavoisier, 12 g de carbono reagem com 32 g de oxigênio formando quantos gramas de CO_2?',
+        options: ['20 g', '32 g', '44 g'],
+        answer: 2,
+        why: 'Num sistema fechado, a massa se conserva: 12 g + 32 g = 44 g de CO_2.'
+      },
+      {
+        q: 'A água sempre tem 1 g de hidrogênio para 8 g de oxigênio, venha de onde vier. Isso é a:',
+        options: ['Lei de Proust (proporções definidas)', 'Constante de Avogadro', 'Lei de Lavoisier'],
+        answer: 0,
+        why: 'Proust: cada substância tem uma proporção fixa em massa entre seus elementos.'
+      }
+    ]
   }
 };

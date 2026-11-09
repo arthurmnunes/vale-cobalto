@@ -781,9 +781,10 @@ window.VC = window.VC || {};
         ui.rich(prompt, task.prompt);
         vals = {}; boxes = {};
         fields.innerHTML = '';
-        const ionMode = !!task.ions, eqMode = !!task.eq;
-        const update = () => (eqMode ? updateEq() : ionMode ? updateIons() : drawAtom(svg, vals, task.shells));
-        svg.style.display = ionMode || eqMode ? 'none' : '';
+        const ionMode = !!task.ions, eqMode = !!task.eq, calcMode = !!task.calc;
+        const update = () => (calcMode ? null : eqMode ? updateEq() : ionMode ? updateIons() : drawAtom(svg, vals, task.shells));
+        svg.style.display = ionMode || eqMode || calcMode ? 'none' : '';
+        row.classList.toggle('calc-mode', calcMode);
         ionBox.hidden = !(ionMode || eqMode);
         row.classList.toggle('ion-mode', ionMode);
         row.classList.toggle('eq-mode', eqMode);
@@ -823,7 +824,7 @@ window.VC = window.VC || {};
         });
         if (!wrong) {
           ui.sfx('ok'); check.hidden = true; i++;
-          feedback(fb, true, task.eq ? 'Equação balanceada!' : task.ions ? 'Fórmula correta!' : 'Átomo correto!', task.why, show);
+          feedback(fb, true, task.calc ? 'Cálculo correto!' : task.eq ? 'Equação balanceada!' : task.ions ? 'Fórmula correta!' : 'Átomo correto!', task.why, show);
         } else {
           errors++; ui.sfx('err');
           let hint = task.shells
@@ -835,6 +836,9 @@ window.VC = window.VC || {};
             hint = total === 0 && all
               ? 'A carga zerou, mas a fórmula usa a menor proporção possível. Divida as quantidades pelo mesmo número.'
               : 'A soma das cargas precisa dar zero. Dica: cruze as cargas (a carga de um vira a quantidade do outro).';
+          }
+          if (task.calc) {
+            hint = 'Use a proporção dos coeficientes da equação: eles dizem quantos mol de cada substância reagem e se formam. Se o dado vier em gramas, transforme em mol primeiro (n = m ÷ M).';
           }
           if (task.eq) {
             const off = elements().filter((e) => countSide(task.eq[0], e) !== countSide(task.eq[1], e));

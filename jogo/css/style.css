@@ -408,3 +408,7 @@ sup { font-size: 0.72em; line-height: 0; }
   .tube-wrap { width: 80px; padding: 4px 0; }
   .tube { height: 58px; width: 22px; }
 }
+
+/* Capítulo 5: cálculos estequiométricos */
+.atom-row.calc-mode { grid-template-columns: 1fr; }
+.atom-row.calc-mode .steppers { max-width: 30rem; }
