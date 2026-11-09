@@ -42,14 +42,9 @@ O jogador herda o Laboratório Aurora da Profa. Ítala Ferraz, sua antiga orient
 | 3 | Ligações e interações: iônica, covalente, metálica, fórmulas iônicas, polaridade, solubilidade (missões: O estoque misturado; Óleo na fonte) | Publicado (issue #7) |
 | 4 | Compostos e reações inorgânicas: ácidos, bases, sais, óxidos, pH, neutralização, chuva ácida, balanceamento (missões: Solo ácido na horta; A chuva ácida) | Publicado (issue #13) |
 | 5 | Grandezas e estequiometria: mol, Avogadro, massa molar, conversões, proporções, reagente limitante (missões: A grande encomenda; Sem sobra e sem falta) | Publicado (issue #16) |
-| 6 | Soluções e misturas: concentração, diluição, separação; final do jogo | **Próximo** |
+| 6 | Soluções e misturas: misturas, separação, destilação, concentração, diluição (missões: O rio por partes; A Fórmula Aurora; missão final O Congresso) | Publicado (issue #17) |
 
-### Planejamento dos próximos capítulos
-
-- **Cap. 6:** concentração e diluição; separação de misturas; a Fórmula Aurora purifica o rio. Recompensa: destilador.
-- **Missão final (13ª):** Congresso Internacional, reconciliação com o rival, aparição da Profa. Ítala e indicação ao Nobel.
-
-Cada capítulo tem 2 missões e cerca de 5 desafios curtos, no mesmo formato dos capítulos já publicados.
+**Jogo completo:** 6 capítulos e 13 missões. A missão final (Congresso Internacional, reconciliação com o rival, Profa. Ítala e indicação ao Nobel) termina com a tela "Fim de jogo" (`S.endGame`); depois dela o jogador continua explorando a cidade. O rio fica limpo no mapa (tile `WATER_CLEAN`, flag `rioLimpo`).
 
 ## Stack e estrutura
 
@@ -99,4 +94,4 @@ README.md
 
 ## Próximo passo
 
-Conferir as issues abertas (`gh issue list`) e, se não houver pendências, criar a issue do **Capítulo 6** (último, com a missão final) e implementá-lo.
+O jogo está completo. Conferir as issues abertas (`gh api repos/arthurmnunes/vale-cobalto/issues`) e tratar correções e ajustes pedidos pela autora após os testes.

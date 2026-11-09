@@ -113,7 +113,8 @@ window.VC = window.VC || {};
     prefeita: { s: '#c68a5a', h: '#2a1a12', c: '#7b4fa0', a: '#f2b84b', p: '#5a3a7a', f: '#2a1a12' },
     bento: { s: '#e0ac7a', h: '#a7a7a7', c: '#8a5a32', a: '#e7d7b7', p: '#3b3b3b', f: '#2b2b2b' },
     lia: { s: '#8d5a3b', h: '#1d1d1d', c: '#4fb3a0', a: '#ffffff', p: '#2f4f6f', f: '#1d1d1d' },
-    rival: { s: '#f3d0a8', h: '#e4dccb', c: '#22252f', a: '#d9534f', p: '#22252f', f: '#0e0f14' }
+    rival: { s: '#f3d0a8', h: '#e4dccb', c: '#22252f', a: '#d9534f', p: '#22252f', f: '#0e0f14' },
+    itala: { s: '#e0ac7a', h: '#d9d9e3', c: '#8a2c4a', a: '#f2b84b', p: '#3b3b3b', f: '#2b2b2b' }
   };
 
   const BASE_PAL = { k: '#1b1f2e', s: '#f1c27d', e: '#1b1f2e', m: '#c0705a' };
@@ -171,10 +172,10 @@ window.VC = window.VC || {};
   art.T = {
     GRASS: 0, GRASS2: 1, PATH: 2, WATER: 3, TREE: 4, ROOF_COBALT: 5, ROOF_RED: 6, ROOF_GREEN: 7,
     WALL: 8, BRICK: 9, DOOR: 10, FLOWERS: 11, FENCE: 12, LAB_FLOOR: 13, LAB_TOP: 14, LAB_WALL: 15,
-    MAT: 16, WINDOW: 17, DOOR_CLOSED: 18, WINDOW_BRICK: 19, RUG: 20
+    MAT: 16, WINDOW: 17, DOOR_CLOSED: 18, WINDOW_BRICK: 19, RUG: 20, WATER_CLEAN: 21
   };
-  art.SOLID = [3, 4, 5, 6, 7, 8, 9, 12, 14, 15, 17, 18, 19];
-  const TILE_COUNT = 21;
+  art.SOLID = [3, 4, 5, 6, 7, 8, 9, 12, 14, 15, 17, 18, 19, 21];
+  const TILE_COUNT = 22;
 
   function grass(ctx, ox, r, tufts) {
     R(ctx, '#5c9e4a', ox, 0, 16, 16);
@@ -307,6 +308,12 @@ window.VC = window.VC || {};
     ox = at(T.RUG);
     ctx.drawImage(c, at(T.LAB_FLOOR), 0, 16, 16, ox, 0, 16, 16);
     R(ctx, '#2a4c8f', ox, 2, 16, 12); R(ctx, '#4fb3a0', ox, 4, 16, 1); R(ctx, '#4fb3a0', ox, 11, 16, 1);
+
+    // Rio limpo, depois da Fórmula Aurora
+    ox = at(T.WATER_CLEAN);
+    R(ctx, '#2f7fc1', ox, 0, 16, 16);
+    for (let y = 2; y < 16; y += 5) { R(ctx, '#5aa5dd', ox + (y % 3) * 3, y, 6, 1); R(ctx, '#5aa5dd', ox + 9, y + 2, 5, 1); }
+    R(ctx, '#c8e3ec', ox + 4, 6); R(ctx, '#c8e3ec', ox + 12, 12);
 
     return c;
   };
@@ -503,6 +510,27 @@ window.VC = window.VC || {};
     R(ctx, '#aab4b8', 6, 5, 4, 1); R(ctx, '#7aa8bd', 7, 4, 2, 1);
     R(ctx, '#e8edef', 3, 7, 10, 2); R(ctx, '#1b1f2e', 4, 7, 5, 2); R(ctx, '#7bc67e', 5, 7, 3, 1);
     R(ctx, '#f2b84b', 11, 7, 1, 1);
+    return c;
+  };
+
+  // Destilador: balão aquecido, condensador inclinado e frasco coletor
+  O.destilador = () => {
+    const [c, ctx] = canvas(32, 24);
+    R(ctx, '#1b1f2e', 0, 15, 32, 9); R(ctx, '#e8edef', 1, 15, 30, 3); R(ctx, '#6b7f8a', 1, 18, 30, 5);
+    R(ctx, '#3d2716', 4, 13, 7, 2); R(ctx, '#e0675a', 6, 12, 3, 1);
+    R(ctx, '#dbe8ee', 4, 7, 7, 6); R(ctx, '#4d6650', 5, 10, 5, 3); R(ctx, '#dbe8ee', 6, 4, 3, 3);
+    for (let i = 0; i < 12; i++) { R(ctx, '#9cc7d9', 9 + i, 4 + Math.floor(i / 2), 3, 2); }
+    R(ctx, '#2f7fc1', 12, 6, 6, 1);
+    R(ctx, '#dbe8ee', 22, 9, 6, 6); R(ctx, '#5aa5dd', 23, 12, 4, 3); R(ctx, '#dbe8ee', 24, 7, 2, 2);
+    return c;
+  };
+
+  // Ponto de coleta na margem do rio: pequeno píer com placa
+  O.coleta = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#5a3d22', 2, 9, 12, 5); R(ctx, '#7a5634', 2, 9, 12, 1); R(ctx, '#3d2716', 3, 14, 2, 2); R(ctx, '#3d2716', 11, 14, 2, 2);
+    R(ctx, '#3d2716', 7, 2, 2, 7); R(ctx, '#f4f7f8', 4, 1, 8, 5); R(ctx, '#2a4c8f', 5, 2, 6, 1); R(ctx, '#4fb3a0', 5, 4, 4, 1);
+    R(ctx, '#dbe8ee', 10, 6, 3, 3); R(ctx, '#4d6650', 10, 7, 3, 2);
     return c;
   };
 

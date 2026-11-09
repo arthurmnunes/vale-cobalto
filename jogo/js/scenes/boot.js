@@ -2,7 +2,7 @@
 window.VC = window.VC || {};
 
 (function () {
-  const CHARS = ['player', 'player_epi', 'prefeita', 'bento', 'lia', 'rival'];
+  const CHARS = ['player', 'player_epi', 'prefeita', 'bento', 'lia', 'rival', 'itala'];
 
   class BootScene extends Phaser.Scene {
     constructor() { super('Boot'); }

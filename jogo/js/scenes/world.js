@@ -30,6 +30,7 @@ window.VC = window.VC || {};
       const ts = map.addTilesetImage('tiles', 'tiles', 16, 16, 1, 2);
       this.layer = map.createLayer(0, ts, 0, 0);
       this.layer.setCollision(VC.art.SOLID);
+      if (this.mapKey === 'praca' && VC.flag('rioLimpo')) this.layer.replaceByIndex(VC.art.T.WATER, VC.art.T.WATER_CLEAN);
       this.tilemap = map;
       this.mapW = map.widthInPixels;
       this.mapH = map.heightInPixels;
@@ -240,6 +241,7 @@ window.VC = window.VC || {};
       const talk = (this.def.tileTalk || []).find((k) => k.tx === tile.tx && k.ty === tile.ty);
       if (talk) { await VC.story.narrate(talk.text); return; }
       if (tile.idx === VC.art.T.WATER && this.def.waterText) await VC.story.narrate(this.def.waterText);
+      if (tile.idx === VC.art.T.WATER_CLEAN && this.def.cleanWaterText) await VC.story.narrate(this.def.cleanWaterText);
     }
 
     // Espetáculo de fogos do Festival das Luzes (cores do teste de chama)
@@ -283,6 +285,23 @@ window.VC = window.VC || {};
             onComplete: () => { night.destroy(); emitters.forEach((e) => e.destroy()); this.updateMarker(); resolve(); }
           });
         });
+      });
+    }
+
+    // O rio fica limpo, faixa por faixa, da margem para longe
+    cleanRiver() {
+      return new Promise((resolve) => {
+        const T = VC.art.T;
+        const cols = this.tilemap.width;
+        for (let x = 0; x < cols; x++) {
+          this.time.delayedCall(x * 70, () => {
+            for (let y = 0; y < this.tilemap.height; y++) {
+              const t = this.layer.getTileAt(x, y);
+              if (t && t.index === T.WATER) this.layer.putTileAt(T.WATER_CLEAN, x, y);
+            }
+          });
+        }
+        this.time.delayedCall(cols * 70 + 300, () => { this.layer.setCollision(VC.art.SOLID); resolve(); });
       });
     }
 

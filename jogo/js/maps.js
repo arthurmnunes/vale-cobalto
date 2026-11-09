@@ -80,12 +80,15 @@ window.VC = window.VC || {};
         { id: 'quadro', tex: 'quadro', x: 11, y: 8, w: 1, solidH: 8 },
         { id: 'placa_lab', tex: 'placa', x: 7, y: 5, w: 1, solidH: 6 },
         { id: 'barraca', tex: 'barraca', x: 9, y: 13, w: 2, solidH: 10, talk: 'bento' },
-        { id: 'horta', tex: () => (VC.flag('hortaOk') ? 'horta_ok' : 'horta'), x: 21, y: 13, w: 3, solidH: 18 }
+        { id: 'horta', tex: () => (VC.flag('hortaOk') ? 'horta_ok' : 'horta'), x: 21, y: 13, w: 3, solidH: 18 },
+        { id: 'coleta', tex: 'coleta', x: 15, y: 16, w: 1, solidH: 6, cond: () => VC.flag('cap5') }
       ],
       npcs: [
         { id: 'prefeita', sprite: 'prefeita', pos: () => (['q_prefeita'].includes(VC.state.quest) ? [6, 7] : [23, 6]), face: 'down' },
         { id: 'bento', sprite: 'bento', pos: () => [9.5, 12], face: 'down', solid: false },
-        { id: 'lia', sprite: 'lia', pos: () => [17, 11], face: 'left' }
+        { id: 'lia', sprite: 'lia', pos: () => [17, 11], face: 'left' },
+        { id: 'rival', sprite: 'rival', pos: () => [13, 8], face: 'down', cond: () => VC.state.quest === 'q6_congresso' || VC.flag('cap6') },
+        { id: 'itala', sprite: 'itala', pos: () => [7, 7], face: 'down', cond: () => VC.flag('cap6') }
       ],
       doors: [
         { id: 'lab', tx: 5, ty: 4, to: 'lab', spawn: [7.5, 10], face: 'up', needs: 'chave', locked: 'A porta está trancada. A Prefeita Célia está com a chave.' }
@@ -94,7 +97,8 @@ window.VC = window.VC || {};
         { tx: 23, ty: 4, text: 'A prefeitura está fechada para o almoço. A Prefeita Célia está aqui fora.' },
         { tx: 4, ty: 14, text: 'A loja está fechada. O Seu Bento atende na barraca ao lado.' }
       ],
-      waterText: 'O rio de Vale Cobalto: água escura, espuma e cheiro forte. Um dia a Fórmula Aurora vai limpar isto.'
+      waterText: 'O rio de Vale Cobalto: água escura, espuma e cheiro forte. Um dia a Fórmula Aurora vai limpar isto.',
+      cleanWaterText: 'O rio de Vale Cobalto, limpo e azul. Dá até para ver os peixes voltando.'
     },
     lab: {
       grid: buildLab(),
@@ -114,6 +118,7 @@ window.VC = window.VC || {};
         { id: 'sintese', tex: 'sintese', x: 2, y: 6, w: 2, solidH: 12, cond: () => VC.flag('sinteseOk') },
         { id: 'tubos', tex: 'tubos', x: 5, y: 2, w: 1, solidH: 6, cond: () => VC.state.decor.includes('tubos') },
         { id: 'capela', tex: 'capela', x: 13, y: 5, w: 2, solidH: 12, cond: () => VC.flag('capelaOk') },
+        { id: 'destilador', tex: 'destilador', x: 11, y: 9, w: 2, solidH: 12, cond: () => VC.flag('destiladorOk') },
         { id: 'analitica', tex: 'analitica', x: 3, y: 9, w: 1, solidH: 8, cond: () => VC.flag('analiticaOk') },
         { id: 'poster_mol', tex: 'poster_mol', x: 5, y: 1, w: 1, solid: false, depth: 1, cond: () => VC.state.decor.includes('poster_mol') },
         { id: 'cartaz_ph', tex: 'cartaz_ph', x: 10, y: 1, w: 1, solid: false, depth: 1, cond: () => VC.state.decor.includes('cartaz_ph') }

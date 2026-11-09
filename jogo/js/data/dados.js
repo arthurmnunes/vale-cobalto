@@ -22,6 +22,11 @@ VC.ITEMS = {
   phmetro: { name: 'Medidor de pH', icon: 'phmetro', desc: 'Mede a acidez de uma solução com precisão, de 0 a 14. Presente da prefeitura.' },
   pedido: { name: 'Pedido da estação', icon: 'relatorio', desc: 'Encomenda da estação de tratamento de água: sulfato de alumínio, Al_2(SO_4)_3, e cal hidratada, Ca(OH)_2. Quantidade exata, sem sobra.' },
   tabela_massas: { name: 'Tabela de massas atômicas', icon: 'receita', desc: 'H = 1, C = 12, N = 14, O = 16, Na = 23, Al = 27, S = 32, Cl = 35,5, Ca = 40 (em u).' },
+  pagina_aurora: { name: 'Última página da pesquisa', icon: 'carta', desc: 'Anotações da Profa. Ítala: "Primeiro, separe o que está misturado. Depois, a Fórmula Aurora na concentração certa: nem mais, nem menos."' },
+  amostra_rio: { name: 'Amostra do rio', icon: 'agua_chuva', desc: 'Água turva do rio de Vale Cobalto, com lama, folhas, óleo e sais dissolvidos.' },
+  formula_aurora: { name: 'Fórmula Aurora', icon: 'detergente', desc: 'Tanque de 12 L na concentração exata: 2 g/L. Pronta para aplicar no rio.' },
+  convite: { name: 'Convite do Congresso', icon: 'receita', desc: 'Congresso Internacional de Química: o Laboratório Aurora foi convidado a apresentar a Fórmula Aurora.' },
+  nobel: { name: 'Indicação ao Prêmio Nobel', icon: 'licenca', desc: 'Carta da Academia: indicação ao Prêmio Nobel de Química pela Fórmula Aurora. Assinada também pela Profa. Ítala.' },
   planilha: { name: 'Planilha da encomenda', icon: 'laudo', desc: 'Cada reagente calculado pela equação balanceada, em mol e em gramas. Entregue à Prefeita Célia.' }
 };
 
@@ -75,6 +80,15 @@ VC.NOTEBOOK = {
   neutralizacao: { title: 'Neutralização', text: 'Ácido + base → sal + água. O H^+ do ácido e o OH^− da base formam H_2O. Ex.: HCl + NaOH → NaCl + H_2O. A calagem usa calcário para neutralizar o solo ácido.' },
   chuva_acida: { title: 'Chuva ácida', text: 'A chuva normal já tem pH perto de 5,6, por causa do CO_2 do ar. Óxidos de enxofre (SO_2) e de nitrogênio (NO_2), lançados por caldeiras e motores, formam ácidos sulfúrico e nítrico e baixam ainda mais o pH. Ela corrói mármore e acidifica solos e lagos.' },
   lavoisier: { title: 'Lei de Lavoisier', text: 'Em um sistema fechado, a massa total antes e depois da reação é a mesma. Os átomos não somem nem aparecem: só se reorganizam em substâncias novas.' },
+  mistura_homogenea: { title: 'Mistura homogênea', text: 'Tem uma única fase: não dá para distinguir os componentes, nem ao microscópio comum. Ex.: água com sal dissolvido, ar filtrado, álcool 70%. Também é chamada de solução.' },
+  mistura_heterogenea: { title: 'Mistura heterogênea', text: 'Tem duas ou mais fases visíveis. Ex.: água e óleo, água e areia, granito.' },
+  separacao: { title: 'Separação de misturas', text: 'Filtração: sólido não dissolvido de líquido, com filtro. Decantação: componentes de densidades diferentes, deixando assentar ou com funil de decantação. Separação magnética: retira metais atraídos pelo ímã, como o ferro.' },
+  destilacao: { title: 'Destilação', text: 'Separa por diferença de ponto de ebulição: o líquido vira vapor, passa pelo condensador e volta a ser líquido no outro frasco. Simples: sólido dissolvido em líquido (água do mar). Fracionada: líquidos misturados (água e álcool, petróleo).' },
+  solucao: { title: 'Solução', text: 'Mistura homogênea formada por soluto (o que é dissolvido, em menor quantidade) e solvente (o que dissolve). A água é o solvente mais comum.' },
+  concentracao_comum: { title: 'Concentração comum', text: 'C = massa do soluto ÷ volume da solução, em g/L. 20 g de sal em 2 L de solução: 10 g/L. O soro fisiológico tem 9 g/L de NaCl.' },
+  concentracao_molar: { title: 'Concentração em mol/L', text: 'Quantidade de matéria do soluto ÷ volume da solução. 2 mol de soluto em 4 L: 0,5 mol/L.' },
+  diluicao: { title: 'Diluição', text: 'Acrescentar solvente diminui a concentração, mas a quantidade de soluto não muda: C_1 × V_1 = C_2 × V_2.' },
+  saturada: { title: 'Solução saturada', text: 'Contém a quantidade máxima de soluto que o solvente dissolve naquela temperatura. O que passar disso fica no fundo, como corpo de chão.' },
   mol: { title: 'Mol', text: 'Unidade de quantidade de matéria no SI. 1 mol contém 6,02 × 10^23 entidades (átomos, moléculas ou íons), assim como 1 dúzia contém 12 unidades.' },
   avogadro: { title: 'Constante de Avogadro', text: 'É o número de entidades em 1 mol: 6,02 × 10^23. Ela faz a ponte entre o mundo dos átomos e as quantidades que pesamos no laboratório.' },
   massa_atomica: { title: 'Massa atômica', text: 'Massa de um átomo em unidades de massa atômica (u), comparada a 1/12 da massa do carbono-12. Está na tabela periódica: H = 1 u, C = 12 u, O = 16 u.' },
@@ -131,7 +145,17 @@ VC.QUESTS = {
   q5_massas: { ch: 5, text: 'Calcule as massas molares na balança analítica.', target: { map: 'lab', id: 'analitica' } },
   q5_calculo: { ch: 5, text: 'Calcule a encomenda pela equação na bancada de síntese.', target: { map: 'lab', id: 'sintese' } },
   q5_entrega: { ch: 5, text: 'Entregue a planilha da encomenda à Prefeita Célia.', target: { map: 'praca', id: 'prefeita' } },
-  q5_fim: { ch: 5, text: 'Fim do conteúdo disponível. O Capítulo 6 chega na próxima atualização.', target: null }
+  q5_fim: { ch: 5, text: 'Fim do conteúdo disponível. O Capítulo 6 chega na próxima atualização.', target: null },
+  q6_carta: { ch: 6, text: 'Chegou uma carta para você. Ela está na mesa do laboratório.', target: { map: 'lab', id: 'mesa' } },
+  q6_coleta: { ch: 6, text: 'Colete uma amostra no ponto de coleta, na margem do rio.', target: { map: 'praca', id: 'coleta' } },
+  q6_separacao: { ch: 6, text: 'Separe as misturas da amostra na bancada.', target: { map: 'lab', id: 'bancada' } },
+  q6_bento: { ch: 6, text: 'Procure um destilador na barraca do Seu Bento.', target: { map: 'praca', id: 'bento' } },
+  q6_destilacao: { ch: 6, text: 'Purifique a amostra no destilador.', target: { map: 'lab', id: 'destilador' } },
+  q6_formula: { ch: 6, text: 'Prepare a Fórmula Aurora na bancada de síntese.', target: { map: 'lab', id: 'sintese' } },
+  q6_rio: { ch: 6, text: 'Aplique a Fórmula Aurora no ponto de coleta do rio.', target: { map: 'praca', id: 'coleta' } },
+  q6_prefeita: { ch: 6, text: 'Conte à Prefeita Célia que o rio está limpo.', target: { map: 'praca', id: 'prefeita' } },
+  q6_congresso: { ch: 6, text: 'Encontre {rival} na praça para ir ao Congresso.', target: { map: 'praca', id: 'rival' } },
+  q6_fim: { ch: 6, text: 'Vale Cobalto está salva! Explore a cidade à vontade.', target: null }
 };
 
 // Início de cada capítulo e o que ele concede ao ser concluído (para "Escolher capítulo")
@@ -180,11 +204,20 @@ VC.CHAPTER_DATA = {
       notebook: ['mol', 'avogadro', 'massa_atomica', 'volume_molar', 'massa_molar', 'conversao', 'estequiometria', 'limitante', 'proust'],
       stars: ['grandezas', 'massas', 'calculo']
     }
+  },
+  6: {
+    start: { quest: 'q6_carta', spawn: [5, 6], face: 'down' },
+    grants: {
+      inv: ['nobel'],
+      flags: ['destiladorOk', 'rioLimpo', 'cap6'],
+      notebook: ['mistura_homogenea', 'mistura_heterogenea', 'separacao', 'destilacao', 'solucao', 'concentracao_comum', 'concentracao_molar', 'diluicao', 'saturada'],
+      stars: ['separacao', 'destilacao', 'formula', 'banca']
+    }
   }
 };
 
 // Capítulos já implementados
-VC.IMPLEMENTED = 5;
+VC.IMPLEMENTED = 6;
 
 // Roteiro de capítulos (quadro de pedidos)
 VC.CHAPTERS = [
@@ -193,7 +226,7 @@ VC.CHAPTERS = [
   { n: 3, short: 'Ligações', title: 'Ligações e interações', topic: 'Iônica, covalente, metálica e polaridade', reward: 'Bancada de síntese' },
   { n: 4, short: 'Reações', title: 'Compostos e reações inorgânicas', topic: 'Ácidos, bases, sais, óxidos e balanceamento', reward: 'Medidor de pH e capela' },
   { n: 5, short: 'Estequiometria', title: 'Grandezas e estequiometria', topic: 'Mol, massa molar e proporções', reward: 'Balança analítica' },
-  { n: 6, title: 'Soluções e misturas', topic: 'Concentração, diluição e separação', reward: 'Destilador e a Fórmula Aurora' }
+  { n: 6, short: 'Soluções', title: 'Soluções e misturas', topic: 'Concentração, diluição e separação', reward: 'Destilador e a Fórmula Aurora' }
 ];
 
 // Personagens que falam
@@ -205,5 +238,6 @@ VC.SPEAKERS = {
   cat: { name: () => VC.state.cat || 'Gato', sprite: 'cat' },
   player: { name: () => VC.state.player, sprite: 'player' },
   itala: { name: 'Profa. Ítala (carta)', sprite: null },
+  itala_p: { name: 'Profa. Ítala', sprite: 'itala' },
   narrador: { name: '', sprite: null }
 };

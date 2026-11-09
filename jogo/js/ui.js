@@ -85,7 +85,7 @@ window.VC = window.VC || {};
   /* ---------- HUD ---------- */
   ui.refreshHud = function () {
     const q = VC.QUESTS[VC.state.quest];
-    $('objectiveText').textContent = q ? q.text : '';
+    $('objectiveText').textContent = q ? VC.fmt(q.text) : '';
     const ch = VC.CHAPTERS.find((c) => c.n === ((q && q.ch) || 1));
     $('chapterLabel').textContent = 'Capítulo ' + ch.n + ': ' + ch.short;
     $('coinCount').textContent = VC.state.coins;

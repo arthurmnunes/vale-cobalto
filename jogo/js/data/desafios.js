@@ -1106,5 +1106,260 @@ VC.CHALLENGES = {
         why: 'Proust: cada substância tem uma proporção fixa em massa entre seus elementos.'
       }
     ]
+  },
+
+  /* ================= Capítulo 6 ================= */
+
+  misturas: {
+    type: 'sort',
+    need: 6,
+    title: 'Amostra do rio: misturas',
+    prompt: 'Cada mistura tem quantas fases?',
+    bins: ['Homogênea (1 fase)', 'Heterogênea (2 ou mais fases)'],
+    items: [
+      { label: 'Água com sal dissolvido', bin: 0, why: 'O sal dissolvido não aparece: uma única fase.' },
+      { label: 'Ar filtrado', bin: 0, why: 'Os gases se misturam por completo: uma fase.' },
+      { label: 'Álcool 70%', bin: 0, why: 'Água e álcool se misturam em qualquer proporção: uma fase.' },
+      { label: 'Vinagre', bin: 0, why: 'Ácido acético dissolvido em água: uma fase.' },
+      { label: 'Ouro 18k', bin: 0, why: 'Liga metálica: os metais ficam misturados por igual.' },
+      { label: 'Soro fisiológico', bin: 0, why: 'Sal dissolvido em água: solução, uma fase.' },
+      { label: 'Água e óleo', bin: 1, why: 'O óleo forma uma camada separada: duas fases.' },
+      { label: 'Água e areia', bin: 1, why: 'A areia fica no fundo: duas fases.' },
+      { label: 'Granito', bin: 1, why: 'Dá para ver os grãos de quartzo, feldspato e mica: três fases.' },
+      { label: 'Água do rio com lama e folhas', bin: 1, why: 'Lama e folhas aparecem: várias fases.' },
+      { label: 'Limalha de ferro com areia', bin: 1, why: 'Os grãos de ferro e de areia são visíveis: duas fases.' },
+      { label: 'Feijão com arroz cru', bin: 1, why: 'Cada grão é visível: duas fases.' }
+    ]
+  },
+
+  separacao: {
+    type: 'sort',
+    need: 6,
+    title: 'Amostra do rio: separação',
+    prompt: 'Qual método separa melhor cada mistura?',
+    bins: ['Filtração', 'Decantação', 'Destilação', 'Separação magnética'],
+    items: [
+      { label: 'Água e areia', bin: 0, why: 'O filtro segura a areia e deixa a água passar.' },
+      { label: 'Café coado', bin: 0, why: 'O filtro de papel segura o pó; o café passa.' },
+      { label: 'Ar com poeira, no aspirador', bin: 0, why: 'O filtro do aspirador segura a poeira e deixa o ar passar.' },
+      { label: 'Água e óleo', bin: 1, why: 'No funil de decantação, o óleo fica em cima e a água é retirada por baixo.' },
+      { label: 'Água barrenta na caixa d’água', bin: 1, why: 'Em repouso, a terra, mais densa, assenta no fundo.' },
+      { label: 'Água e óleo de motor no rio', bin: 1, why: 'Líquidos que não se misturam e têm densidades diferentes: decantação.' },
+      { label: 'Sal dissolvido na água do mar, recuperando a água', bin: 2, why: 'Destilação simples: a água evapora, condensa no outro frasco e o sal fica.' },
+      { label: 'Água e álcool', bin: 2, why: 'Destilação fracionada: o álcool ferve antes da água.' },
+      { label: 'Petróleo, separando gasolina e diesel', bin: 2, why: 'Destilação fracionada, pelos pontos de ebulição diferentes.' },
+      { label: 'Limalha de ferro e areia', bin: 3, why: 'O ímã atrai o ferro e deixa a areia.' },
+      { label: 'Pregos misturados na serragem', bin: 3, why: 'O ímã puxa os pregos de ferro.' },
+      { label: 'Enxofre em pó e limalha de ferro', bin: 3, why: 'Só o ferro é atraído pelo ímã.' }
+    ]
+  },
+
+  destilacao: {
+    type: 'quiz',
+    need: 3,
+    title: 'Destilador',
+    questions: [
+      {
+        q: 'A destilação separa os componentes de uma mistura pela diferença de:',
+        options: ['Cor', 'Ponto de ebulição', 'Massa molar'],
+        answer: 1,
+        why: 'O componente que ferve primeiro vira vapor, passa pelo condensador e é recolhido separado.'
+      },
+      {
+        q: 'No destilador, para que serve o condensador?',
+        options: ['Esfriar o vapor para ele voltar a ser líquido', 'Aquecer a mistura', 'Filtrar a lama'],
+        answer: 0,
+        why: 'A água fria que circula por fora do condensador resfria o vapor, que se condensa e escorre para o frasco coletor.'
+      },
+      {
+        q: 'Na destilação simples da água do mar, o que fica no balão de aquecimento?',
+        options: ['A água pura', 'O sal', 'Nada'],
+        answer: 1,
+        why: 'A água evapora e é recolhida; o sal, que não evapora a essa temperatura, fica no balão.'
+      },
+      {
+        q: 'Para separar água e álcool, que se misturam completamente, usa-se a:',
+        options: ['Filtração', 'Decantação', 'Destilação fracionada'],
+        answer: 2,
+        why: 'Os dois são líquidos com pontos de ebulição diferentes (álcool cerca de 78 °C, água 100 °C): destilação fracionada.'
+      },
+      {
+        q: 'Enquanto a água pura está fervendo no destilador, ao nível do mar, a temperatura do vapor:',
+        options: ['Fica constante em 100 °C', 'Sobe sem parar', 'Cai até 0 °C'],
+        answer: 0,
+        why: 'Na mudança de estado de uma substância pura, a temperatura fica constante.'
+      },
+      {
+        q: 'Por que a água destilada é usada em laboratório?',
+        options: ['Porque é mais gelada', 'Porque não tem sais nem outras substâncias dissolvidas', 'Porque tem mais oxigênio'],
+        answer: 1,
+        why: 'Sem impurezas dissolvidas, ela não interfere nas reações e nas medidas.'
+      }
+    ]
+  },
+
+  concentracao: {
+    type: 'quiz',
+    need: 3,
+    title: 'Destilador: soluções',
+    questions: [
+      {
+        q: 'No soro fisiológico (água com sal), qual é o soluto e qual é o solvente?',
+        options: ['Soluto: água; solvente: sal', 'Soluto: sal; solvente: água', 'Os dois são solventes'],
+        answer: 1,
+        why: 'O soluto é o que se dissolve (sal); o solvente é o que dissolve (água).'
+      },
+      {
+        q: '20 g de sal dissolvidos formam 2 L de solução. Qual é a concentração?',
+        options: ['10 g/L', '40 g/L', '0,1 g/L'],
+        answer: 0,
+        why: 'C = m ÷ V = 20 g ÷ 2 L = 10 g/L.'
+      },
+      {
+        q: 'O soro fisiológico tem 9 g/L de NaCl. Quanto sal há em 500 mL de soro?',
+        options: ['9 g', '18 g', '4,5 g'],
+        answer: 2,
+        why: '500 mL é meio litro: 9 g/L × 0,5 L = 4,5 g.'
+      },
+      {
+        q: '2 mol de glicose dissolvidos formam 4 L de solução. Qual é a concentração?',
+        options: ['2 mol/L', '0,5 mol/L', '8 mol/L'],
+        answer: 1,
+        why: '2 mol ÷ 4 L = 0,5 mol/L.'
+      },
+      {
+        q: '58,5 g de NaCl (M = 58,5 g/mol) formam 1 L de solução. Qual é a concentração em mol/L?',
+        options: ['58,5 mol/L', '1 mol/L', '0,5 mol/L'],
+        answer: 1,
+        why: '58,5 g é 1 mol de NaCl. 1 mol em 1 L: 1 mol/L.'
+      },
+      {
+        q: 'Você junta mais água a um suco. O que acontece com a concentração e com a quantidade de açúcar?',
+        options: ['A concentração diminui; a quantidade de açúcar não muda', 'As duas aumentam', 'A concentração aumenta; o açúcar diminui'],
+        answer: 0,
+        why: 'Isso é uma diluição: o mesmo soluto fica espalhado num volume maior.'
+      },
+      {
+        q: 'Uma solução saturada é aquela que:',
+        options: ['Não tem soluto', 'Tem o máximo de soluto que o solvente dissolve naquela temperatura', 'Tem mais solvente do que soluto'],
+        answer: 1,
+        why: 'Passando desse limite, o soluto extra não dissolve e fica no fundo, como corpo de chão.'
+      }
+    ]
+  },
+
+  diluicao: {
+    type: 'numbers',
+    title: 'Bancada de síntese: Fórmula Aurora',
+    tasks: [
+      {
+        calc: true,
+        prompt: 'Teste: 1 L de solução de 10 g/L recebe água até completar 2 L. Qual é a nova concentração?',
+        fields: [['a', 'g/L']],
+        answer: { a: 5 },
+        why: 'C_1 × V_1 = C_2 × V_2: 10 × 1 = C_2 × 2, então C_2 = 5 g/L. O volume dobrou, a concentração caiu pela metade.'
+      },
+      {
+        calc: true,
+        prompt: 'Teste: 2 L de solução de 3 g/L são aquecidos até restar 1 L (só a água evapora). Qual é a nova concentração?',
+        fields: [['a', 'g/L']],
+        answer: { a: 6 },
+        why: 'O soluto não sai: 3 × 2 = C_2 × 1, então C_2 = 6 g/L. Menos solvente, mais concentrada.'
+      },
+      {
+        calc: true,
+        prompt: 'Teste: 2 L de solução de 4 mol/L devem ser diluídos até 1 mol/L. Qual será o volume final? Quantos litros de água acrescentar?',
+        fields: [['a', 'L de volume final'], ['b', 'L de água']],
+        answer: { a: 8, b: 6 },
+        why: '4 × 2 = 1 × V_2, então V_2 = 8 L. Já havia 2 L, então acrescentam-se 6 L de água.'
+      },
+      {
+        calc: true,
+        prompt: 'A Fórmula Aurora: o tanque de 12 L precisa ter 2 g/L. O concentrado tem 8 g/L. Quantos litros de concentrado usar? Quantos litros de água acrescentar?',
+        fields: [['a', 'L de concentrado'], ['b', 'L de água']],
+        answer: { a: 3, b: 9 },
+        why: '8 × V_1 = 2 × 12, então V_1 = 3 L de concentrado, completados com 9 L de água. Nem mais, nem menos, como pediu a Profa. Ítala.'
+      }
+    ]
+  },
+
+  banca: {
+    type: 'quiz',
+    need: 5,
+    title: 'A banca do Congresso',
+    questions: [
+      {
+        q: 'Capítulo 1. Qual destes é um fenômeno químico?',
+        options: ['Gelo derretendo', 'Ferro enferrujando', 'Papel sendo rasgado'],
+        answer: 1,
+        why: 'A ferrugem é uma substância nova: fenômeno químico. Derreter e rasgar são fenômenos físicos.'
+      },
+      {
+        q: 'Capítulo 1. O que se usa ao trabalhar numa bancada de laboratório?',
+        options: ['Sandália e cabelo solto', 'Jaleco, óculos de proteção e luvas', 'Só as luvas'],
+        answer: 1,
+        why: 'Os EPIs protegem pele, olhos e mãos. Calçado fechado e cabelo preso também.'
+      },
+      {
+        q: 'Capítulo 2. O número atômico (Z) indica o número de:',
+        options: ['Nêutrons', 'Prótons', 'Camadas'],
+        answer: 1,
+        why: 'Z é o número de prótons e define o elemento químico.'
+      },
+      {
+        q: 'Capítulo 2. Por que cada metal deixa a chama de uma cor no teste de chama?',
+        options: ['Os elétrons emitem luz de energia característica ao voltar para a camada de origem', 'O metal derrete e muda de cor', 'O gás do bico muda sozinho'],
+        answer: 0,
+        why: 'Modelo de Bohr: cada elemento tem camadas com energias próprias.'
+      },
+      {
+        q: 'Capítulo 3. No sal de cozinha (NaCl), a ligação entre sódio e cloro é:',
+        options: ['Covalente', 'Metálica', 'Iônica'],
+        answer: 2,
+        why: 'O sódio (metal) transfere um elétron ao cloro (não metal): ligação iônica.'
+      },
+      {
+        q: 'Capítulo 3. Por que o óleo não se mistura com a água?',
+        options: ['A água é polar e o óleo é apolar', 'O óleo é mais pesado', 'A água está fria'],
+        answer: 0,
+        why: 'Semelhante dissolve semelhante.'
+      },
+      {
+        q: 'Capítulo 4. Uma solução com pH 3 é:',
+        options: ['Neutra', 'Básica', 'Ácida'],
+        answer: 2,
+        why: 'pH abaixo de 7 é ácido; 7 é neutro; acima de 7, básico.'
+      },
+      {
+        q: 'Capítulo 4. Ácido + base forma:',
+        options: ['Sal + água', 'Óxido + gás', 'Só água'],
+        answer: 0,
+        why: 'É a neutralização, usada para corrigir o solo ácido da horta.'
+      },
+      {
+        q: 'Capítulo 5. Quantos mol há em 36 g de água (M = 18 g/mol)?',
+        options: ['18 mol', '2 mol', '0,5 mol'],
+        answer: 1,
+        why: 'n = m ÷ M = 36 ÷ 18 = 2 mol.'
+      },
+      {
+        q: 'Capítulo 5. O reagente que acaba primeiro e define quanto produto se forma é o:',
+        options: ['Reagente em excesso', 'Catalisador', 'Reagente limitante'],
+        answer: 2,
+        why: 'O que passa da proporção sobra sem reagir.'
+      },
+      {
+        q: 'Capítulo 6. Qual método separa a areia da água?',
+        options: ['Filtração', 'Destilação fracionada', 'Separação magnética'],
+        answer: 0,
+        why: 'O filtro segura o sólido que não se dissolveu.'
+      },
+      {
+        q: 'Capítulo 6. A Fórmula Aurora precisava de 2 g/L. Se a concentração fosse maior, o que aconteceria?',
+        options: ['Limparia mais rápido, sem problema', 'Seria desperdício, e o excesso poderia virar poluição no rio', 'A concentração não importa'],
+        answer: 1,
+        why: 'Na química, a dose certa importa: nem mais, nem menos.'
+      }
+    ]
   }
 };

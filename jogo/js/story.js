@@ -37,6 +37,11 @@ window.VC = window.VC || {};
       try { await S.chapterIntro(aviso, true); } finally { ui().unlock(); }
     }
 
+    if (scene.mapKey === 'praca' && VC.flag('finalPendente')) {
+      VC.flag('finalPendente', false);
+      await finaleScene(scene);
+    }
+
     if (scene.mapKey === 'praca' && !VC.flag('controlsHint')) {
       VC.flag('controlsHint', true);
       ui().toast(ui().isTouch ? 'Use o joystick para andar e o botão E para conversar.' : 'WASD ou setas para andar, E para conversar. Menu no Esc.');
@@ -71,8 +76,21 @@ window.VC = window.VC || {};
 
   const starsOf = (keys) => keys.reduce((a, k) => a + (VC.state.stars[k] || 0), 0) + ' de ' + keys.length * 3;
 
+  // Encerramento do jogo
+  S.endGame = function () {
+    const keys = [];
+    Object.values(VC.CHAPTER_DATA).forEach((c) => c.grants.stars.forEach((k) => keys.push(k)));
+    return ui().chapterCard('Fim de jogo', [
+      'Parabéns, {player}! Você reabriu o Laboratório Aurora, limpou o rio de Vale Cobalto e foi indicado ao Prêmio Nobel de Química.',
+      'Estrelas no jogo todo: ' + starsOf(keys) + '. Conceitos no Caderno: ' + VC.state.notebook.length + '.',
+      'Obrigado por jogar! Você pode continuar explorando a cidade, rever o Caderno do Laboratório ou voltar a qualquer capítulo pelo menu.',
+      'Vale Cobalto: O Laboratório Aurora. Um trabalho escolar de Química do Ensino Médio.'
+    ]);
+  };
+
   S.endOfDemo = function () {
     const next = VC.CHAPTERS.find((c) => c.n === VC.IMPLEMENTED + 1);
+    if (!next) return S.endGame();
     return ui().chapterCard('Fim da versão atual', [
       'Você concluiu todo o conteúdo disponível de Vale Cobalto.',
       'Conceitos no Caderno: ' + VC.state.notebook.length + '.',
@@ -85,7 +103,8 @@ window.VC = window.VC || {};
     2: { quest: 'q2_lia', lines: ['Vale Cobalto se prepara para o Festival das Luzes.', 'A Lia tem novidades. Procure por ela na praça.'] },
     3: { quest: 'q3_bento', lines: ['Depois do festival, a cidade volta à rotina. Mas o Seu Bento está com um problema na barraca.', 'Vá falar com ele na praça.'] },
     4: { quest: 'q4_prefeita', lines: ['A primavera chega a Vale Cobalto, mas a horta comunitária, perto do rio, não vai nada bem.', 'A Prefeita Célia quer falar com você.'] },
-    5: { quest: 'q5_prefeita', lines: ['A temporada de chuvas se aproxima, e a estação de tratamento de água precisa se preparar.', 'A Prefeita Célia tem uma encomenda grande para o Aurora.'] }
+    5: { quest: 'q5_prefeita', lines: ['A temporada de chuvas se aproxima, e a estação de tratamento de água precisa se preparar.', 'A Prefeita Célia tem uma encomenda grande para o Aurora.'] },
+    6: { quest: 'q6_carta', lines: ['O Aurora é hoje o laboratório mais respeitado da região. Mas o rio de Vale Cobalto continua escuro.', 'Chegou uma carta para você no laboratório.'] }
   };
 
   S.chapterIntro = function (n, isNew) {
@@ -110,7 +129,8 @@ window.VC = window.VC || {};
     if (st.quest === 'q2_fim') { st.quest = 'q3_bento'; st.flags.capAviso = 3; }
     if (st.quest === 'q3_fim') { st.quest = 'q4_prefeita'; st.flags.capAviso = 4; }
     if (st.quest === 'q4_fim') { st.quest = 'q5_prefeita'; st.flags.capAviso = 5; }
-    const fromFlags = st.flags.cap4 ? 5 : st.flags.cap3 ? 4 : st.flags.cap2 ? 3 : st.flags.cap1 ? 2 : 1;
+    if (st.quest === 'q5_fim') { st.quest = 'q6_carta'; st.flags.capAviso = 6; }
+    const fromFlags = st.flags.cap5 ? 6 : st.flags.cap4 ? 5 : st.flags.cap3 ? 4 : st.flags.cap2 ? 3 : st.flags.cap1 ? 2 : 1;
     const fromQuest = (VC.QUESTS[st.quest] && VC.QUESTS[st.quest].ch) || 1;
     st.maxCh = Math.max(st.maxCh || 1, fromFlags, fromQuest);
   };
@@ -344,7 +364,109 @@ window.VC = window.VC || {};
       'Estrelas: ' + starsOf(['grandezas', 'massas', 'calculo']) + '. O contrato rendeu 150 moedas ao Aurora.',
       'A balança analítica agora faz parte do laboratório.'
     ]);
-    await S.endOfDemo();
+    await S.startChapter(6);
+  }
+
+  /* ---------- Capítulo 6 e missão final ---------- */
+  // O rival oferece o destilador do Grupo Vex: começo da reconciliação
+  async function stillScene(scene) {
+    await say('bento', 'Um destilador grande, para tanta água? Esse eu não tenho, {player}.');
+    scene.scripted = true;
+    try {
+      scene.addNpc({ id: 'rival', sprite: 'rival', pos: () => [16, 12], face: 'left', solid: false });
+      await scene.walkNpc('rival', [12, 12], 60);
+      await talk([
+        ['rival', 'Eu tenho. O Grupo Vex tem um destilador industrial parado no depósito.'],
+        ['rival', 'O tambor de óleo, a caldeira, a cal em dobro... Uma parte da sujeira do rio é culpa nossa. Deixa o Grupo Vex ajudar.']
+      ]);
+      const c = await ui().choose('player', 'Responder:', ['Aceito. O rio precisa de todo mundo.', 'Aceito. Mas o cálculo continua sendo meu.']);
+      await say('rival', c === 0 ? 'Então está combinado. Mando instalar no Aurora hoje mesmo.' : 'Ha! Justo. O destilador chega hoje mesmo.');
+      await scene.walkNpc('rival', [16, 12], 70);
+      scene.removeNpc('rival');
+    } finally { scene.scripted = false; }
+    await say('bento', 'Quem diria, o Grupo Vex ajudando. Esse rio ainda vai voltar a ter peixe!');
+    VC.flag('destiladorOk', true);
+    VC.setQuest('q6_destilacao');
+  }
+
+  async function riverScene(scene) {
+    await say('narrador', 'Você despeja a Fórmula Aurora no ponto de coleta, e a correnteza leva tudo rio abaixo.');
+    VC.removeItem('formula_aurora');
+    VC.flag('rioLimpo', true);
+    scene.scripted = true;
+    try { await scene.cleanRiver(); } finally { scene.scripted = false; }
+    ui().sfx('win');
+    await say('narrador', 'A água escura clareia, faixa por faixa. Em poucos minutos, o rio de Vale Cobalto corre azul.');
+    ui().toast('Missão concluída: A Fórmula Aurora');
+    VC.setQuest('q6_prefeita');
+  }
+
+  async function inviteScene(scene) {
+    await talk([
+      ['prefeita', 'O rio! Azul de novo! Eu não via isso desde criança, {player}.'],
+      ['prefeita', 'E a notícia correu longe. Chegou um convite para o Aurora.'],
+      ['prefeita', 'O Congresso Internacional de Química quer que você apresente a Fórmula Aurora. E pediu que o Grupo Vex vá junto, como parceiro.'],
+      ['prefeita', 'A prefeitura também deixou uma verba para a viagem. {rival} está esperando você perto do quadro de pedidos.']
+    ]);
+    VC.addItem('convite');
+    VC.addCoins(200);
+    VC.setQuest('q6_congresso');
+    const def = scene.def.npcs.find((n) => n.id === 'rival');
+    if (def && !scene.npcs.rival) scene.addNpc(def);
+    scene.updateMarker();
+  }
+
+  async function congressScene(scene) {
+    const c = await ui().choose('rival', 'O trem para a capital sai em dez minutos. Pronto para o Congresso, {player}?', ['Vamos!', 'Só mais um minuto.']);
+    if (c === 1) { await say('rival', 'Tudo bem. Estou aqui quando você quiser.'); return; }
+    const title = 'O Congresso Internacional de Química';
+    await ui().story([
+      'Na capital, o auditório do Congresso Internacional de Química está lotado. Cientistas do mundo inteiro vieram ver a Fórmula Aurora.',
+      'Você e {rival} sobem ao palco. Na tela, o antes e o depois do rio de Vale Cobalto.',
+      'Depois da apresentação, a banca de cientistas tem algumas perguntas.'
+    ], { title, skippable: false });
+    const r = await ui().challenge('banca', 'Banca aprovada');
+    VC.state.stars.banca = r.stars;
+    await ui().story([
+      'A plateia aplaude de pé. Na primeira fila, uma senhora de cabelos brancos sorri: é a Profa. Ítala.',
+      'No fim do congresso, a notícia: a Fórmula Aurora foi indicada ao Prêmio Nobel de Química.',
+      'De volta a Vale Cobalto, a cidade inteira espera vocês na praça.'
+    ], { title, skippable: false });
+    VC.removeItem('convite');
+    VC.addItem('nobel', true);
+    VC.flag('cap6', true);
+    VC.flag('finalPendente', true);
+    VC.setQuest('q6_fim');
+    scene.scene.restart({ map: 'praca', spawn: [7, 9], face: 'up' });
+  }
+
+  // De volta à praça: Profa. Ítala, reconciliação com o rival e encerramento
+  async function finaleScene(scene) {
+    ui().lock();
+    scene.scripted = true;
+    try {
+      await scene.walkNpc('rival', [9, 8], 60);
+      await talk([
+        ['itala_p', '{player}! Que alegria ver o Aurora assim: organizado, equipado e cheio de vida.'],
+        ['itala_p', 'Quando escrevi aquela primeira carta, eu sabia que você ia conseguir. Fui eu que indiquei a Fórmula Aurora ao Congresso.'],
+        ['rival', 'E eu assinei a indicação ao Nobel junto com a professora.'],
+        ['rival', 'Desculpe pelo tambor de óleo, pela caldeira, pela cal em dobro... O Grupo Vex aprendeu muito com o Aurora.']
+      ]);
+      const c = await ui().choose('player', 'Responder:', ['Sem o seu destilador, o rio não estaria limpo. Obrigado, {rival}.', 'Parceiros de laboratório daqui para a frente?']);
+      await say('rival', c === 0 ? 'Obrigado a você. Agora somos uma equipe.' : 'Parceiros. Mas eu continuo querendo ganhar de você no próximo cálculo.');
+      await talk([
+        ['itala_p', 'O rio limpo, a cidade confiando na ciência e uma indicação ao Nobel. Estou muito orgulhosa, {player}.'],
+        ['itala_p', 'Só mais uma pergunta: e o gato? Está bem alimentado?'],
+        ['narrador', 'Em algum lugar do laboratório, {cat} ronrona, satisfeito.']
+      ]);
+    } finally { scene.scripted = false; }
+    try {
+      await ui().chapterCard('Capítulo 6 concluído', [
+        'O rio de Vale Cobalto está limpo, e a Fórmula Aurora foi apresentada ao mundo.',
+        'Estrelas: ' + starsOf(['separacao', 'destilacao', 'formula', 'banca']) + '. A indicação ao Prêmio Nobel de Química está na sua mochila.'
+      ]);
+      await S.endGame();
+    } finally { ui().unlock(); }
   }
 
   /* ---------- Interações ---------- */
@@ -398,6 +520,10 @@ window.VC = window.VC || {};
       return;
     }
     if (q() === 'q_bancada') { await say('prefeita', 'O relatório está com você. Analise tudo na bancada do laboratório!'); return; }
+    if (q() === 'q6_prefeita') { await inviteScene(scene); return; }
+    if (q() === 'q6_congresso') { await say('prefeita', '{rival} está esperando você perto do quadro de pedidos. Boa viagem!'); return; }
+    if (q() === 'q6_fim') { await say('prefeita', 'Vale Cobalto inteira tem orgulho de você, {player}. E o rio... olhe só esse azul!'); return; }
+    if (q().indexOf('q6_') === 0) { await say('prefeita', 'O rio conta com você e com a Fórmula Aurora, {player}!'); return; }
     if (q() === 'q5_prefeita') { await orderScene(scene); return; }
     if (q() === 'q5_entrega') { await finalCap5(scene); return; }
     if (q() === 'q5_fim') { await say('prefeita', 'A estação de tratamento já recebeu tudo, {player}. Nenhum saco sobrando.'); return; }
@@ -427,6 +553,7 @@ window.VC = window.VC || {};
   };
 
   H.bento = async function (scene) {
+    if (q() === 'q6_bento') { await stillScene(scene); return; }
     if (q() === 'q5_bento') {
       await talk([
         ['bento', 'Uma encomenda para a estação de tratamento? Então balança de cozinha não serve.'],
@@ -526,7 +653,17 @@ window.VC = window.VC || {};
     q5_massas: 'Massa molar é só somar as massas dos átomos da fórmula. E o número fora do parêntese multiplica tudo o que está dentro!',
     q5_calculo: 'Os coeficientes da equação são como uma receita de bolo: sempre na mesma proporção.',
     q5_entrega: 'Leva a planilha para a prefeita! Quero ver a cara do Grupo Vex.',
-    q5_fim: 'Calculei quantos mol de água cabem no meu copo: uns 11 mol! É muita molécula.'
+    q5_fim: 'Calculei quantos mol de água cabem no meu copo: uns 11 mol! É muita molécula.',
+    q6_carta: 'O carteiro passou no laboratório hoje cedo. Parecia uma carta importante!',
+    q6_coleta: 'O ponto de coleta fica na margem do rio, abaixo da fonte.',
+    q6_separacao: 'Para cada mistura, um método: filtro para sólidos, funil para líquidos que não se misturam, ímã para o ferro...',
+    q6_bento: 'Destilador grande? Nem o Seu Bento deve ter. Mas pergunta lá!',
+    q6_destilacao: 'Destilação é como a chuva: a água evapora, condensa e cai limpa.',
+    q6_formula: 'Diluir é colocar mais água: o soluto é o mesmo, só fica mais espalhado.',
+    q6_rio: 'Vai! Joga a Fórmula Aurora no rio! Quero ver a água ficar azul!',
+    q6_prefeita: 'O rio está AZUL! Conta para a prefeita!',
+    q6_congresso: 'Congresso Internacional! Traz um autógrafo de algum cientista famoso para mim?',
+    q6_fim: 'Decidi: vou estudar Química na faculdade. Um dia eu trabalho no Aurora com você!'
   };
 
   H.lia = async function () {
@@ -567,7 +704,11 @@ window.VC = window.VC || {};
     q5_grandezas: '{cat} tenta contar os grãos de sal da bancada. Desiste no terceiro.',
     q5_massas: '{cat} encosta o bigode na balança analítica, e o visor treme na quarta casa decimal.',
     q5_calculo: '{cat} senta em cima das contas. Talvez seja o jeito dele de ajudar.',
-    q5_fim: '{cat} dorme ao lado da balança analítica. Em cima dela, nem pensar.'
+    q5_fim: '{cat} dorme ao lado da balança analítica. Em cima dela, nem pensar.',
+    q6_separacao: '{cat} encara o funil de decantação, hipnotizado pela gota que cai.',
+    q6_destilacao: '{cat} se enrola perto do destilador, que está quentinho.',
+    q6_formula: '{cat} cheira o tanque da Fórmula Aurora e espirra.',
+    q6_fim: '{cat} ganhou um sachê especial para comemorar. A Profa. Ítala fez questão.'
   };
 
   H.cat = async function () {
@@ -577,6 +718,17 @@ window.VC = window.VC || {};
   };
 
   H.mesa = async function (scene) {
+    if (q() === 'q6_carta') {
+      await talk([
+        ['itala', '{player}, se esta carta chegou, é porque o Aurora está de pé de novo. As notícias de Vale Cobalto chegam longe.'],
+        ['itala', 'Aqui está a última página da minha pesquisa. Para limpar o rio, primeiro separe o que está misturado nele.'],
+        ['itala', 'Depois, a Fórmula Aurora, na concentração certa: 2 g/L. Nem mais, nem menos.'],
+        ['itala', 'Comece por uma amostra do rio. Eu acredito em você. P.S.: o gato continua bem alimentado?']
+      ]);
+      VC.addItem('pagina_aurora');
+      VC.setQuest('q6_coleta');
+      return;
+    }
     if (q() !== 'q_carta') {
       await say('narrador', 'A mesa da Profa. Ítala. Ainda tem uma xícara de café esquecida.');
       return;
@@ -632,6 +784,16 @@ window.VC = window.VC || {};
   };
 
   H.bancada = async function (scene) {
+    if (q() === 'q6_separacao') {
+      await say('narrador', 'A amostra do rio é uma mistura de muitas misturas. Primeiro, identifique as fases; depois, o método para separar cada uma.');
+      const r = await ui().challenge(['misturas', 'separacao'], 'Amostra separada');
+      VC.state.stars.separacao = r.stars;
+      VC.learn(['mistura_homogenea', 'mistura_heterogenea', 'separacao']);
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'Filtro e funil de decantação resolveram a lama, as folhas e o óleo. Mas os sais dissolvidos só saem com um destilador, e o Aurora não tem um grande o bastante.');
+      VC.setQuest('q6_bento');
+      return;
+    }
     if (q() === 'q5_grandezas') {
       await say('narrador', 'Massa, mol, volume, número de partículas... Antes de calcular qualquer coisa, cada grandeza precisa da unidade certa.');
       const r = await ui().challenge(['grandezas', 'unidades'], 'Grandezas organizadas');
@@ -746,6 +908,18 @@ window.VC = window.VC || {};
   H.licenca = async function () { await say('narrador', 'Licença provisória de funcionamento. O Aurora está oficialmente de volta!'); };
   H.planta = async function () { await say('narrador', 'A samambaia gosta da luz do laboratório. Plantas fazem fotossíntese: um fenômeno químico!'); };
   H.sintese = async function () {
+    if (q() === 'q6_formula') {
+      await say('narrador', 'A receita da Profa. Ítala: 2 g/L, nem mais, nem menos. Primeiro, alguns testes de diluição.');
+      const r = await ui().challenge('diluicao', 'Fórmula Aurora pronta');
+      VC.state.stars.formula = r.stars;
+      VC.learn('diluicao');
+      VC.addCoins(15 + 10 * r.stars);
+      await say('narrador', 'O tanque de 12 L está pronto: 3 L de concentrado e 9 L de água destilada. A Fórmula Aurora, finalmente.');
+      VC.removeItem('amostra_rio');
+      VC.addItem('formula_aurora');
+      VC.setQuest('q6_rio');
+      return;
+    }
     if (q() === 'q5_calculo') {
       await say('narrador', 'Os coeficientes da equação balanceada são a receita da reação: dizem quantos mol de cada substância reagem e se formam.');
       const r = await ui().challenge(['proporcoes', 'limitante'], 'Encomenda calculada');
@@ -826,6 +1000,41 @@ window.VC = window.VC || {};
     if (VC.flag('hortaOk')) { await say('narrador', 'A horta comunitária, verde e cheia: repolhos roxos, tomates e alfaces. Nada como um solo com o pH certo.'); return; }
     if (q().indexOf('q4_') === 0) { await say('narrador', 'O canteiro continua amarelado. O solo precisa de cuidado.'); return; }
     await say('narrador', 'A horta comunitária de Vale Cobalto. As folhas andam meio amareladas.');
+  };
+
+  H.coleta = async function (scene) {
+    if (q() === 'q6_coleta') {
+      await say('narrador', 'Você enche um frasco na margem: água turva, folhas, lama, uma película de óleo e, invisíveis, os sais dissolvidos.');
+      VC.addItem('amostra_rio');
+      VC.setQuest('q6_separacao');
+      return;
+    }
+    if (q() === 'q6_rio') { await riverScene(scene); return; }
+    await say('narrador', VC.flag('rioLimpo') ? 'O ponto de coleta. A água do frasco de teste agora sai transparente.' : 'O ponto de coleta de amostras do rio, com um frasco preso à placa.');
+  };
+
+  H.destilador = async function () {
+    if (q() === 'q6_destilacao') {
+      await say('narrador', 'A amostra ferve no balão, o vapor passa pelo condensador e pinga limpo no frasco coletor. No balão, ficam os sais.');
+      const r = await ui().challenge(['destilacao', 'concentracao'], 'Amostra purificada');
+      VC.state.stars.destilacao = r.stars;
+      VC.learn(['destilacao', 'solucao', 'concentracao_comum', 'concentracao_molar', 'saturada']);
+      VC.addCoins(15 + 10 * r.stars);
+      ui().toast('Missão concluída: O rio por partes');
+      await say('narrador', 'Com a água destilada, já dá para preparar a Fórmula Aurora. A concentração precisa ser exata.');
+      VC.setQuest('q6_formula');
+      return;
+    }
+    await say('narrador', 'O destilador do Grupo Vex: balão, condensador e frasco coletor. Presente de um rival que virou parceiro.');
+  };
+
+  H.rival = async function (scene) {
+    if (q() === 'q6_congresso') { await congressScene(scene); return; }
+    await say('rival', 'O Grupo Vex agora trata a água antes de devolver ao rio. Ideia de uma certa pessoa do Aurora, {player}.');
+  };
+
+  H.itala = async function () {
+    await say('itala_p', 'O Aurora está em boas mãos, {player}. Descanse um pouco. Depois, a ciência continua.');
   };
 
   H.analitica = async function () {
