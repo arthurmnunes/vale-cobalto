@@ -437,7 +437,7 @@ window.VC = window.VC || {};
     return c;
   };
 
-  function fonte(oil) {
+  function fonte(oil, clean) {
     const [c, ctx] = canvas(32, 32);
     R(ctx, '#1b1f2e', 2, 12, 28, 18); R(ctx, '#9aa3a8', 3, 13, 26, 16); R(ctx, '#7f888d', 3, 26, 26, 3);
     R(ctx, '#56705a', 5, 15, 22, 9); R(ctx, '#6b866d', 7, 17, 6, 1); R(ctx, '#6b866d', 16, 20, 7, 1);
@@ -449,9 +449,14 @@ window.VC = window.VC || {};
       R(ctx, '#e0675a', 9, 21, 4, 1); R(ctx, '#6fa8dc', 13, 21, 5, 1); R(ctx, '#9b7bd0', 19, 20, 4, 1);
       R(ctx, '#2b2a24', 3, 26, 5, 3); R(ctx, '#2b2a24', 24, 27, 4, 2);
     }
+    if (clean) {
+      R(ctx, '#2f7fc1', 5, 15, 22, 9); R(ctx, '#5aa5dd', 7, 17, 6, 1); R(ctx, '#5aa5dd', 16, 20, 7, 1); R(ctx, '#c8e3ec', 10, 19, 1, 1);
+      R(ctx, '#5aa5dd', 12, 1, 8, 2);
+    }
     return c;
   }
   O.fonte = () => fonte(false);
+  O.fonte_limpa = () => fonte(false, true);
   O.fonte_oleo = () => fonte(true);
 
   O.sintese = () => {
@@ -510,6 +515,60 @@ window.VC = window.VC || {};
     R(ctx, '#aab4b8', 6, 5, 4, 1); R(ctx, '#7aa8bd', 7, 4, 2, 1);
     R(ctx, '#e8edef', 3, 7, 10, 2); R(ctx, '#1b1f2e', 4, 7, 5, 2); R(ctx, '#7bc67e', 5, 7, 3, 1);
     R(ctx, '#f2b84b', 11, 7, 1, 1);
+    return c;
+  };
+
+  /* ---------- Itens da loja (Cap. 1 a 6) ---------- */
+  O.extintor = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#1b1f2e', 5, 3, 6, 13); R(ctx, '#d9534f', 6, 4, 4, 11); R(ctx, '#f07a74', 6, 4, 1, 10);
+    R(ctx, '#1b1f2e', 6, 1, 4, 3); R(ctx, '#3b3b3b', 7, 0, 3, 2); R(ctx, '#3b3b3b', 10, 1, 3, 1); R(ctx, '#3b3b3b', 12, 2, 1, 4);
+    R(ctx, '#f4f7f8', 7, 8, 2, 3);
+    return c;
+  };
+  O.caminha = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#1b1f2e', 1, 9, 14, 6); R(ctx, '#7b4fa0', 2, 9, 12, 5); R(ctx, '#9b6fc0', 3, 10, 10, 1);
+    R(ctx, '#c9a7e0', 4, 11, 8, 2);
+    return c;
+  };
+  O.microscopio = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#3d2716', 1, 11, 14, 2); R(ctx, '#3d2716', 2, 13, 2, 3); R(ctx, '#3d2716', 12, 13, 2, 3);
+    R(ctx, '#1b1f2e', 5, 9, 7, 2); R(ctx, '#1b1f2e', 9, 2, 2, 8); R(ctx, '#2a4c8f', 6, 1, 3, 2); R(ctx, '#e8edef', 7, 3, 2, 4);
+    R(ctx, '#e8edef', 5, 7, 3, 1); R(ctx, '#9cc7d9', 6, 8, 2, 1);
+    return c;
+  };
+  O.espectroscopio = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#3d2716', 1, 11, 14, 2); R(ctx, '#3d2716', 2, 13, 2, 3); R(ctx, '#3d2716', 12, 13, 2, 3);
+    R(ctx, '#1b1f2e', 1, 6, 6, 3); R(ctx, '#55687a', 2, 7, 4, 1);
+    R(ctx, '#1b1f2e', 7, 4, 4, 7); R(ctx, '#c8e3ec', 8, 5, 2, 5);
+    ['#e8323c', '#ffb020', '#7bc67e', '#2fd3b0', '#6fa8dc', '#b48ce8'].forEach((col, i) => R(ctx, col, 11, 4 + i, 4, 1));
+    return c;
+  };
+  O.vidraria = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#3d2716', 1, 12, 14, 2); R(ctx, '#3d2716', 2, 14, 2, 2); R(ctx, '#3d2716', 12, 14, 2, 2);
+    R(ctx, '#dbe8ee', 3, 3, 1, 5); R(ctx, '#dbe8ee', 2, 8, 3, 4); R(ctx, '#4fb3a0', 2, 10, 3, 2);
+    R(ctx, '#1b1f2e', 7, 1, 1, 11); R(ctx, '#dbe8ee', 8, 1, 1, 10); R(ctx, '#f2b84b', 8, 7, 1, 3);
+    R(ctx, '#dbe8ee', 11, 2, 1, 10); R(ctx, '#9b7bd0', 11, 8, 1, 3);
+    return c;
+  };
+  O.aquario = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#3d2716', 1, 12, 14, 2); R(ctx, '#3d2716', 2, 14, 2, 2); R(ctx, '#3d2716', 12, 14, 2, 2);
+    R(ctx, '#1b1f2e', 1, 3, 14, 9); R(ctx, '#5aa5dd', 2, 4, 12, 7); R(ctx, '#2f7fc1', 2, 9, 12, 2);
+    R(ctx, '#3f8a4a', 3, 7, 1, 3); R(ctx, '#3f8a4a', 12, 6, 1, 4);
+    R(ctx, '#f2b84b', 5, 5, 3, 1); R(ctx, '#f2b84b', 8, 5, 1, 1); R(ctx, '#e0675a', 9, 8, 2, 1); R(ctx, '#e0675a', 11, 8, 1, 1);
+    return c;
+  };
+  // Moldura num cavalete
+  O.moldura = () => {
+    const [c, ctx] = canvas(16, 16);
+    R(ctx, '#5a3d22', 3, 9, 2, 7); R(ctx, '#5a3d22', 11, 9, 2, 7); R(ctx, '#5a3d22', 7, 10, 2, 5);
+    R(ctx, '#8a5a12', 2, 0, 12, 11); R(ctx, '#f2b84b', 3, 1, 10, 9); R(ctx, '#f4f7f8', 4, 2, 8, 7);
+    R(ctx, '#2a4c8f', 5, 3, 6, 1); R(ctx, '#2a4c8f', 5, 5, 4, 1); R(ctx, '#f2b84b', 7, 6, 2, 2);
     return c;
   };
 

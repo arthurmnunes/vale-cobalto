@@ -38,7 +38,6 @@ window.VC = window.VC || {};
     }
 
     if (scene.mapKey === 'praca' && VC.flag('finalPendente')) {
-      VC.flag('finalPendente', false);
       await finaleScene(scene);
     }
 
@@ -466,6 +465,7 @@ window.VC = window.VC || {};
         'Estrelas: ' + starsOf(['separacao', 'destilacao', 'formula', 'banca']) + '. A indicação ao Prêmio Nobel de Química está na sua mochila.'
       ]);
       await S.endGame();
+      VC.flag('finalPendente', false);
     } finally { ui().unlock(); }
   }
 
@@ -1002,6 +1002,15 @@ window.VC = window.VC || {};
     await say('narrador', 'A horta comunitária de Vale Cobalto. As folhas andam meio amareladas.');
   };
 
+  // Itens da loja
+  H.extintor = async function () { await say('narrador', 'Extintor de pó químico, para fogo em papel, líquidos inflamáveis e equipamentos elétricos. Em aparelho ligado na tomada, água nunca: ela conduz eletricidade.'); };
+  H.caminha = async function () { await say('narrador', '{cat} adotou a caminha nova. Agora só sai dela na hora de comer.'); };
+  H.microscopio = async function () { await say('narrador', 'No microscópio, uma gota de leite mostra gotinhas de gordura espalhadas. A olho nu parece homogêneo, mas é uma mistura heterogênea.'); };
+  H.espectroscopio = async function () { await say('narrador', 'O espectroscópio separa a luz da chama em linhas coloridas. Cada elemento tem as suas, como um código de barras de luz.'); };
+  H.vidraria = async function () { await say('narrador', 'Balão volumétrico, pipeta e bureta: vidrarias de precisão para preparar soluções com o volume exato.'); };
+  H.aquario = async function () { await say('narrador', 'Lambaris do rio de Vale Cobalto. Peixes só sobrevivem em água com oxigênio dissolvido e sem poluição.'); };
+  H.moldura = async function () { await say('narrador', 'A carta de indicação ao Prêmio Nobel de Química, emoldurada na parede do Aurora.'); };
+
   H.coleta = async function (scene) {
     if (q() === 'q6_coleta') {
       await say('narrador', 'Você enche um frasco na margem: água turva, folhas, lama, uma película de óleo e, invisíveis, os sais dissolvidos.');
@@ -1086,6 +1095,7 @@ window.VC = window.VC || {};
       return;
     }
     if (VC.flag('oleo') && !VC.flag('fonteLimpa')) { await say('narrador', 'Uma mancha de óleo boia na fonte, com reflexos coloridos.'); return; }
+    if (VC.flag('rioLimpo')) { await say('narrador', 'A fonte agora recebe água limpa do rio. A água sai transparente e já não tem cheiro nenhum.'); return; }
     if (VC.flag('fonteLimpa')) { await say('narrador', 'Sem óleo, a fonte voltou ao normal. A água ainda vem turva do rio, mas isso é um problema para outro dia.'); return; }
     await say('narrador', 'A água da fonte vem do rio. Está turva e tem um leve cheiro de ovo podre.');
   };

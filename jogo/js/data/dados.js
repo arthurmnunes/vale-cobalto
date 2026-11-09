@@ -32,14 +32,20 @@ VC.ITEMS = {
 
 // Loja do Seu Bento
 VC.SHOP = [
+  { id: 'extintor', name: 'Extintor de incêndio', price: 25, desc: 'Segurança em primeiro lugar: pó químico para várias classes de fogo.', decor: true },
   { id: 'planta', name: 'Samambaia em vaso', price: 30, desc: 'Deixa o laboratório mais vivo.', decor: true },
   { id: 'poltrona', name: 'Poltrona de leitura', price: 45, desc: 'Para estudar com conforto.', decor: true },
   { id: 'lousa', name: 'Lousa branca', price: 60, desc: 'Para rabiscar fórmulas na parede.', decor: true },
+  { id: 'caminha', name: 'Caminha do gato', price: 40, desc: 'Uma almofada macia para o mascote do Aurora.', decor: true, needs: 'cap1' },
   { id: 'modelo', name: 'Modelo atômico', price: 50, desc: 'Um átomo de Bohr com órbitas de arame.', decor: true, needs: 'cap1' },
+  { id: 'microscopio', name: 'Microscópio', price: 100, desc: 'Para ver o que o olho não vê.', decor: true, needs: 'cap1' },
+  { id: 'espectroscopio', name: 'Espectroscópio', price: 180, desc: 'Separa a luz de uma chama nas cores de cada elemento.', decor: true, needs: 'cap2' },
   { id: 'tubos', name: 'Estante de tubos de ensaio', price: 40, desc: 'Tubos coloridos para reações em pequena escala.', decor: true, needs: 'cap2' },
   { id: 'cartaz_ph', name: 'Cartaz da escala de pH', price: 35, desc: 'As cores do repolho roxo, do ácido ao básico.', decor: true, needs: 'cap3' },
   { id: 'poster_mol', name: 'Pôster do mol', price: 35, desc: '6,02 × 10²³: o número de Avogadro na parede.', decor: true, needs: 'cap4' },
-  { id: 'vidraria', name: 'Kit de vidraria volumétrica', price: 90, desc: 'Balões, pipetas e buretas para medidas precisas.', lockedText: 'Disponível no Capítulo 5' }
+  { id: 'vidraria', name: 'Kit de vidraria volumétrica', price: 90, desc: 'Balões, pipetas e buretas para medidas precisas.', decor: true, needs: 'cap5' },
+  { id: 'aquario', name: 'Aquário com peixes do rio', price: 150, desc: 'Lambaris do rio de Vale Cobalto, agora que a água está limpa.', decor: true, needs: 'cap6' },
+  { id: 'moldura', name: 'Moldura da indicação ao Nobel', price: 80, desc: 'Para pendurar a carta mais importante do Aurora.', decor: true, needs: 'cap6' }
 ];
 
 // Caderno do Laboratório (conceitos aprendidos)

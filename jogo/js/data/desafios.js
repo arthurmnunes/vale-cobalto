@@ -799,9 +799,9 @@ VC.CHALLENGES = {
       },
       {
         q: 'Por que as estátuas de mármore (CaCO_3) da praça se desgastam com a chuva ácida?',
-        options: ['O ácido reage com o carbonato e o transforma em CO_2 e um sal solúvel', 'A chuva é forte demais', 'O mármore derrete com o calor'],
+        options: ['O ácido reage com o carbonato de cálcio, libera CO_2 e a pedra vai sendo consumida', 'A chuva é forte demais', 'O mármore derrete com o calor'],
         answer: 0,
-        why: 'CaCO_3 + H_2SO_4 → CaSO_4 + H_2O + CO_2. O mármore vai sendo consumido pela reação.'
+        why: 'CaCO_3 + H_2SO_4 → CaSO_4 + H_2O + CO_2. O carbonato reage, o gás escapa e a superfície vira sulfato de cálcio, que esfarela e é levado pela chuva aos poucos.'
       },
       {
         q: 'Como uma caldeira pode lançar menos SO_2 no ar?',

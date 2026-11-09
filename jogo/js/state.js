@@ -66,12 +66,18 @@ window.VC = window.VC || {};
   };
 
   VC.learn = function (ids) {
+    const novos = [];
     [].concat(ids).forEach((id) => {
       if (!VC.state.notebook.includes(id)) {
         VC.state.notebook.push(id);
-        VC.ui.toast('Novo no Caderno: ' + VC.NOTEBOOK[id].title);
+        novos.push(VC.NOTEBOOK[id].title);
       }
     });
+    // um único aviso para todos os conceitos novos (vários avisos cobriam o diálogo no celular)
+    if (novos.length) {
+      const lista = novos.length <= 2 ? novos.join(' e ') : novos.slice(0, 2).join(', ') + ' e mais ' + (novos.length - 2);
+      VC.ui.toast('Novo no Caderno: ' + lista);
+    }
     VC.ui.refreshHud();
     VC.save();
   };

@@ -101,7 +101,9 @@ window.VC = window.VC || {};
     const t = el('div', 'toast');
     if (icon) { const i = el('img', 'pixel'); i.src = icon; i.alt = ''; t.appendChild(i); }
     t.appendChild(richEl('span', '', text));
-    $('toasts').appendChild(t);
+    const box = $('toasts');
+    box.appendChild(t);
+    while (box.children.length > 3) box.firstChild.remove();
     setTimeout(() => t.classList.add('out'), 2600);
     setTimeout(() => t.remove(), 3100);
   };
@@ -597,11 +599,15 @@ window.VC = window.VC || {};
         if (item.flame) q.prepend(flameEl(item.flame));
         if (item.tube) q.prepend(tubeEl(item.tube));
         opts.innerHTML = '';
-        item.options.forEach((o, k) => {
+        let rightBtn = null;
+        // alternativas embaralhadas a cada exibição: a posição não entrega a resposta
+        shuffle(item.options.map((o, k) => k)).forEach((k) => {
+          const o = item.options[k];
           const b = richEl('button', 'btn option', o);
+          if (k === item.answer) rightBtn = b;
           b.addEventListener('click', () => {
             opts.querySelectorAll('button').forEach((x) => { x.disabled = true; });
-            opts.children[item.answer].classList.add('right');
+            rightBtn.classList.add('right');
             const ok = k === item.answer;
             if (!ok) { b.classList.add('wrong'); errors++; deck.miss(item); ui.sfx('err'); } else { correct++; ui.sfx('ok'); }
             setProgress(correct);

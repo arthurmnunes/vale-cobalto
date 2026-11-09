@@ -78,6 +78,9 @@ README.md
 - Transição entre capítulos em `story.js` (`S.startChapterN`) e tela de fim de conteúdo (`S.endOfDemo`).
 - **Compatibilidade de saves:** jogos salvos no fim do conteúdo anterior devem continuar no novo capítulo sem recomeçar (tratar em `S.migrate`).
 - Atualizar a tabela de capítulos do `README.md` a cada capítulo publicado.
+- Item da loja (`decor`) precisa de arte em `art.js`, posição em `maps.js` e texto ao interagir (`H.<id>` em `story.js`); conferir se não bloqueia caminhos nem "rouba" a interação de um objeto vizinho.
+- Avisos: `VC.learn` agrupa os conceitos novos em um único aviso, e no máximo 3 avisos ficam visíveis (evita cobrir o diálogo no celular).
+- Alternativas das perguntas são embaralhadas na exibição: não escrever opções que dependam da posição ("todas as anteriores").
 
 ## Fluxo de trabalho (obrigatório)
 

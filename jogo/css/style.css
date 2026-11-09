@@ -412,3 +412,10 @@ sup { font-size: 0.72em; line-height: 0; }
 /* Capítulo 5: cálculos estequiométricos */
 .atom-row.calc-mode { grid-template-columns: 1fr; }
 .atom-row.calc-mode .steppers { max-width: 30rem; }
+
+/* Telas baixas: avisos compactos, longe da caixa de diálogo */
+@media (max-height: 500px) {
+  #toasts { top: calc(56px + var(--safe-t)); gap: 4px; width: min(60vw, 26rem); }
+  .toast { padding: 4px 10px; font-size: 0.85rem; border-width: 2px; }
+  .toast img { width: 18px; height: 18px; }
+}
