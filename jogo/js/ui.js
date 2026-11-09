@@ -353,7 +353,7 @@ window.VC = window.VC || {};
       snd.textContent = 'Som: ' + (VC.state.sound ? 'ligado' : 'desligado');
     });
     if (document.fullscreenEnabled) add('Tela cheia', () => { ui.toggleFullscreen(); m.close(); });
-    if ((VC.state.maxCh || 1) > 1) add('Escolher capítulo', () => { m.close(); ui.chapterSelect(); });
+    add('Escolher capítulo', () => { m.close(); ui.chapterSelect(); });
     add('Como jogar', () => { m.close(); ui.help(); });
     add('Recomeçar do zero', async () => {
       m.close();
@@ -364,21 +364,27 @@ window.VC = window.VC || {};
     m.content.appendChild(el('p', 'muted small', 'O jogo salva sozinho a cada missão. Versão ' + (VC.VERSION || 'local') + '.'));
   };
 
-  // Voltar (ou avançar) ao início de um capítulo já alcançado
+  // Voltar ou avançar ao início de qualquer capítulo já criado
   ui.chapterSelect = function () {
     const m = ui.modal({ title: 'Escolher capítulo' });
     const cur = (VC.QUESTS[VC.state.quest] && VC.QUESTS[VC.state.quest].ch) || 1;
-    const max = Math.min(VC.state.maxCh || 1, VC.IMPLEMENTED);
-    m.content.appendChild(el('p', 'muted small', 'Volte ao início de um capítulo que você já alcançou. Os capítulos anteriores contam como concluídos.'));
+    const max = VC.IMPLEMENTED;
+    m.content.appendChild(el('p', 'muted small', 'Vá para o início de qualquer capítulo. Os capítulos anteriores ao escolhido contam como concluídos.'));
     const list = el('div', 'menu-list');
     for (let n = 1; n <= max; n++) {
       const c = VC.CHAPTERS.find((x) => x.n === n);
       const b = el('button', 'btn chapter-pick');
       b.appendChild(el('strong', '', 'Capítulo ' + n + ': ' + c.title));
-      b.appendChild(el('span', 'small', n === cur ? 'Você está aqui: recomeçar este capítulo' : c.topic));
+      const situ = n === cur ? 'Você está aqui: recomeçar este capítulo'
+        : n < cur ? 'Voltar ao início: ' + c.topic
+        : 'Avançar' + (n > (VC.state.maxCh || 1) ? ' (ainda não jogado)' : '') + ': ' + c.topic;
+      b.appendChild(el('span', 'small', situ));
       b.addEventListener('click', async () => {
         m.close();
-        const ok = await ui.choose('narrador', 'Ir para o início do Capítulo ' + n + '? O progresso a partir dele será refeito quando você jogar. Nomes, moedas e decoração comprada são mantidos.', ['Cancelar', 'Ir para o Capítulo ' + n]);
+        const msg = n > cur
+          ? 'Avançar para o início do Capítulo ' + n + '? Os capítulos anteriores contam como concluídos (estrelas dos não jogados ficam zeradas). Nomes, moedas e decoração comprada são mantidos.'
+          : 'Ir para o início do Capítulo ' + n + '? O progresso a partir dele será refeito quando você jogar. Nomes, moedas e decoração comprada são mantidos.';
+        const ok = await ui.choose('narrador', msg, ['Cancelar', (n > cur ? 'Avançar para o Capítulo ' : 'Ir para o Capítulo ') + n]);
         if (ok !== 1) return;
         VC.state = VC.chapterStartState(n);
         VC.save();
